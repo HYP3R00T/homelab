@@ -4,4 +4,4 @@ namespace: metallb-system
 
 resources:
   - namespace.yaml
-  - github.com/metallb/metallb/config/native?ref=v0.14.9
+  - https://github.com/metallb/metallb/tree/main/config/native?ref=v0.14.9
