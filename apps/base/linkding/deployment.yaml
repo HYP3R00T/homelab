@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: linkding
+  namespace: linkding
 spec:
   replicas: 1
   selector:
@@ -15,9 +16,16 @@ spec:
       containers:
         - name: linkding
           image: sissbruecker/linkding:latest
-          resources:
-            limits:
-              memory: "512Mi"
-              cpu: "500m"
           ports:
             - containerPort: 9090
+          volumeMounts:
+            - mountPath: /etc/linkding/data
+              name: linkding-data
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "250m"
+      volumes:
+        - name: linkding-data
+          persistentVolumeClaim:
+            claimName: linkding-data
