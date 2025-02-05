@@ -23,7 +23,7 @@ spec:
               name: linkding-data
           resources:
             limits:
-              memory: "128Mi"
+              memory: "512Mi"
               cpu: "250m"
       volumes:
         - name: linkding-data
