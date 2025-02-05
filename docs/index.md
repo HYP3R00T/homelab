@@ -14,7 +14,7 @@ homelab:
     storage: "1TB HDD"
     virtualization: "Docker"
   system:
-    os: "Ubuntu 24.04.1 LTS"
+    os: "Ubuntu Server 24.04.1 LTS"
   kubernetes:
     distribution: "k3s"
     git_ops: "FluxCD"
