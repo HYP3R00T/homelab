@@ -8,7 +8,7 @@ spec:
   retryInterval: 1m0s
   timeout: 5m
   sourceRef:
-    name: GitRepository-kustomization
+    name: flux-system
     kind: GitRepository
   path: ./apps/lab
   prune: true
