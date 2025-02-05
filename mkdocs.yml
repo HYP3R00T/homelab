@@ -1,0 +1,106 @@
+site_name: homelab
+docs_dir: docs
+repo_url: https://github.com/HYP3R00T/homelab
+repo_name: HYP3R00T/homelab
+
+theme:
+  icon:
+    logo: octicons/terminal-24
+    menu: material/dots-grid
+    search: octicons/search-24
+  name: "material"
+  palette:
+    - scheme: Dark_Blue # Palette toggle for dark mode
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Prepare for Flashbang!
+    - scheme: Light_Blue # Palette toggle for light mode
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/toggle-switch
+        name: Join the dark side. We have cookies.
+  font:
+    text: Inter
+    code: Source Code Pro
+  features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.path
+    - navigation.indexes
+    - navigation.top
+    - navigation.prune
+    - navigation.indexes
+    - navigation.footer
+    - toc.follow
+    - content.code.copy
+    - search.suggest
+    - search.share
+    - content.action.edit
+    - content.action.view
+
+plugins:
+  - search
+  - roamlinks
+  - callouts
+  - termynal:
+      title: shell
+      buttons: windows
+      prompt_literal_start:
+        - ">"
+  - tags
+  - social:
+      cards_layout_options:
+        background_color: "#1e1e2e"
+        color: "#cdd6f4"
+
+markdown_extensions:
+  - footnotes
+  - nl2br
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - def_list
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - toc:
+      permalink: true
+
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/HYP3R00T
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/rajesh-kumar-das/
+    - icon: fontawesome/brands/youtube
+      link: https://www.youtube.com/@hyperoot
+    - icon: octicons/person-fill-24
+      link: https://hyperoot.dev/
+    - icon: fontawesome/brands/mastodon
+      link: https://mastodon.social/@hyp3r00t
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+copyright: Copyright &copy; 2025 hyperoot.dev
