@@ -1,17 +1,30 @@
-# Welcome to MkDocs
+---
+title: Homelab
+description: Documenting my homelab journey, lessons learned, and experiments in self-hosting and networking.
+hide:
+    - navigation
+---
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
-
-## Commands
-
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
-
-## Project layout
-
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+```yaml
+homelab:
+  hardware:
+    device: "HP Notebook - 15-ay563tu"
+    processor: "Intel i3-6006U (4) @ 2.000GHz"
+    ram: "4GB"
+    storage: "1TB HDD"
+    virtualization: "Docker"
+  system:
+    os: "Ubuntu 24.04.1 LTS"
+  kubernetes:
+    distribution: "k3s"
+    git_ops: "FluxCD"
+    setup: "Single-node cluster"
+    tools:
+      - "Traefik for ingress management"
+      - "FluxCD for continuous delivery"
+    network:
+      ingress: "Local, not exposed to the internet"
+  services:
+    - name: "Linkding"
+      purpose: "Bookmark management"
+```
