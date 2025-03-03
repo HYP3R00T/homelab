@@ -291,17 +291,21 @@
   background-color: var(--bg-lightest) !important;
 }
 
+.md-nav__title {
+  background-color: var(--md-default-bg-color--lightest);
+}
+
 ::selection {
   background-color: var(--fg-lighter);
   color: var(--bg-light);
 }
 
 .termy {
-    --color-bg: #1e2030;
-    --color-text: #cad3f5;
-    --color-text-subtle: #6e738d;
+  --color-bg: #1e2030;
+  --color-text: #cad3f5;
+  --color-text-subtle: #6e738d;
 }
 
 .termynal-comment {
-    color: #a6da95
+  color: #a6da95;
 }
