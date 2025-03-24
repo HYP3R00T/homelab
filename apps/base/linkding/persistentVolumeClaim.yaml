@@ -10,3 +10,6 @@ spec:
     requests:
       storage: 10Gi
   volumeName: pv-linkding
+  selector:
+    matchLabels:
+      app: linkding
