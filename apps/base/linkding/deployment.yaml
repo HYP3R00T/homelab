@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: linkding
+  name: linkding-deployment
   namespace: linkding
 spec:
   replicas: 1
