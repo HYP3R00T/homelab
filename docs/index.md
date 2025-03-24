@@ -8,13 +8,15 @@ hide:
 ```yaml
 homelab:
   hardware:
-    device: "HP Notebook - 15-ay563tu"
-    processor: "Intel i3-6006U (4) @ 2.000GHz"
-    ram: "4GB"
-    storage: "1TB HDD"
+    device: "ASUS TUF Gaming F17"
+    processor: "Intel i5-11400H (12) @ 4.500GHz"
+    ram: "16GB"
+    storage: "512GB SSD"
+    gpu: "Nvidia RTX 3050"
+    vram: "4GB"
     virtualization: "Docker"
   system:
-    os: "Ubuntu Server 24.04.1 LTS"
+    os: "Arch Linux x86_64"
   kubernetes:
     distribution: "k3s"
     git_ops: "FluxCD"

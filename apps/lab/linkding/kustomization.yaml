@@ -4,3 +4,4 @@ namespace: linkding
 resources:
   - ../../base/linkding/
   - service.yaml
+  - persistentVolume.yaml

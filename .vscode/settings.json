@@ -7,5 +7,5 @@
     },
     "[**/cluster/lab/flux-system/gotk-sync.yaml]": {
         "editor.defaultFormatter": null
-    }
+    },
 }
