@@ -10,3 +10,4 @@ spec:
     requests:
       storage: 10Gi
   volumeName: pv-linkding
+  storageClassName: ""
