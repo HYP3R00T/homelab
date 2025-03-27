@@ -1,0 +1,14 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
+metadata:
+  name: monitoring
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  retryInterval: 1m
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./apps/monitoring/controllers
+  prune: true

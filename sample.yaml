@@ -1,0 +1,149 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    devpod.sh/last-applied-configuration: '{"kubernetesContext":"archlab","kubernetesConfig":"C:\\Users\\hyperoot\\.kube\\config","kubernetesNamespace":"devpod","podTimeout":"10m","kubernetesPullSecretsEnabled":"true","createNamespace":"true","diskSize":"5Gi","strictSecurity":"false"}'
+  creationTimestamp: "2025-03-27T15:36:21Z"
+  labels:
+    devpod.sh/created: "true"
+    devpod.sh/workspace-uid: default-vs-11886
+  name: devpod-default-vs-11886
+  namespace: devpod
+  resourceVersion: "58188"
+  uid: 3f1a4d09-7389-4169-9ea2-9aa67b55b65b
+spec:
+  containers:
+    - args:
+        - -c
+        - |-
+          echo Container started
+          trap "exit 0" 15
+
+          exec "$@"
+          while sleep 1 & wait $!; do :; done
+        - "-"
+      command:
+        - /bin/sh
+      env:
+        - name: DEVPOD
+          value: "true"
+        - name: REMOTE_CONTAINERS
+          value: "true"
+        - name: DEVPOD_WORKSPACE_ID
+          value: vscode-remote-try-python-kubernetes
+        - name: DEVPOD_WORKSPACE_UID
+          value: default-vs-11886
+      image: mcr.microsoft.com/devcontainers/python:1-3.12
+      imagePullPolicy: IfNotPresent
+      name: devpod
+      resources: {}
+      securityContext:
+        runAsGroup: 0
+        runAsNonRoot: false
+        runAsUser: 0
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+        - mountPath: /workspaces/vscode-remote-try-python-kubernetes
+          name: devpod
+          subPath: devpod/0
+        - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+          name: kube-api-access-646mn
+          readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: quasar
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Never
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+  volumes:
+    - name: devpod
+      persistentVolumeClaim:
+        claimName: devpod-default-vs-11886
+    - name: kube-api-access-646mn
+      projected:
+        defaultMode: 420
+        sources:
+          - serviceAccountToken:
+              expirationSeconds: 3607
+              path: token
+          - configMap:
+              items:
+                - key: ca.crt
+                  path: ca.crt
+              name: kube-root-ca.crt
+          - downwardAPI:
+              items:
+                - fieldRef:
+                    apiVersion: v1
+                    fieldPath: metadata.namespace
+                  path: namespace
+status:
+  conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2025-03-27T15:36:25Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2025-03-27T15:36:24Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2025-03-27T15:36:24Z"
+      message: "containers with unready status: [devpod]"
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2025-03-27T15:36:24Z"
+      message: "containers with unready status: [devpod]"
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2025-03-27T15:36:24Z"
+      status: "True"
+      type: PodScheduled
+  containerStatuses:
+    - image: mcr.microsoft.com/devcontainers/python:1-3.12
+      imageID: ""
+      lastState: {}
+      name: devpod
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        waiting:
+          message: failed to prepare subPath for volumeMount "devpod" of container "devpod"
+          reason: CreateContainerConfigError
+      volumeMounts:
+        - mountPath: /workspaces/vscode-remote-try-python-kubernetes
+          name: devpod
+        - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+          name: kube-api-access-646mn
+          readOnly: true
+          recursiveReadOnly: Disabled
+  hostIP: 192.168.1.42
+  hostIPs:
+    - ip: 192.168.1.42
+    - ip: 2401:4900:1cb1:b5bb:92e8:68ff:fe2c:901
+  phase: Pending
+  podIP: 10.42.0.22
+  podIPs:
+    - ip: 10.42.0.22
+  qosClass: BestEffort
+  startTime: "2025-03-27T15:36:24Z"
