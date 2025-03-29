@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: linkding-ingress
+  namespace: linkding
+spec:
+  rules:
+    - host: linkding.homelab.internal
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: linkding-service
+                port:
+                  number: 9090
