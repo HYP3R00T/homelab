@@ -26,9 +26,14 @@ spec:
         target:
           kind: PrometheusRule
   values:
-    grafana:
-      adminPassword: hyperoot
     prometheus:
       prometheusSpec:
-        web:
-          config: {}
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 10Gi
+    grafana:
+      adminPassword: "hyperoot"
