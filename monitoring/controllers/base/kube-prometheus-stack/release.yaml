@@ -35,5 +35,19 @@ spec:
               resources:
                 requests:
                   storage: 10Gi
+
+    alertmanager:
+      alertmanagerSpec:
+        storage:
+          volumeClaimTemplate:
+            spec:
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 2Gi
+
     grafana:
+      persistence:
+        enabled: true
+        size: 2Gi
       adminPassword: "hyperoot"
