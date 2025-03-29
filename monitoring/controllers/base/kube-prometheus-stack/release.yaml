@@ -9,7 +9,6 @@ spec:
     spec:
       chart: kube-prometheus-stack
       version: "70.3.0"
-
       sourceRef:
         kind: HelmRepository
         name: kube-prometheus-stack
@@ -29,3 +28,7 @@ spec:
   values:
     grafana:
       adminPassword: hyperoot
+    prometheus:
+      prometheusSpec:
+        web:
+          config: {}
