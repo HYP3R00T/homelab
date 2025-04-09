@@ -25,7 +25,7 @@ spec:
     #     - paths: ["/metadata/annotations/prometheus-operator-validated"]
     #       target:
     #         kind: PrometheusRule
-    values:
+  values:
     prometheus:
       service:
         type: NodePort
