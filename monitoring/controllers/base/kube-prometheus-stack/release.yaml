@@ -25,8 +25,11 @@ spec:
       - paths: ["/metadata/annotations/prometheus-operator-validated"]
         target:
           kind: PrometheusRule
-  values:
+    values:
     prometheus:
+      service:
+        type: NodePort
+        nodePort: 32001
       prometheusSpec:
         storageSpec:
           volumeClaimTemplate:
@@ -37,6 +40,9 @@ spec:
                   storage: 10Gi
 
     alertmanager:
+      service:
+        type: NodePort
+        nodePort: 32002
       alertmanagerSpec:
         storage:
           volumeClaimTemplate:
@@ -47,6 +53,9 @@ spec:
                   storage: 2Gi
 
     grafana:
+      service:
+        type: NodePort
+        nodePort: 32000
       persistence:
         enabled: true
         size: 2Gi
