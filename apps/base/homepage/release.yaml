@@ -1,0 +1,19 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: homepage
+  namespace: homepage
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: homepage
+      sourceRef:
+        kind: HelmRepository
+        name: homepage
+        namespace: homepage
+      version: "1.0.0"
+  values:
+    env:
+      - name: HOMEPAGE_ALLOWED_HOSTS
+        value: "*"
