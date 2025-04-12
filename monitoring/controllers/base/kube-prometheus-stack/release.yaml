@@ -33,7 +33,6 @@ spec:
               resources:
                 requests:
                   storage: 10Gi
-
     alertmanager:
       service:
         type: NodePort
@@ -46,7 +45,6 @@ spec:
               resources:
                 requests:
                   storage: 2Gi
-
     grafana:
       service:
         type: NodePort
