@@ -4,15 +4,16 @@ metadata:
   name: homepage
   namespace: homepage
 spec:
+  url: https://ritvikcs.github.io/homepage-helm/index.yaml
   interval: 5m
   chart:
     spec:
       chart: homepage
+      version: "*"
       sourceRef:
         kind: HelmRepository
         name: homepage
         namespace: homepage
-      version: "1.0.0"
   values:
     env:
       - name: HOMEPAGE_ALLOWED_HOSTS
