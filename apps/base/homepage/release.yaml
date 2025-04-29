@@ -4,7 +4,7 @@ metadata:
   name: homepage
   namespace: homepage
 spec:
-  url: https://ritvikcs.github.io/homepage-helm/index.yaml
+  url: https://ritvikcs.github.io/homepage-helm/
   interval: 5m
   chart:
     spec:

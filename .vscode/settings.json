@@ -1,6 +1,6 @@
 {
     "[yaml]": {
-        "editor.defaultFormatter": "redhat.vscode-yaml"
+        "editor.defaultFormatter": "kennylong.kubernetes-yaml-formatter"
     },
     "[**/cluster/lab/flux-system/gotk-components.yaml]": {
         "editor.defaultFormatter": null
