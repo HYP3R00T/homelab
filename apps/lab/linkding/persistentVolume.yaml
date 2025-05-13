@@ -2,6 +2,7 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: pv-linkding
+  namespace: linkding
   labels:
     app: linkding
 spec:
