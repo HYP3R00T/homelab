@@ -8,24 +8,22 @@ To create a single node cluster, we can use K3s. K3s is a lightweight Kubernetes
 curl -sfL https://get.k3s.io | sh -
 ```
 
-This will be enough for most people but not me. For that, I need to explain my server partition and volume.
+This will be enough for most people but not me. For that, I need to explain my server partition and volume quickly.
 
 ```text
 lsblk -o NAME,SIZE,TYPE
-NAME                SIZE TYPE
-nvme0n1           476.9G disk
-├─nvme0n1p1           1G part
-└─nvme0n1p2       475.9G part
-  └─quasar        475.9G crypt
-    ├─quasar-swap    16G lvm
-    ├─quasar-root    32G lvm
-    ├─quasar-home   200G lvm
-    └─quasar-data   200G lvm
+NAME                          SIZE TYPE
+nvme0n1                     476.9G disk
+├─nvme0n1p1                     1G part
+├─nvme0n1p2                     2G part
+└─nvme0n1p3                 473.9G part
+  └─dm_crypt-0              473.9G crypt
+    ├─ubuntu--vg-ubuntu--lv   100G lvm
+    ├─ubuntu--vg-data         200G lvm
+    └─ubuntu--vg-home         150G lvm
 ```
 
-There are two partitions within my SSD. One partition is reserved for the `/boot` and the rest is for the `/root`, `/home` and `/data` mounts.
-
-The Arch wiki suggests that 15-20 GiB should be sufficient for the `/root` volume. So, after creating that, I have distributed the rest into two separate volumes. I created `/data` directory to store data. I want to use this path to store all persistent volumes of my K3s cluster.
+I created `/data` directory to store data. I want to use this path to store all persistent volumes of my K3s cluster.
 
 Therefore, I decided to modify it by adjusting the flag when I first installed K3s.
 

@@ -16,17 +16,13 @@ homelab:
     vram: "4GB"
     virtualization: "Docker"
   system:
-    os: "Arch Linux x86_64"
+    os: "Ubuntu Server"
   kubernetes:
     distribution: "k3s"
     git_ops: "FluxCD"
-    setup: "Single-node cluster"
     tools:
       - "Traefik for ingress management"
       - "FluxCD for continuous delivery"
     network:
       ingress: "Local, not exposed to the internet"
-  services:
-    - name: "Linkding"
-      purpose: "Bookmark management"
 ```
