@@ -1,0 +1,20 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: vault
+  namespace: vault
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: vault
+      version: "0.30.0"
+      sourceRef:
+        kind: HelmRepository
+        name: hashicorp
+        namespace: vault
+      interval: 12h
+  valuesFrom:
+    - kind: ConfigMap
+      name: vault-values
+      valuesKey: values.yaml

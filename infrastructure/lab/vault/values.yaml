@@ -1,0 +1,47 @@
+global:
+  enabled: true
+  tlsDisable: true
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+    limits:
+      memory: 256Mi
+      cpu: 250m
+
+server:
+  standalone:
+    enabled: true
+    config: |-
+      ui = true
+
+      listener "tcp" {
+        tls_disable = 1
+        address = "[::]:8200"
+        cluster_address = "[::]:8201"
+        # Enable unauthenticated metrics access (necessary for Prometheus Operator)
+        telemetry {
+          unauthenticated_metrics_access = "true"
+        }
+      }
+      storage "file" {
+        path = "/data/vault"
+      }
+
+  dataStorage:
+    enabled: false
+
+  volumes:
+    - name: vault-data
+      persistentVolumeClaim:
+        claimName: vault-data
+
+  volumeMounts:
+    - name: vault-data
+      mountPath: /data/vault
+
+# Vault UI
+ui:
+  enabled: true
+  serviceType: "NodePort"
+  serviceNodePort: 32000
