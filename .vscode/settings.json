@@ -1,6 +1,6 @@
 {
     "[yaml]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "editor.defaultFormatter": "redhat.vscode-yaml"
     },
     "[**/cluster/lab/flux-system/gotk-components.yaml]": {
         "editor.defaultFormatter": null
