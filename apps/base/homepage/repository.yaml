@@ -1,8 +1,0 @@
-apiVersion: source.toolkit.fluxcd.io/v1beta2
-kind: HelmRepository
-metadata:
-  name: homepage
-  namespace: homepage
-spec:
-  interval: 1m
-  url: https://ritvikcs.github.io/homepage-helm
