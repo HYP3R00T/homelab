@@ -1,0 +1,111 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homepage
+  namespace: homepage
+  labels:
+    app.kubernetes.io/name: homepage
+data:
+  kubernetes.yaml: |
+    mode: cluster
+
+  settings.yaml: |
+    background:
+        image: "https://raw.githubusercontent.com/gethomepage/homepage/main/docs/assets/blossom_valley.jpg"
+        blur: sm
+        opacity: 50
+    cardBlur: 3xl
+    theme: dark
+    color: zinc
+    headerStyle: clean
+    # fullWidth: true
+    disableCollapse: true
+
+    layout:
+      widgets:
+        style: row
+        # columns: 1
+        header: false
+      Homelab:
+        style: row
+        columns: 3
+        header: true
+      AI:
+        style: row
+        columns: 3
+        header: true
+        iconsOnly: true
+
+  custom.css: ""
+  custom.js: ""
+  bookmarks.yaml: ""
+  services.yaml: |
+    - Homelab:
+      - Linkding:
+          icon: linkding.png
+          href: http://linkding.homelab.internal/
+          description: Bookmark management
+          target: _self
+      - Mealie:
+          icon: mealie.png
+          href: http://mealie.homelab.internal/
+          description: Recipe management
+          target: _self
+      - Vault:
+          icon: vault.png
+          href: http://vault.homelab.internal/
+          description: Secret management
+          target: _self
+    - AI:
+      - ChatGPT:
+          icon: chatgpt.png
+          href: https://chatgpt.com/
+          description: ChatGPT by OpenAI
+          target: _self
+      - Gemini:
+          icon: google-gemini.png
+          href: https://gemini.google.com/app
+          description: Gemini by Google
+          target: _self
+      - Claude:
+          icon: claude-ai.png
+          href: https://claude.ai/chats
+          description: Claude by Anthropic
+          target: _self
+      - GitHub Copilot:
+          icon: https://registry.npmmirror.com/@lobehub/icons-static-png/latest/files/dark/githubcopilot.png
+          href: https://github.com/copilot/
+          description: AI pair programmer
+          target: _self
+      - Grok:
+          icon: https://registry.npmmirror.com/@lobehub/icons-static-png/1.46.0/files/dark/grok.png
+          href: https://grok.com/
+          description: AI by x.com
+          target: _self
+
+  widgets.yaml: |
+    - kubernetes:
+        cluster:
+          show: true
+          cpu: true
+          memory: true
+          showLabel: false
+          label: "homelab"
+        nodes:
+          show: false
+          cpu: true
+          memory: true
+          showLabel: true
+    - resources:
+        # backend: resources
+        expanded: true
+        cpu: true
+        memory: true
+        network: default
+    - datetime:
+        text_size: xl
+        format:
+          dateStyle: long
+          timeStyle: short
+
+  docker.yaml: ""
