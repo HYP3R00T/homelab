@@ -1,0 +1,14 @@
+service:
+  type: NodePort
+  port: 80
+  nodePorts:
+    http: 30880
+    https: 30881
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi

@@ -1,0 +1,14 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: nginx
+  namespace: nginx
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: bitnami
+  interval: 5m
+  valuesFrom:
+    - kind: ConfigMap
+      name: nginx-values
+      valuesKey: values.yaml
