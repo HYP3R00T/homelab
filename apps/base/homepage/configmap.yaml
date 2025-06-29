@@ -30,6 +30,11 @@ data:
         style: row
         columns: 3
         header: true
+      Misc:
+        style: row
+        columns: 3
+        header: true
+        iconsOnly: true
       AI:
         style: row
         columns: 3
@@ -55,6 +60,11 @@ data:
           icon: vault.png
           href: http://vault.homelab.internal/
           description: Secret management
+          target: _self
+    - Misc:
+      - Luma:
+          icon: https://raw.githubusercontent.com/HYP3R00T/homelab/refs/heads/main/assets/luma.png
+          href: https://lu.ma/home
           target: _self
     - AI:
       - ChatGPT:
