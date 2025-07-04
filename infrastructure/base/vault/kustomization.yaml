@@ -3,5 +3,8 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - persistentVolumeClaim.yaml
+  - serviceaccount.yaml
+  - clusterrole.yaml
+  - clusterrolebinding.yaml
   - repository.yaml
   - release.yaml
