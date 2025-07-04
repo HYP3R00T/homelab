@@ -8,3 +8,4 @@ resources:
   - clusterrolebinding.yaml
   - repository.yaml
   - release.yaml
+  - secret.yaml
