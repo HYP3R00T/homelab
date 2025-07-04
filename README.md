@@ -83,4 +83,4 @@ This setup is built for:
 
 ## 🤝 License
 
-MIT – feel free to fork, clone, and adapt for your own lab!
+MIT - feel free to fork, clone, and adapt for your own lab!
