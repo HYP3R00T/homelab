@@ -11,4 +11,4 @@ spec:
       port: 9090
       targetPort: http
       name: http
-  type: NodePort
+  type: ClusterIP
