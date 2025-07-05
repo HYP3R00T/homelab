@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflared
+  namespace: cloudflared
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloudflared
+  template:
+    metadata:
+      labels:
+        app: cloudflared
+    spec:
+      containers:
+        - name: cloudflared
+          image: cloudflare/cloudflared:latest
+          command: ["cloudflared"]
+          args:
+            - "--no-autoupdate"
+            - "--credentials-file"
+            - "/etc/cloudflared/credentials.json"
+            - "tunnel"
+            - "run"
+            - "$(TUNNEL_ID)"
+          env:
+            - name: TUNNEL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: cloudflared-credentials
+                  key: tunnel-id
+          volumeMounts:
+            - name: cloudflared-credentials
+              mountPath: /etc/cloudflared/credentials.json
+              subPath: credentials-file
+              readOnly: true
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+      volumes:
+        - name: cloudflared-credentials
+          secret:
+            secretName: cloudflared-credentials

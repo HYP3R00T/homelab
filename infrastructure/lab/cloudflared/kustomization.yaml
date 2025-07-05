@@ -1,0 +1,15 @@
+# https://external-secrets.io/latest/introduction/getting-started/#installing-with-helm
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: cloudflared
+resources:
+  - ../../base/cloudflared/
+  - externalSecret.yaml
+# configMapGenerator:
+#   - name: external-secrets-values
+#     files:
+#       - values.yaml
+
+# generatorOptions:
+#   disableNameSuffixHash: true
