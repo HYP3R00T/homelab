@@ -21,7 +21,9 @@ spec:
         - name: linkding
           image: sissbruecker/linkding:latest
           ports:
-            - containerPort: 9090
+            - name: http
+              containerPort: 9090
+              protocol: TCP
           volumeMounts:
             - mountPath: /etc/linkding/data
               name: linkding-data
