@@ -8,12 +8,4 @@
     "[**/cluster/lab/flux-system/gotk-sync.yaml]": {
         "editor.defaultFormatter": null
     },
-    "files.exclude": {
-        "**/.git": true,
-        "**/.svn": true,
-        "**/.hg": true,
-        "**/.DS_Store": true,
-        "**/Thumbs.db": true
-    },
-    "hide-files.files": [],
 }
