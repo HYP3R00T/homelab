@@ -8,7 +8,7 @@ resources:
   - ../../base/cnpg/
 
 configMapGenerator:
-  - name: vault-values
+  - name: cnpg-values
     files:
       - values.yaml
 
