@@ -1,0 +1,16 @@
+# https://artifacthub.io/packages/helm/cloudnative-pg/cloudnative-pg
+# https://cloudnative-pg.io/charts/
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: cnpg
+resources:
+  - ../../base/cnpg/
+
+configMapGenerator:
+  - name: vault-values
+    files:
+      - values.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
