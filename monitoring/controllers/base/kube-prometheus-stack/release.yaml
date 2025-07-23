@@ -18,38 +18,7 @@ spec:
     crds: Create
   upgrade:
     crds: CreateReplace
-  values:
-    prometheus:
-      service:
-        type: NodePort
-        nodePort: 32001
-      ingress:
-        enable: true
-      prometheusSpec:
-        storageSpec:
-          volumeClaimTemplate:
-            spec:
-              accessModes: ["ReadWriteOnce"]
-              resources:
-                requests:
-                  storage: 10Gi
-    alertmanager:
-      service:
-        type: NodePort
-        nodePort: 32002
-      alertmanagerSpec:
-        storage:
-          volumeClaimTemplate:
-            spec:
-              accessModes: ["ReadWriteOnce"]
-              resources:
-                requests:
-                  storage: 2Gi
-    grafana:
-      service:
-        type: NodePort
-        nodePort: 32000
-      persistence:
-        enabled: true
-        size: 2Gi
-      adminPassword: "hyperoot"
+  valuesFrom:
+    - kind: ConfigMap
+      name: kube-prometheus-stack-values
+      valuesKey: values.yaml

@@ -1,0 +1,41 @@
+grafana:
+  service:
+    nodePort: 32000
+  ingress:
+    enabled: true
+    hosts:
+      - grafana.homelab.internal
+  persistence:
+    enabled: true
+    size: 2Gi
+  adminPassword: "hyperoot"
+prometheus:
+  service:
+    nodePort: 32001
+  ingress:
+    enabled: true
+    hosts:
+      - prometheus.homelab.internal
+  prometheusSpec:
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi
+alertmanager:
+  service:
+    nodePort: 32002
+  ingress:
+    enabled: true
+    hosts:
+      - alertmanager.homelab.internal
+  alertmanagerSpec:
+    storage:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 2Gi
