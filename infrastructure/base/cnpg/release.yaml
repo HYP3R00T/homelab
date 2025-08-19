@@ -14,3 +14,7 @@ spec:
         namespace: cnpg
   install:
     createNamespace: false
+  valuesFrom:
+    - kind: ConfigMap
+      name: cnpg-values
+      valuesKey: values.yaml
