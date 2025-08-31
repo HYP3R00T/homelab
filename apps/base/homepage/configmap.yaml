@@ -10,88 +10,87 @@ data:
     mode: cluster
 
   settings.yaml: |
+    # hideVersion: true
     background:
-        image: "https://raw.githubusercontent.com/gethomepage/homepage/main/docs/assets/blossom_valley.jpg"
-        blur: sm
-        opacity: 50
-    cardBlur: 3xl
+      # image: "https://w.wallhaven.cc/full/yx/wallhaven-yxmm3g.jpg"
+      image: "https://w.wallhaven.cc/full/pk/wallhaven-pkl5pm.jpg"
+      blur: sm
+      opacity: 50
     theme: dark
     color: zinc
     headerStyle: clean
-    # fullWidth: true
-    disableCollapse: true
-
+    # disableCollapse: true
     layout:
-      widgets:
+      AI:
         style: row
-        # columns: 1
+        header: false
+        columns: 8
+      Misc:
+        style: row
+        columns: 8
         header: false
       Homelab:
         style: row
-        columns: 3
-        header: true
-      Misc:
+        header: false
+        columns: 8
+      Some:
         style: row
-        columns: 3
-        header: true
-        iconsOnly: true
-      AI:
-        style: row
-        columns: 3
-        header: true
-        iconsOnly: true
-
+        columns: 4
+        header: false
   custom.css: ""
   custom.js: ""
   bookmarks.yaml: ""
   services.yaml: |
     - Homelab:
-      - Linkding:
-          icon: linkding.png
-          href: http://linkding.homelab.internal/
-          description: Bookmark management
-          target: _self
-      - Mealie:
-          icon: mealie.png
-          href: http://mealie.homelab.internal/
-          description: Recipe management
-          target: _self
-      - Vault:
-          icon: vault.png
-          href: http://vault.homelab.internal/
-          description: Secret management
-          target: _self
-    - Misc:
-      - Luma:
-          icon: https://raw.githubusercontent.com/HYP3R00T/homelab/refs/heads/main/assets/luma.png
-          href: https://lu.ma/home
-          target: _self
+        - Linkding:
+            icon: linkding.png
+            href: http://linkding.homelab.internal/
+            target: _self
+        - Mealie:
+            icon: mealie.png
+            href: http://mealie.homelab.internal/
+            target: _self
+        - Vault:
+            icon: vault.png
+            href: http://vault.homelab.internal/
+            target: _self
     - AI:
-      - ChatGPT:
-          icon: chatgpt.png
-          href: https://chatgpt.com/
-          description: ChatGPT by OpenAI
-          target: _self
-      - Gemini:
-          icon: google-gemini.png
-          href: https://gemini.google.com/app
-          description: Gemini by Google
-          target: _self
-      - Claude:
-          icon: claude-ai.png
-          href: https://claude.ai/chats
-          description: Claude by Anthropic
-          target: _self
-      - GitHub Copilot:
-          icon: https://registry.npmmirror.com/@lobehub/icons-static-png/latest/files/dark/githubcopilot.png
-          href: https://github.com/copilot/
-          description: AI pair programmer
-          target: _self
-      - Grok:
-          icon: https://registry.npmmirror.com/@lobehub/icons-static-png/1.46.0/files/dark/grok.png
-          href: https://grok.com/
-          description: AI by x.com
-          target: _self
+        - ChatGPT:
+            icon: chatgpt.png
+            href: https://chatgpt.com/
+            target: _self
+        - Gemini:
+            icon: google-gemini.png
+            href: https://gemini.google.com/app
+            target: _self
+        - Claude:
+            icon: claude-ai.png
+            href: https://claude.ai/chats
+            target: _self
+        - GitHub Copilot:
+            icon: https://registry.npmmirror.com/@lobehub/icons-static-png/1.62.0/files/light/githubcopilot.png
+            href: https://github.com/copilot/
+            target: _self
+        - Grok:
+            icon: grok.png
+            href: https://grok.com/
+            target: _self
+        - Perplexity:
+            icon: https://registry.npmmirror.com/@lobehub/icons-static-png/1.62.0/files/light/perplexity-color.png
+            href: https://www.perplexity.ai/
+            target: _self
+    - Some:
+        - Grafana:
+            icon: grafana.png
+            href: http://grafana.homelab.internal/
+            target: _self
+            widget:
+              type: grafana
+              version: 2 # optional, default is 1
+              alerts: alertmanager # optional, default is grafana
+              url: http://kube-prometheus-stack-grafana.monitoring.svc.cluster.local
+              username: admin
+              password: hyperoot
 
   widgets.yaml: |
     - kubernetes:
@@ -113,9 +112,9 @@ data:
         memory: true
         network: default
     - datetime:
-        text_size: xl
+        text_size: 3xl
         format:
-          dateStyle: long
+          hourCycle: h23
           timeStyle: short
 
   docker.yaml: ""
