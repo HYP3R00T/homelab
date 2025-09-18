@@ -3,3 +3,22 @@ kind: Kustomization
 namespace: homepage
 resources:
   - ../../base/homepage/
+  - ingress.yaml
+
+configMapGenerator:
+  - name: homepage
+    files:
+      - configs/kubernetes.yaml
+      - configs/settings.yaml
+      - configs/bookmarks.yaml
+      - configs/services.yaml
+      - configs/widgets.yaml
+      - configs/docker.yaml
+      - configs/custom.js
+      - configs/custom.css
+    options:
+      labels:
+        app.kubernetes.io/name: homepage
+
+generatorOptions:
+  disableNameSuffixHash: true

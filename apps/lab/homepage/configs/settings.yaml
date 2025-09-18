@@ -1,0 +1,26 @@
+background:
+  # image: "https://w.wallhaven.cc/full/yx/wallhaven-yxmm3g.jpg"
+  image: "https://w.wallhaven.cc/full/pk/wallhaven-pkl5pm.jpg"
+  blur: sm
+  opacity: 50
+theme: dark
+color: zinc
+headerStyle: clean
+# disableCollapse: true
+layout:
+  AI:
+    style: row
+    header: false
+    columns: 6
+  Misc:
+    style: row
+    columns: 6
+    header: false
+  Homelab:
+    style: row
+    header: false
+    columns: 6
+  Homelab2:
+    style: row
+    columns: 3
+    header: false

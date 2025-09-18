@@ -1,0 +1,67 @@
+- Homelab:
+    - Linkding:
+        icon: linkding.png
+        href: http://linkding.homelab.internal/
+        siteMonitor: linkding.linkding.svc.cluster.local
+        target: _self
+    - Mealie:
+        icon: mealie.png
+        href: http://mealie.homelab.internal/
+        siteMonitor: http://mealie.homelab.internal/
+        target: _self
+    - Vault:
+        icon: vault.png
+        href: http://vault.homelab.internal/
+        siteMonitor: http://vault.homelab.internal/
+        target: _self
+- AI:
+    - ChatGPT:
+        icon: chatgpt.png
+        href: https://chatgpt.com/
+        target: _self
+    - Gemini:
+        icon: google-gemini.png
+        href: https://gemini.google.com/app
+        target: _self
+    - Claude:
+        icon: claude-ai.png
+        href: https://claude.ai/chats
+        target: _self
+    - Microsoft Copilot:
+        icon: microsoft-copilot.png
+        href: https://copilot.microsoft.com
+        target: _self
+    - GitHub Copilot:
+        icon: https://registry.npmmirror.com/@lobehub/icons-static-png/1.62.0/files/light/githubcopilot.png
+        href: https://github.com/copilot/
+        target: _self
+    - Grok:
+        icon: grok.png
+        href: https://grok.com/
+        target: _self
+    - Perplexity:
+        icon: https://registry.npmmirror.com/@lobehub/icons-static-png/1.62.0/files/light/perplexity-color.png
+        href: https://www.perplexity.ai/
+        target: _self
+- Homelab2:
+    - Grafana:
+        icon: grafana.png
+        href: http://grafana.homelab.internal/
+        siteMonitor: http://grafana.homelab.internal/
+        target: _self
+        widget:
+          type: grafana
+          version: 2 # optional, default is 1
+          alerts: alertmanager # optional, default is grafana
+          url: http://kube-prometheus-stack-grafana.monitoring.svc.cluster.local
+          username: admin
+          password: hyperoot
+    - Proxmox:
+        icon: proxmox.png
+        href: https://192.168.0.50:8006/
+        siteMonitor: https://192.168.0.50:8006/
+        widget:
+          type: proxmox
+          url: https://192.168.0.50:8006/
+          username: api@pam!homepage
+          password: b494b4af-9b0a-447a-99c9-e3f9719af4ed

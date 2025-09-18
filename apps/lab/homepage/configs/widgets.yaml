@@ -1,0 +1,23 @@
+- kubernetes:
+    cluster:
+      show: true
+      cpu: true
+      memory: true
+      showLabel: false
+      label: "homelab"
+    nodes:
+      show: false
+      cpu: true
+      memory: true
+      showLabel: true
+- resources:
+    # backend: resources
+    expanded: true
+    cpu: true
+    memory: true
+    network: default
+- datetime:
+    text_size: 3xl
+    format:
+      hourCycle: h23
+      timeStyle: short
