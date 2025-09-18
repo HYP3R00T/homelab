@@ -2,17 +2,17 @@
     - Linkding:
         icon: linkding.png
         href: http://linkding.homelab.internal/
-        siteMonitor: linkding.linkding.svc.cluster.local
+        # siteMonitor: http://linkding.linkding.svc.cluster.local
         target: _self
     - Mealie:
         icon: mealie.png
         href: http://mealie.homelab.internal/
-        siteMonitor: http://mealie.homelab.internal/
+        # siteMonitor: http://mealie.mealie.svc.cluster.local
         target: _self
     - Vault:
         icon: vault.png
         href: http://vault.homelab.internal/
-        siteMonitor: http://vault.homelab.internal/
+        # siteMonitor: http://vault.vault.svc.cluster.local
         target: _self
 - AI:
     - ChatGPT:
@@ -47,7 +47,7 @@
     - Grafana:
         icon: grafana.png
         href: http://grafana.homelab.internal/
-        siteMonitor: http://grafana.homelab.internal/
+        # siteMonitor: http://grafana.homelab.internal/
         target: _self
         widget:
           type: grafana
