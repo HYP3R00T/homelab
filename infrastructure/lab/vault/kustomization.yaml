@@ -6,6 +6,7 @@ namespace: vault
 resources:
   - ../../base/vault/
   - persistentVolume.yaml
+  - persistentVolumeClaim.yaml
 
 configMapGenerator:
   - name: vault-values
