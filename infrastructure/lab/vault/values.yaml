@@ -1,32 +1,58 @@
+# values.yaml — modified for HA+Raft but with old-UI bootstrap behaviour restored
+
 global:
   enabled: true
   tlsDisable: true
-  resources:
-    requests:
-      memory: 256Mi
-      cpu: 250m
-    limits:
-      memory: 256Mi
-      cpu: 250m
 
 server:
-  standalone:
-    enabled: true
-    config: |-
-      ui = true
+  resources:
+    requests: { cpu: 100m, memory: 256Mi }
+    limits: { cpu: 500m, memory: 512Mi }
 
-      listener "tcp" {
-        tls_disable = 1
-        address = "[::]:8200"
-        cluster_address = "[::]:8201"
-        # Enable unauthenticated metrics access (necessary for Prometheus Operator)
-        telemetry {
-          unauthenticated_metrics_access = "true"
+  # You can temporarily disable liveness while bootstrapping if needed,
+  # but leaving enabled with conservative settings is reasonable.
+  readinessProbe:
+    enabled: true
+    path: /v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204
+    failureThreshold: 10
+
+  livenessProbe:
+    enabled: true
+    path: /v1/sys/health?standbyok=true
+    initialDelaySeconds: 60
+    periodSeconds: 10
+    failureThreshold: 6
+
+  # Security context to make PV ownership less problematic (vault runs as uid 100)
+  securityContext:
+    runAsUser: 100
+    fsGroup: 100
+
+  standalone:
+    enabled: false
+
+  ha:
+    enabled: true
+    replicas: 1
+    # make Vault advertise an externally-consistent api_addr for the UI/ingress
+    apiAddr: "http://vault.homelab.internal:8200"
+    raft:
+      enabled: true
+      config: |
+        ui = true
+
+        listener "tcp" {
+          tls_disable = 1
+          address = "[::]:8200"
+          cluster_address = "[::]:8201"
+          telemetry {
+            unauthenticated_metrics_access = "true"
+          }
         }
-      }
-      storage "file" {
-        path = "/data/vault"
-      }
+
+        storage "raft" {
+          path = "/data/vault"
+        }
 
   dataStorage:
     enabled: false
@@ -43,14 +69,19 @@ server:
   ingress:
     enabled: true
     ingressClassName: "traefik"
+
+    # IMPORTANT: set activeService=false so the chart will not switch the ingress to vault-active,
+    # and ensure the ingress backend targets the 'vault' API service directly.
+    activeService: false
+
     hosts:
       - host: vault.homelab.internal
         extraPaths:
-          - path: /*
+          - path: /
             pathType: Prefix
             backend:
               service:
-                name: vault-ui
+                name: vault # direct API service (ensures UI sees the same /v1/sys/health)
                 port:
                   number: 8200
 
@@ -58,3 +89,9 @@ server:
 ui:
   enabled: true
   serviceType: "ClusterIP"
+  # expose the UI on the same port as the API so ingress routing is straightforward
+  externalPort: 8200
+  targetPort: 8200
+  # during bootstrap it's useful to allow not-ready addresses — keep if you want ingress
+  # to reach pod while it's NotReady (optional; remove after bootstrap if desired)
+  publishNotReadyAddresses: true

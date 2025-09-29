@@ -3,20 +3,9 @@ kind: ClusterRole
 metadata:
   name: vault-token-reviewer
 rules:
-  - apiGroups:
-      - ""
-    resources:
-      - serviceaccounts
-      - pods
-    verbs:
-      - get
-      - list
-      - create
-  - apiGroups:
-      - authentication.k8s.io
-    resources:
-      - tokenreviews
-    verbs:
-      - get
-      - list
-      - create
+  - apiGroups: ["authentication.k8s.io"]
+    resources: ["tokenreviews"]
+    verbs: ["create"]
+  - apiGroups: [""]
+    resources: ["serviceaccounts"]
+    verbs: ["get"]
