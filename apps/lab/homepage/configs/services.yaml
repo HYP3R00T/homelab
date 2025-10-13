@@ -19,6 +19,10 @@
         icon: chatgpt.png
         href: https://chatgpt.com/
         target: _self
+    - AI Fiesta:
+        icon: https://chat.aifiesta.ai/static/images/logo/icon.png
+        href: https://chat.aifiesta.ai/
+        target: _self
     - Gemini:
         icon: google-gemini.png
         href: https://gemini.google.com/app
