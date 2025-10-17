@@ -1,9 +1,10 @@
-apiVersion: source.toolkit.fluxcd.io/v1beta2
+apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
   name: bitnami
+  namespace: nginx
 spec:
   interval: 5m0s
   url: oci://registry-1.docker.io/bitnamicharts/nginx
   ref:
-    semver: 22.0.11
+    semver: "22.0.11"

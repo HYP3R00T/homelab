@@ -1,11 +1,8 @@
 # https://artifacthub.io/packages/helm/bitnami/nginx
 
-service:
-  type: NodePort
-  port: 80
-  nodePorts:
-    http: 30880
-    https: 30881
+ingress:
+  enabled: true
+  hostname: nginx.homelab.internal
 
 resources:
   requests:
