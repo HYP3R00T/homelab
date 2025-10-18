@@ -1,6 +1,4 @@
 grafana:
-  service:
-    nodePort: 32000
   ingress:
     enabled: true
     hosts:
@@ -10,8 +8,6 @@ grafana:
     size: 2Gi
   adminPassword: "hyperoot"
 prometheus:
-  service:
-    nodePort: 32001
   ingress:
     enabled: true
     hosts:
@@ -25,8 +21,6 @@ prometheus:
             requests:
               storage: 10Gi
 alertmanager:
-  service:
-    nodePort: 32002
   ingress:
     enabled: true
     hosts:
