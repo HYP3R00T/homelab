@@ -15,26 +15,19 @@ spec:
     spec:
       containers:
         - name: cloudflared
-          image: cloudflare/cloudflared:latest
-          command: ["cloudflared"]
-          args:
-            - "--no-autoupdate"
-            - "--credentials-file"
-            - "/etc/cloudflared/credentials.json"
-            - "tunnel"
-            - "run"
-            - "$(TUNNEL_ID)"
+          image: cloudflare/cloudflared:2025.11.1
           env:
-            - name: TUNNEL_ID
+            - name: TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: cloudflared-credentials
-                  key: tunnel-id
-          volumeMounts:
-            - name: cloudflared-credentials
-              mountPath: /etc/cloudflared/credentials.json
-              subPath: credentials-file
-              readOnly: true
+                  name: cloudflared-secret
+                  key: token
+          command:
+            - "cloudflared"
+            - "--no-autoupdate"
+            - "tunnel"
+            - "run"
+            - "$(TOKEN)"
           resources:
             limits:
               cpu: 500m
@@ -42,7 +35,3 @@ spec:
             requests:
               cpu: 100m
               memory: 128Mi
-      volumes:
-        - name: cloudflared-credentials
-          secret:
-            secretName: cloudflared-credentials
