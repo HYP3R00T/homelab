@@ -27,6 +27,7 @@ spec:
             - "--no-autoupdate"
             - "tunnel"
             - "run"
+            - "--token"
             - "$(TOKEN)"
           resources:
             limits:
