@@ -1,6 +1,7 @@
 background:
   # image: "https://w.wallhaven.cc/full/yx/wallhaven-yxmm3g.jpg"
-  image: "https://w.wallhaven.cc/full/pk/wallhaven-pkl5pm.jpg"
+  # image: "https://w.wallhaven.cc/full/pk/wallhaven-pkl5pm.jpg"
+  image: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/ad80879c-fb2b-498c-ba01-90055f5373c0/dli7ejn-76facd05-4bcb-4fcc-8f2f-ca2de4ca510d.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi9hZDgwODc5Yy1mYjJiLTQ5OGMtYmEwMS05MDA1NWY1MzczYzAvZGxpN2Vqbi03NmZhY2QwNS00YmNiLTRmY2MtOGYyZi1jYTJkZTRjYTUxMGQuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.qxCKFCgwev4FOe9pHYJYku7IbEhxNrpfutsJenWhRCE"
   blur: sm
   opacity: 50
 theme: dark
