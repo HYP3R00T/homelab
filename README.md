@@ -6,19 +6,19 @@ A production-grade, self-hosted Kubernetes homelab powered by [k3s](https://k3s.
 
 ## 🧰 Stack Overview
 
-| Layer           | Tooling                                 |
-|----------------|------------------------------------------|
-| Kubernetes     | [k3s](https://k3s.io)                    |
-| GitOps         | [FluxCD](https://fluxcd.io)              |
-| Secrets Mgmt   | [HashiCorp Vault](https://www.vaultproject.io) + [ESO](https://external-secrets.io) |
-| Networking     | [Cloudflared](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/) + [Traefik (in-built)](https://doc.traefik.io) |
-| Monitoring     | [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack) |
-| App Packaging  | [Helm](https://helm.sh), [Kustomize](https://kubectl.docs.kubernetes.io/references/kustomize/) |
-| OS Environment | Ubuntu 24.04.2 LTS on Lenovo Legion Y540 |
+| Layer           | Tooling                                                                                                                                  |
+|-----------------|------------------------------------------------------------------------------------------------------------------------------------------|
+| Kubernetes      | [k3s](https://k3s.io)                                                                                                                    |
+| GitOps          | [FluxCD](https://fluxcd.io)                                                                                                              |
+| Secrets Mgmt    | [HashiCorp Vault](https://www.vaultproject.io) + [ESO](https://external-secrets.io)                                                      |
+| Networking      | [Cloudflared](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/) + [Traefik (in-built)](https://doc.traefik.io) |
+| Monitoring      | [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)                      |
+| App Packaging   | [Helm](https://helm.sh), [Kustomize](https://kubectl.docs.kubernetes.io/references/kustomize/)                                           |
+| OS Environment  | Ubuntu 24.04.2 LTS on Lenovo Legion Y540                                                                                                 |
 
 ## 📁 Repository Structure
 
-```
+```sh
 .
 ├── apps/                # Application manifests (base/lab overlays)
 ├── cluster/             # Cluster-level definitions, Flux bootstrap
@@ -34,21 +34,22 @@ A production-grade, self-hosted Kubernetes homelab powered by [k3s](https://k3s.
 
 ## 🚀 Deployed Applications
 
-| App         | Purpose                        |
-|-------------|--------------------------------|
-| Homepage    | Custom home dashboard          |
-| Linkding    | Bookmark manager               |
-| Mealie      | Recipe management              |
-| Vault       | Secrets management backend     |
-| ESO         | Sync Vault secrets to K8s      |
-| Cloudflared | Secure tunneling to cluster    |
-| Prometheus + Grafana | Monitoring + Dashboards |
+| App                  | Purpose                        |
+|----------------------|--------------------------------|
+| Homepage             | Custom home dashboard          |
+| Linkding             | Bookmark manager               |
+| Mealie               | Recipe management              |
+| Vault                | Secrets management backend     |
+| ESO                  | Sync Vault secrets to K8s      |
+| Cloudflared          | Secure tunneling to cluster    |
+| Prometheus + Grafana | Monitoring + Dashboards        |
 
 All apps are declaratively managed using Helm & Kustomize via FluxCD.
 
 ## 🔐 Secrets & Security
 
 Secrets are managed using:
+
 - **HashiCorp Vault** (deployed in-cluster)
 - **External Secrets Operator (ESO)** using the Kubernetes auth method
 - Cloudflared tunnels expose apps securely without port forwarding or public IPs
@@ -65,16 +66,17 @@ This homelab follows a pure GitOps model:
 ## 🖥️ Host Specs
 
 | Spec       | Value                          |
-|------------|---------------------------------|
-| OS         | Ubuntu 24.04.2 LTS              |
-| Machine    | Lenovo Legion Y540 (i5-9300H)   |
-| Memory     | 16 GB                           |
-| GPU        | NVIDIA GTX 1650 Mobile          |
-| Cluster    | Bare-metal, single-node (k3s)   |
+|------------|--------------------------------|
+| OS         | Ubuntu 24.04.2 LTS             |
+| Machine    | Lenovo Legion Y540 (i5-9300H)  |
+| Memory     | 16 GB                          |
+| GPU        | NVIDIA GTX 1650 Mobile         |
+| Cluster    | Bare-metal, single-node (k3s)  |
 
 ## 🧠 Philosophy
 
 This setup is built for:
+
 - **Learning** Kubernetes, GitOps, and security best practices
 - **Running production-grade self-hosted tools**
 - **Keeping everything declarative, minimal, and portable**
