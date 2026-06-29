@@ -1,0 +1,6 @@
+[tools]
+flux2 = "latest"
+helm = "latest"
+
+[shell_alias]
+k = "kubectl"
