@@ -31,4 +31,3 @@ spec:
     url: "https://github.com/HYP3R00T/homelab.git"
     ref: "refs/heads/main"
     path: "clusters/lab"
-    pullSecret: "flux-system"
