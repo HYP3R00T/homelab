@@ -1,6 +1,19 @@
 [tools]
 flux2 = "latest"
 helm = "latest"
+prek = "latest"
+rumdl = "latest"
+uv = "latest"
+
+[settings]
+experimental = true
 
 [shell_alias]
 k = "kubectl"
+
+[hooks]
+enter = "bash ./scripts/enter_project.sh"
+
+[tasks.docs]
+run = "uvx zensical serve"
+description = "Serve the documentation locally"
