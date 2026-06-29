@@ -12,7 +12,7 @@ experimental = true
 k = "kubectl"
 
 [hooks]
-enter = "bash ./scripts/enter_project.sh"
+enter = "{{config_root}}/scripts/enter_project.sh"
 
 [tasks.docs]
 run = "uvx zensical serve"
