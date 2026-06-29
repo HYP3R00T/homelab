@@ -1,0 +1,10 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: traefik-chart
+  namespace: traefik
+spec:
+  interval: 1h
+  url: oci://ghcr.io/traefik/helm/traefik
+  ref:
+    semver: "41.x.x"

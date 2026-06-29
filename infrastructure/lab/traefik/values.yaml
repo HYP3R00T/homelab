@@ -1,0 +1,24 @@
+ingressClass:
+  enabled: true
+  isDefaultClass: true
+  name: traefik
+ingressRoute:
+  dashboard:
+    enabled: true
+    matchRule: Host(`traefik.homelab.internal`)
+    entryPoints:
+      - web
+providers:
+  kubernetesIngress:
+    publishedService:
+      enabled: false
+    ingressEndpoint:
+      ip: 192.168.0.50
+ports:
+  web:
+    nodePort: 31231
+  websecure:
+    nodePort: 30154
+service:
+  spec:
+    type: NodePort
