@@ -1,3 +1,11 @@
+hostNetwork: false
+ports:
+  web:
+    port: 8000
+    hostPort: 80
+  websecure:
+    port: 8443
+    hostPort: 443
 ingressClass:
   enabled: true
   isDefaultClass: true
@@ -12,13 +20,3 @@ providers:
   kubernetesIngress:
     publishedService:
       enabled: false
-    ingressEndpoint:
-      ip: 192.168.0.50
-ports:
-  web:
-    nodePort: 31231
-  websecure:
-    nodePort: 30154
-service:
-  spec:
-    type: NodePort
