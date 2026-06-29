@@ -1,0 +1,124 @@
+vars: {
+  d2-config: {
+    theme-id: 101
+    layout-engine: elk
+    pad: 24
+  }
+}
+
+direction: right
+
+classes: {
+  default: {
+    style: {
+      border-radius: 10
+      stroke-width: 1
+      fill: transparent
+    }
+  }
+  platform: {
+    style: {
+      border-radius: 12
+      stroke-width: 2
+      fill: "#eef5ff"
+    }
+  }
+  runtime: {
+    style: {
+      border-radius: 10
+      fill: "#f8fbff"
+    }
+  }
+  note: {
+    style: {
+      border-radius: 10
+      fill: "#fff8e8"
+      stroke-dash: 4
+    }
+  }
+  edge_default: {
+    style.animated: true
+  }
+}
+
+workstation: {
+  label: "Workstation"
+  class: default
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/windows-11.png
+}
+
+github: {
+  label: "GitHub"
+  class: default
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/github.svg
+}
+
+lan: {
+  label: "LAN"
+  class: default
+}
+
+lenovo: {
+  label: "Lenovo"
+  class: platform
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/lenovo.svg
+
+  talos: {
+    label: "Talos"
+    class: runtime
+    icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/talos.svg
+  }
+
+  kubernetes: {
+    label: "Kubernetes"
+    class: platform
+    icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/kubernetes.svg
+
+    cni: {
+      label: "Core"
+      class: runtime
+      icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/coredns.svg
+    }
+
+    flux: {
+      label: "Flux"
+      class: runtime
+      icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/flux-cd.svg
+    }
+
+    metallb: {
+      label: "MetalLB"
+      class: runtime
+      icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/metallb.svg
+    }
+
+    traefik: {
+      label: "Traefik"
+      class: runtime
+      icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/traefik.svg
+    }
+
+    homepage: {
+      label: "Homepage"
+      class: runtime
+      icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homepage.png
+    }
+
+    gpu: {
+      label: "GPU"
+      class: runtime
+      icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nvidia.svg
+    }
+  }
+}
+
+workstation -> lan: "hosts"
+lan -> lenovo.kubernetes.traefik: "192.168.0.60"
+github -> lenovo.kubernetes.flux: "sync"
+lenovo.talos -> lenovo.kubernetes: "runs"
+lenovo.kubernetes.cni -> lenovo.kubernetes.traefik
+lenovo.kubernetes.flux -> lenovo.kubernetes.metallb
+lenovo.kubernetes.flux -> lenovo.kubernetes.traefik
+lenovo.kubernetes.flux -> lenovo.kubernetes.homepage
+lenovo.kubernetes.flux -> lenovo.kubernetes.gpu
+lenovo.kubernetes.traefik -> lenovo.kubernetes.homepage: "route"
