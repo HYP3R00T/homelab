@@ -1,5 +1,12 @@
 {
-    "recommendations": [
-        "redhat.vscode-yaml"
-    ]
+  "recommendations": [
+    "christian-kohler.path-intellisense",
+    "editorconfig.editorconfig",
+    "hverlin.mise-vscode",
+    "ms-kubernetes-tools.vscode-kubernetes-tools",
+    "redhat.vscode-yaml",
+    "rvben.rumdl",
+    "yzhang.markdown-all-in-one",
+    "zensical.zensical-studio"
+  ]
 }
