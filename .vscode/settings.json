@@ -2,8 +2,5 @@
   "explorer.excludeGitIgnore": true,
   "[yaml]": {
     "editor.defaultFormatter": "redhat.vscode-yaml"
-  },
-  "files.associations": {
-    "*.md": "python-markdown"
   }
 }
