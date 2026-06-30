@@ -2,7 +2,6 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: pv-linkding
-  namespace: linkding
   labels:
     app: linkding
 spec:
@@ -13,8 +12,9 @@ spec:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
-  local:
-    path: /data/linkding
+  hostPath:
+    path: /var/lib/linkding
+    type: DirectoryOrCreate
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -22,4 +22,4 @@ spec:
             - key: kubernetes.io/hostname
               operator: In
               values:
-                - homelab
+                - talos-4xj-mzi
