@@ -1,16 +1,3 @@
-- kubernetes:
-    cluster:
-      show: true
-      # Disable cluster metrics until metrics-server is installed.
-      cpu: false
-      memory: false
-      showLabel: false
-      label: "homelab"
-    nodes:
-      show: false
-      cpu: true
-      memory: true
-      showLabel: true
 - resources:
     # backend: resources
     expanded: true
