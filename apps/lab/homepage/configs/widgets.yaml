@@ -1,8 +1,9 @@
 - kubernetes:
     cluster:
       show: true
-      cpu: true
-      memory: true
+      # Disable cluster metrics until metrics-server is installed.
+      cpu: false
+      memory: false
       showLabel: false
       label: "homelab"
     nodes:
