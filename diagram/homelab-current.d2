@@ -1,8 +1,9 @@
 vars: {
   d2-config: {
-    theme-id: 101
+    theme-id: 300
+    # sketch: true
     layout-engine: elk
-    pad: 24
+    pad: 25
   }
 }
 
@@ -12,32 +13,31 @@ classes: {
   default: {
     style: {
       border-radius: 10
-      stroke-width: 1
       fill: transparent
     }
   }
   platform: {
     style: {
-      border-radius: 12
-      stroke-width: 2
-      fill: "#eef5ff"
+      border-radius: 10
     }
   }
   runtime: {
     style: {
       border-radius: 10
-      fill: "#f8fbff"
     }
   }
   note: {
     style: {
       border-radius: 10
-      fill: "#fff8e8"
       stroke-dash: 4
     }
   }
   edge_default: {
     style.animated: true
+    style.bold: true
+    style.stroke: black
+    style.fill: black
+    style.font-color: white
   }
 }
 
