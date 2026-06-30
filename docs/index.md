@@ -4,7 +4,7 @@ icon: lucide/rocket
 
 # Homelab
 
-This page now reflects the current live homelab architecture rather than the older README summary.
+This page reflects the current live homelab architecture.
 
 ## Current Architecture
 
@@ -16,10 +16,10 @@ This page now reflects the current live homelab architecture rather than the old
 - Flux CD as the GitOps control plane syncing this repository
 - MetalLB advertising `192.168.0.60` on the local network
 - Traefik as the default ingress controller behind that VIP
-- Homepage as the currently exposed user workload
+- Homepage and Linkding as the current user-facing workloads in `apps/lab`
 - NVIDIA GPU Operator and Node Feature Discovery active on the node
 
 ### Source of truth
 
-- Editable D2 source: `diagram/homelab-current.d2`
 - Rendered asset: `docs/assets/images/homelab-current.svg`
+- This page is a documentation snapshot. Flux manifests under `clusters/lab/`, `apps/lab/`, and `infrastructure/lab/` remain the operational source of truth.

@@ -6,7 +6,17 @@ repo_url = "https://github.com/HYP3R00T/homelab"
 site_author = "Rajesh Das"
 copyright = "Copyright &copy; 2026 Rajesh Das"
 
-nav = [{ Home = "index.md" }]
+nav = [
+  { Home = "index.md" },
+  { "Repository Structure" = "repository-structure.md" },
+  { "Adding a Service" = "adding-a-service.md" },
+  { Services = [
+    { Overview = "services/index.md" },
+    { Vault = "services/vault.md" },
+    { "External Secrets" = "services/external-secrets.md" },
+    { Cloudflared = "services/cloudflared.md" },
+  ] },
+]
 
 [project.theme]
 language = "en"
