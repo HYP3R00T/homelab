@@ -18,17 +18,31 @@ Use relative paths within the `docs/` folder.
 
 ## Linking to Code and Non-Documentation Files
 
-Use full GitHub permalinks when the rendered site needs to link to files outside `docs/`. Static documentation sites cannot reliably resolve relative paths outside the docs tree.
+Inside repository documentation, prefer repository-relative file paths written as code when referring to files outside `docs/`.
+
+Use full GitHub permalinks only when you explicitly need a clickable external link in published docs.
 
 **DO:**
 
-- `https://github.com/HYP3R00T/homelab/blob/main/zensical.toml`
-- `https://github.com/HYP3R00T/homelab/blob/main/infrastructure/lab/kustomization.yaml`
+- `zensical.toml`
+- `infrastructure/lab/kustomization.yaml`
+- `apps/base/linkding/kustomization.yaml`
 
 **DON'T:**
 
-- Relative paths: `[setup.sh](../../scripts/setup.sh)`
+- Absolute local filesystem paths such as `/home/user/project/...`
+- Broken relative links outside the docs tree
 - Links without protocol or host: `blob/main/file.py`
+
+## Portable Repository References
+
+Documentation should stay valid if the repository is moved to another machine or cloned into a different directory.
+
+That means:
+
+- do not use absolute local paths
+- prefer repository-relative paths in prose
+- only use clickable links when they are actually portable in the rendered environment
 
 ## Referencing Git History and Decisions
 
