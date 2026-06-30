@@ -11,4 +11,4 @@ spec:
     solvers:
       - http01:
           ingress:
-            class: traefik # k3s default; use nginx if using NGINX ingress
+            class: traefik

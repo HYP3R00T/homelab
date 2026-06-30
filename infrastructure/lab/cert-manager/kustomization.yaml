@@ -1,11 +1,22 @@
-# https://artifacthub.io/packages/helm/cloudnative-pg/cloudnative-pg
-# https://cloudnative-pg.io/charts/
+# Core cert-manager install plus a local CA chain for internal homelab services.
+# Keep public ACME issuers as a separate layer so internal-only clusters do not
+# accidentally reconcile unusable issuers by default.
 
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: cert-manager
 resources:
   - ../../base/cert-manager/
+  - ../../base/cert-manager-issuers-local/
+
+patches:
+  - target:
+      version: v1
+      kind: ConfigMap
+      name: cert-manager-values
+    patch: |-
+      - op: add
+        path: /metadata/namespace
+        value: cert-manager
 
 configMapGenerator:
   - name: cert-manager-values

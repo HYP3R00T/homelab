@@ -1,7 +1,7 @@
 - Homelab:
     - Linkding:
         icon: linkding.png
-        href: http://linkding.homelab.internal/
+        href: https://linkding.homelab.internal/
         # siteMonitor: http://linkding.linkding.svc.cluster.local
         target: _self
     - Mealie:
