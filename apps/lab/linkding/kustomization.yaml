@@ -5,5 +5,4 @@ resources:
   - ../../base/linkding/
   - persistentVolume.yaml
   - persistentVolumeClaim.yaml
-  - middleware-https-redirect.yaml
   - ingress.yaml

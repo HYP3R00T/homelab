@@ -1,6 +1,0 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-  - selfsigned-ca.yaml
-  - homelab-ca.yaml
-  - homelab-ca-issuer.yaml

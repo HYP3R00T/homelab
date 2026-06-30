@@ -3,15 +3,8 @@ kind: Ingress
 metadata:
   name: linkding-ingress
   namespace: linkding
-  annotations:
-    cert-manager.io/cluster-issuer: homelab-ca-issuer
-    traefik.ingress.kubernetes.io/router.middlewares: linkding-linkding-https-redirect@kubernetescrd
 spec:
   ingressClassName: traefik
-  tls:
-    - hosts:
-        - linkding.homelab.internal
-      secretName: linkding-tls
   rules:
     - host: linkding.homelab.internal
       http:

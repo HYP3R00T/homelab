@@ -3,7 +3,6 @@ kind: Kustomization
 resources:
   - metallb
   - traefik
-  - cert-manager
   # - cnpg
   # - cloudflared
   # - external-secrets
