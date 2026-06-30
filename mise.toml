@@ -4,7 +4,6 @@ helm = "latest"
 prek = "latest"
 rumdl = "latest"
 uv = "latest"
-watchexec = "latest"
 
 [settings]
 experimental = true
@@ -18,11 +17,3 @@ enter = "{{config_root}}/scripts/enter_project.sh"
 [tasks.docs]
 run = "uvx zensical serve"
 description = "Serve the documentation locally"
-
-[tasks.watch]
-description = "Watch a D2 file and auto-generate its SVG"
-run = "watchexec -e d2 --restart --clear -- bash ./scripts/d2_to_output.sh"
-
-[tasks.d2]
-description = "Render a D2 file to SVG"
-run = "bash ./scripts/d2_to_output.sh"
