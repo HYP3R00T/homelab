@@ -19,6 +19,3 @@ configMapGenerator:
     options:
       labels:
         app.kubernetes.io/name: homepage
-
-generatorOptions:
-  disableNameSuffixHash: true
