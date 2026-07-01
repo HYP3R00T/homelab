@@ -1,9 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+# Core infrastructure that should reconcile together.
+# Services with stricter rollout order are wired from clusters/lab/*.yaml instead.
 resources:
   - metallb
   - traefik
-  # - cnpg
-  # - cloudflared
-  # - external-secrets
-  # - vault
