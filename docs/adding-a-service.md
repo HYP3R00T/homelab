@@ -170,12 +170,13 @@ Sometimes a service should not be bundled into a broad layer.
 
 Secret backends are the clearest example. In this repository:
 
-- `clusters/lab/infrastructure.yaml` reconciles the shared core infrastructure bundle
-- `clusters/lab/vault.yaml` reconciles `infrastructure/lab/vault`
-- `clusters/lab/external-secrets.yaml` reconciles `infrastructure/lab/external-secrets`
-- `clusters/lab/cloudflared.yaml` reconciles `infrastructure/lab/cloudflared`
+- `clusters/lab/infrastructure.yaml` reconciles `infrastructure/lab/flux`
+- `infrastructure/lab/flux/core.yaml` reconciles the shared core infrastructure bundle
+- `infrastructure/lab/flux/vault.yaml` reconciles `infrastructure/lab/vault`
+- `infrastructure/lab/flux/external-secrets.yaml` reconciles `infrastructure/lab/external-secrets`
+- `infrastructure/lab/flux/cloudflared.yaml` reconciles `infrastructure/lab/cloudflared`
 
-This keeps the service folders simple while letting Flux express the real dependency chain through `dependsOn`.
+This keeps `clusters/lab` small while still letting Flux express the real dependency chain through `dependsOn` inside the infrastructure layer itself.
 
 ```text
 infrastructure

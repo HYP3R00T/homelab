@@ -10,7 +10,7 @@ In this repository, it is configured to read from Vault through a `ClusterSecret
 
 ## What it depends on
 
-- Vault, through `clusters/lab/vault.yaml`
+- Vault, through `infrastructure/lab/flux/vault.yaml`
 - The Vault-backed store definition in `infrastructure/lab/external-secrets/clusterSecretStore.yaml`
 
 ## What depends on it
@@ -20,7 +20,8 @@ In this repository, it is configured to read from Vault through a `ClusterSecret
 
 ## Where it is activated
 
-- `clusters/lab/external-secrets.yaml`
+- `clusters/lab/infrastructure.yaml`
+- `infrastructure/lab/flux/external-secrets.yaml`
 - `infrastructure/lab/external-secrets/kustomization.yaml`
 - `infrastructure/base/external-secrets/`
 

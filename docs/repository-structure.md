@@ -98,7 +98,7 @@ This is why commented entries in a `kustomization.yaml` matter so much. The file
 
 For simple layers, a cluster entrypoint can target the whole overlay such as `./apps/lab` or `./monitoring/lab`.
 
-For services that need stricter ordering, a cluster entrypoint can target a single service overlay directly. That is the pattern used for `vault`, `external-secrets`, and `cloudflared`.
+For infrastructure services that need stricter ordering, the cluster entrypoint can hand off to an internal infrastructure Flux layer. In this repository, `clusters/lab/infrastructure.yaml` points to `infrastructure/lab/flux`, and that folder contains the service-by-service `dependsOn` chain for `vault`, `external-secrets`, `cloudflared`, and `metallb-config`.
 
 ## Applying this to services in the repository
 

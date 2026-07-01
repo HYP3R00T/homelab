@@ -28,9 +28,10 @@ infrastructure
         └── cloudflared
 ```
 
-The cluster-level wiring for that chain lives in:
+The rollout wiring for that chain lives in:
 
 - `clusters/lab/infrastructure.yaml`
-- `clusters/lab/vault.yaml`
-- `clusters/lab/external-secrets.yaml`
-- `clusters/lab/cloudflared.yaml`
+- `infrastructure/lab/flux/core.yaml`
+- `infrastructure/lab/flux/vault.yaml`
+- `infrastructure/lab/flux/external-secrets.yaml`
+- `infrastructure/lab/flux/cloudflared.yaml`

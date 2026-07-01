@@ -10,16 +10,17 @@ Its job is to hold values that should not live directly in Git, such as API toke
 
 ## What it depends on
 
-- Core infrastructure from `clusters/lab/infrastructure.yaml`
+- Core infrastructure from `infrastructure/lab/flux/core.yaml`
 - The Vault overlay in `infrastructure/lab/vault`
 
 ## What depends on it
 
-- `external-secrets`, through `clusters/lab/external-secrets.yaml`
+- `external-secrets`, through `infrastructure/lab/flux/external-secrets.yaml`
 
 ## Where it is activated
 
-- `clusters/lab/vault.yaml`
+- `clusters/lab/infrastructure.yaml`
+- `infrastructure/lab/flux/vault.yaml`
 - `infrastructure/lab/vault/kustomization.yaml`
 - `infrastructure/base/vault/`
 
