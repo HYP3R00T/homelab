@@ -20,6 +20,9 @@ spec:
       containers:
         - name: linkding
           image: sissbruecker/linkding:1.45.0
+          env:
+            - name: LD_CSRF_TRUSTED_ORIGINS
+              value: "http://linkding.homelab.internal,https://linkding.homelab.internal"
           ports:
             - name: http
               containerPort: 9090
