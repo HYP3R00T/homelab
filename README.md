@@ -1,88 +1,86 @@
+<div align="center">
+
 # 🏡 homelab
 
-A production-grade, self-hosted Kubernetes homelab powered by [k3s](https://k3s.io) and [FluxCD](https://fluxcd.io), running declarative infrastructure with secrets management, monitoring, and a curated suite of personal apps.
+## Talos Linux homelab managed with FluxCD, Kustomize, and Helm
 
-> ⚙️ Built for reliability, automation, and modular GitOps workflows.
+[![Talos Linux](https://img.shields.io/badge/OS-Talos_Linux-0f62fe?style=for-the-badge&logo=linux&logoColor=white)](https://www.talos.dev/)
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-Single_Node-326ce5?style=for-the-badge&logo=kubernetes&logoColor=white)](https://kubernetes.io/)
+[![FluxCD](https://img.shields.io/badge/GitOps-FluxCD-5468ff?style=for-the-badge&logo=flux&logoColor=white)](https://fluxcd.io/)
+[![Docs](https://img.shields.io/badge/Docs-Zensical-0f766e?style=for-the-badge)](docs/)
+
+A self-hosted Kubernetes lab built for clean GitOps workflows, shared platform services, and a small but intentional app layer.
+
+</div>
+
+> ⚙️ The repository is the source of truth for the cluster. Some services are active today, while others are staged here before they are reconciled.
 
 ## 🧰 Stack Overview
 
-| Layer           | Tooling                                                                                                                                  |
-|-----------------|------------------------------------------------------------------------------------------------------------------------------------------|
-| Kubernetes      | [k3s](https://k3s.io)                                                                                                                    |
-| GitOps          | [FluxCD](https://fluxcd.io)                                                                                                              |
-| Secrets Mgmt    | [HashiCorp Vault](https://www.vaultproject.io) + [ESO](https://external-secrets.io)                                                      |
-| Networking      | [Cloudflared](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/) + [Traefik (in-built)](https://doc.traefik.io) |
-| Monitoring      | [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)                      |
-| App Packaging   | [Helm](https://helm.sh), [Kustomize](https://kubectl.docs.kubernetes.io/references/kustomize/)                                           |
-| OS Environment  | Ubuntu 24.04.2 LTS on Lenovo Legion Y540                                                                                                 |
+| Layer | Tooling |
+|-------|---------|
+| Kubernetes | [Talos Linux](https://www.talos.dev/) |
+| GitOps | [FluxCD](https://fluxcd.io/) |
+| Packaging | [Helm](https://helm.sh) + [Kustomize](https://kubectl.docs.kubernetes.io/references/kustomize/) |
+| Networking | [MetalLB](https://metallb.universe.tf/) + [Traefik](https://doc.traefik.io/traefik/) |
+| Apps | Homepage + Linkding |
+| Documentation | Zensical in `docs/` |
 
 ## 📁 Repository Structure
 
-```sh
+```text
 .
-├── apps/                # Application manifests (base/lab overlays)
-├── cluster/             # Cluster-level definitions, Flux bootstrap
-├── docs/                # Documentation site (MkDocs)
-├── infrastructure/      # Infrastructure components (Vault, ESO, Cloudflared)
-├── monitoring/          # Monitoring stack (Prometheus, Grafana)
-├── mkdocs.yml           # MkDocs config for documentation site
-└── README.md
+├── apps/            # User-facing workloads
+├── infrastructure/  # Shared platform capabilities
+├── monitoring/      # Observability layer
+├── clusters/        # Flux entrypoints for the lab cluster
+└── docs/            # Documentation site
 ```
 
-> ✅ `base/` holds reusable blueprints.
-> 🧪 `lab/` contains environment-specific overlays.
+> ✅ `base/` holds reusable service definitions.
+>
+> 🧪 `lab/` holds homelab-specific overlays.
+>
+> 🎛️ `clusters/` decides what Flux actually reconciles.
 
-## 🚀 Deployed Applications
+## 🚀 Current State
 
-| App                  | Purpose                        |
-|----------------------|--------------------------------|
-| Homepage             | Custom home dashboard          |
-| Linkding             | Bookmark manager               |
-| Mealie               | Recipe management              |
-| Vault                | Secrets management backend     |
-| ESO                  | Sync Vault secrets to K8s      |
-| Cloudflared          | Secure tunneling to cluster    |
-| Prometheus + Grafana | Monitoring + Dashboards        |
+### Active now
 
-All apps are declaratively managed using Helm & Kustomize via FluxCD.
+| Layer | Active services |
+|-------|-----------------|
+| Apps | `homepage`, `linkding` |
+| Infrastructure | `metallb`, `traefik` |
+| Monitoring | none enabled right now |
 
-## 🔐 Secrets & Security
+### Staged in the repository
 
-Secrets are managed using:
+- `vault`
+- `external-secrets`
+- `cloudflared`
+- `cnpg`
+- monitoring components
 
-- **HashiCorp Vault** (deployed in-cluster)
-- **External Secrets Operator (ESO)** using the Kubernetes auth method
-- Cloudflared tunnels expose apps securely without port forwarding or public IPs
+These exist in the repo because the design work is happening here first, but they are not all live in the cluster yet.
 
-## 📦 GitOps Workflow
+## 🧭 How It Flows
 
-This homelab follows a pure GitOps model:
+1. Manifests live in `apps/`, `infrastructure/`, and `monitoring/`.
+2. `base/` defines the reusable service shape.
+3. `lab/` adds homelab-specific values, ingress, storage, and overlays.
+4. `clusters/lab/*.yaml` tells Flux what to reconcile and in what order.
 
-1. **All manifests are committed to Git**
-2. **FluxCD watches the repo and applies changes**
-3. **Secrets are synced via ESO from Vault**
-4. **Each component is modular, reusable, and declaratively configured**
+## 📚 Documentation
 
-## 🖥️ Host Specs
-
-| Spec       | Value                          |
-|------------|--------------------------------|
-| OS         | Ubuntu 24.04.2 LTS             |
-| Machine    | Lenovo Legion Y540 (i5-9300H)  |
-| Memory     | 16 GB                          |
-| GPU        | NVIDIA GTX 1650 Mobile         |
-| Cluster    | Bare-metal, single-node (k3s)  |
+- `docs/index.md` shows the current architecture
+- `docs/repository-structure.md` explains how services are grouped
+- `docs/adding-a-service.md` explains the `base/` and `lab/` overlay pattern
+- `docs/services/` documents individual infrastructure services and dependencies
 
 ## 🧠 Philosophy
 
-This setup is built for:
-
-- **Learning** Kubernetes, GitOps, and security best practices
-- **Running production-grade self-hosted tools**
-- **Keeping everything declarative, minimal, and portable**
-
-> Inspired by the principles of GitOps, Platform Engineering, and Zero Trust Access.
-
-## 🤝 License
-
-MIT - feel free to fork, clone, and adapt for your own lab!
+- Keep the cluster declarative.
+- Separate apps from shared infrastructure.
+- Stage services before enabling them.
+- Keep monitoring as its own concern.
+- Make the repo easier to understand before making it more powerful.
