@@ -70,8 +70,10 @@ server:
         - -c
         - mkdir -p /data/vault && chown -R 100:1000 /data/vault && chmod 0770 /data/vault
       securityContext:
+        runAsNonRoot: false
         runAsUser: 0
         runAsGroup: 0
+        allowPrivilegeEscalation: false
       volumeMounts:
         - name: vault-data
           mountPath: /data/vault
