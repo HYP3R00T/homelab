@@ -12,8 +12,9 @@ spec:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
-  local:
-    path: /data/vault
+  hostPath:
+    path: /var/lib/vault
+    type: DirectoryOrCreate
   nodeAffinity:
     required:
       nodeSelectorTerms:
