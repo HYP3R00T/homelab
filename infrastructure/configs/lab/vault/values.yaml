@@ -18,7 +18,9 @@ server:
 
   livenessProbe:
     enabled: true
-    path: /v1/sys/health?standbyok=true
+    # Keep the pod alive while Vault is sealed so the UI init/unseal flow
+    # is not interrupted by kubelet restarts during first-time bootstrap.
+    path: /v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204
     initialDelaySeconds: 60
     periodSeconds: 10
     failureThreshold: 6
