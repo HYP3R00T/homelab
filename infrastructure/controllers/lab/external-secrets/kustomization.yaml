@@ -5,7 +5,6 @@ kind: Kustomization
 namespace: external-secrets
 resources:
   - ../../base/external-secrets/
-  - clusterSecretStore.yaml
 
 configMapGenerator:
   - name: external-secrets-values

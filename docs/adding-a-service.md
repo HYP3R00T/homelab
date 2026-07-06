@@ -107,7 +107,7 @@ generatorOptions:
   disableNameSuffixHash: true
 ```
 
-This is the pattern used in `infrastructure/lab/traefik/kustomization.yaml` and `monitoring/lab/kube-prometheus-stack/kustomization.yaml`.
+This is the pattern used in `infrastructure/controllers/lab/traefik/kustomization.yaml` and `monitoring/lab/kube-prometheus-stack/kustomization.yaml`.
 
 ## How a new service gets added
 
@@ -159,7 +159,7 @@ The parent `kustomization.yaml` must include it, and the cluster entrypoint must
 For example:
 
 - `apps/lab/kustomization.yaml` decides which app overlays are part of `apps/lab`
-- `infrastructure/lab/kustomization.yaml` decides which infrastructure overlays are enabled
+- `infrastructure/controllers/lab/kustomization.yaml` decides which controller overlays are enabled
 - `monitoring/lab/kustomization.yaml` decides which monitoring overlays are enabled
 
 That is how a service can be present in the repository but still not active in the cluster.
@@ -170,11 +170,9 @@ Sometimes a service should not be bundled into a broad layer.
 
 Secret backends are the clearest example. In this repository:
 
-- `clusters/lab/infrastructure.yaml` reconciles `infrastructure/lab/flux`
-- `infrastructure/lab/flux/core.yaml` reconciles the shared core infrastructure bundle
-- `infrastructure/lab/flux/vault.yaml` reconciles `infrastructure/lab/vault`
-- `infrastructure/lab/flux/external-secrets.yaml` reconciles `infrastructure/lab/external-secrets`
-- `infrastructure/lab/flux/cloudflared.yaml` reconciles `infrastructure/lab/cloudflared`
+- `clusters/lab/infrastructure-controllers.yaml` reconciles `infrastructure/controllers/lab`
+- `clusters/lab/infrastructure-configs.yaml` reconciles `infrastructure/configs/lab`
+- `infrastructure/configs/lab/kustomization.yaml` bundles the shared infrastructure config overlays
 
 This keeps `clusters/lab` small while still letting Flux express the real dependency chain through `dependsOn` inside the infrastructure layer itself.
 

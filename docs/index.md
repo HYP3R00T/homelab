@@ -22,4 +22,4 @@ This page reflects the current live homelab architecture.
 ### Source of truth
 
 - Rendered asset: `docs/assets/images/homelab-current.svg`
-- This page is a documentation snapshot. Flux manifests under `clusters/lab/`, `apps/lab/`, and `infrastructure/lab/` remain the operational source of truth.
+- This page is a documentation snapshot. Flux manifests under `clusters/lab/`, `apps/lab/`, and `infrastructure/` remain the operational source of truth.

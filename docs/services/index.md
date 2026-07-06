@@ -30,8 +30,6 @@ infrastructure
 
 The rollout wiring for that chain lives in:
 
-- `clusters/lab/infrastructure.yaml`
-- `infrastructure/lab/flux/core.yaml`
-- `infrastructure/lab/flux/vault.yaml`
-- `infrastructure/lab/flux/external-secrets.yaml`
-- `infrastructure/lab/flux/cloudflared.yaml`
+- `clusters/lab/infrastructure-controllers.yaml`
+- `clusters/lab/infrastructure-configs.yaml`
+- `infrastructure/configs/lab/kustomization.yaml`
