@@ -4,3 +4,6 @@ site
 # temp
 .cache
 .rumdl_cache
+
+# sensitive
+.env
