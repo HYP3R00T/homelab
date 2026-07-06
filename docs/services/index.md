@@ -30,6 +30,6 @@ infrastructure
 
 The rollout wiring for that chain lives in:
 
-- `clusters/lab/infrastructure-controllers.yaml`
-- `clusters/lab/infrastructure-configs.yaml`
-- `infrastructure/configs/lab/kustomization.yaml`
+- `gitops/clusters/lab/infrastructure-controllers.yaml`
+- `gitops/clusters/lab/infrastructure-configs.yaml`
+- `gitops/infrastructure/configs/lab/kustomization.yaml`

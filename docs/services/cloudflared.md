@@ -10,7 +10,7 @@ It is part of infrastructure because it is shared access plumbing, not a user-fa
 
 ## What it depends on
 
-- External Secrets, through `clusters/lab/infrastructure-controllers.yaml`
+- External Secrets, through `gitops/clusters/lab/infrastructure-controllers.yaml`
 - A synced Kubernetes secret named `cloudflared-secret`
 - A Vault value at `cloudflared/tunnel` with the property `token`
 
@@ -20,12 +20,12 @@ It is part of infrastructure because it is shared access plumbing, not a user-fa
 
 ## Where it is activated
 
-- `clusters/lab/infrastructure-controllers.yaml`
-- `clusters/lab/infrastructure-configs.yaml`
-- `infrastructure/configs/lab/cloudflared/kustomization.yaml`
-- `infrastructure/configs/lab/cloudflared/kustomization.yaml`
-- `infrastructure/configs/lab/cloudflared/externalSecret.yaml`
-- `infrastructure/configs/base/cloudflared/`
+- `gitops/clusters/lab/infrastructure-controllers.yaml`
+- `gitops/clusters/lab/infrastructure-configs.yaml`
+- `gitops/infrastructure/configs/lab/cloudflared/kustomization.yaml`
+- `gitops/infrastructure/configs/lab/cloudflared/kustomization.yaml`
+- `gitops/infrastructure/configs/lab/cloudflared/externalSecret.yaml`
+- `gitops/infrastructure/configs/base/cloudflared/`
 
 ## Current repository intent
 

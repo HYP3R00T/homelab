@@ -10,19 +10,21 @@ This repository is grouped by role. The goal is to keep it easy to understand wh
 
 ```text
 .
-├── apps/            # User-facing workloads
-├── infrastructure/  # Platform services that support the cluster
-├── monitoring/      # Observability and inspection layer
-└── clusters/        # Flux entrypoints that activate things in a cluster
+├── gitops/
+│   ├── apps/              # User-facing workloads
+│   ├── infrastructure/    # Platform services that support the cluster
+│   ├── monitoring/        # Observability and inspection layer
+│   └── clusters/          # Flux entrypoints that activate things in a cluster
+└── terraform/             # Terraform-managed infrastructure config
 ```
 
-At the simplest level, `apps/` is for things people use, `infrastructure/` is for the shared capabilities those apps need, `monitoring/` is for observing both layers, and `clusters/` is for deciding what actually goes live.
+At the simplest level, `gitops/` contains the Kubernetes manifests Flux applies to the cluster, while `terraform/` is reserved for infrastructure that will be managed outside the GitOps path. Inside `gitops/`, `apps/` is for things people use, `infrastructure/` is for the shared capabilities those apps need, `monitoring/` is for observing both layers, and `clusters/` is for deciding what actually goes live.
 
 ## Apps
 
-`apps/` is for services that are the actual destination.
+`gitops/apps/` is for services that are the actual destination.
 
-These are the things a user opens, signs into, and actively uses. They are built on top of the shared capabilities provided by `infrastructure/`.
+These are the things a user opens, signs into, and actively uses. They are built on top of the shared capabilities provided by `gitops/infrastructure/`.
 
 Examples:
 
@@ -35,11 +37,11 @@ Examples:
     If it disappeared, would a human notice before the platform noticed?
     Is this the destination rather than the plumbing?
 
-If the answer is mostly yes, it belongs in `apps/`.
+If the answer is mostly yes, it belongs in `gitops/apps/`.
 
 ## Infrastructure
 
-`infrastructure/` is for services that support the cluster or support other services.
+`gitops/infrastructure/` is for services that support the cluster or support other services.
 
 This is the base layer that applications depend on. These services usually do not exist for their own sake. They exist so applications can receive traffic, use certificates, store secrets, reach databases, or be exposed externally when needed.
 
@@ -61,13 +63,13 @@ In this repository, infrastructure means shared capabilities such as:
 - database services
 - controlled external exposure
 
-If multiple applications would rely on it as a common platform feature, it belongs in `infrastructure/`.
+If multiple applications would rely on it as a common platform feature, it belongs in `gitops/infrastructure/`.
 
 ## Monitoring
 
-`monitoring/` is for observability.
+`gitops/monitoring/` is for observability.
 
-Monitoring is separate because it observes both `infrastructure/` and `apps/`. Its job is to tell us what is happening across the system, not to serve end users directly and not to provide platform capabilities.
+Monitoring is separate because it observes both `gitops/infrastructure/` and `gitops/apps/`. Its job is to tell us what is happening across the system, not to serve end users directly and not to provide platform capabilities.
 
 Examples:
 
@@ -77,13 +79,13 @@ Examples:
 - kube-state-metrics
 - node exporters
 
-If its primary job is to measure, record, alert, or explain what is happening in the system, it belongs in `monitoring/`.
+If its primary job is to measure, record, alert, or explain what is happening in the system, it belongs in `gitops/monitoring/`.
 
-Keep `monitoring/` as a separate top-level folder. It has a different responsibility from infrastructure: infrastructure enables workloads, while monitoring observes infrastructure and applications together.
+Keep `gitops/monitoring/` as a separate top-level folder. It has a different responsibility from infrastructure: infrastructure enables workloads, while monitoring observes infrastructure and applications together.
 
-## What `clusters/` does
+## What `gitops/clusters/` does
 
-`clusters/` is the activation layer.
+`gitops/clusters/` is the activation layer.
 
 This folder does not define the services themselves. It tells Flux which parts of the repository should be applied to a given cluster.
 
@@ -96,15 +98,15 @@ That means a manifest can exist in the repository without being live in the clus
 
 This is why commented entries in a `kustomization.yaml` matter so much. The files may exist, but the cluster will not reconcile them until the cluster wiring includes them.
 
-For simple layers, a cluster entrypoint can target the whole overlay such as `./apps/lab` or `./monitoring/lab`.
+For simple layers, a cluster entrypoint can target the whole overlay such as `./gitops/apps/lab` or `./gitops/monitoring/lab`.
 
-For infrastructure services that need stricter ordering, the cluster entrypoint can point directly at the environment overlays. In this repository, `clusters/lab/infrastructure-controllers.yaml` points to `infrastructure/controllers/lab`, and `clusters/lab/infrastructure-configs.yaml` points to `infrastructure/configs/lab`. The controller stage waits for the controller Helm releases to become healthy, and the config stage applies shared resources such as Vault, MetalLB config, External Secrets store config, and Cloudflared.
+For infrastructure services that need stricter ordering, the cluster entrypoint can point directly at the environment overlays. In this repository, `gitops/clusters/lab/infrastructure-controllers.yaml` points to `gitops/infrastructure/controllers/lab`, and `gitops/clusters/lab/infrastructure-configs.yaml` points to `gitops/infrastructure/configs/lab`. The controller stage waits for the controller Helm releases to become healthy, and the config stage applies shared resources such as Vault, MetalLB config, External Secrets store config, and Cloudflared.
 
 ## Applying this to services in the repository
 
-- `apps/`: `Homepage`, `Linkding`
-- `infrastructure/`: `Traefik`, `MetalLB`, `Vault`, `External Secrets Operator`, `Cloudflared`
-- `monitoring/`: `Prometheus`, `Grafana`
+- `gitops/apps/`: `Homepage`, `Linkding`
+- `gitops/infrastructure/`: `Traefik`, `MetalLB`, `Vault`, `External Secrets Operator`, `Cloudflared`
+- `gitops/monitoring/`: `Prometheus`, `Grafana`
 
 !!! note "Staged vs active"
     A service can belong to one of these folders even when it is not currently enabled.
@@ -115,6 +117,6 @@ For infrastructure services that need stricter ordering, the cluster entrypoint 
 
 Before adding a new service, answer one question first: what role does this service play in the homelab?
 
-If it is a shared capability, it belongs in `infrastructure/`.
-If it is something people use directly, it belongs in `apps/`.
-If it watches the whole system, it belongs in `monitoring/`.
+If it is a shared capability, it belongs in `gitops/infrastructure/`.
+If it is something people use directly, it belongs in `gitops/apps/`.
+If it watches the whole system, it belongs in `gitops/monitoring/`.

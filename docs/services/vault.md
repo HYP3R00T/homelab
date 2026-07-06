@@ -10,20 +10,20 @@ Its job is to hold values that should not live directly in Git, such as API toke
 
 ## What it depends on
 
-- Core infrastructure from `clusters/lab/infrastructure-controllers.yaml`
-- The Vault overlay in `infrastructure/configs/lab/vault`
+- Core infrastructure from `gitops/clusters/lab/infrastructure-controllers.yaml`
+- The Vault overlay in `gitops/infrastructure/configs/lab/vault`
 
 ## What depends on it
 
-- `external-secrets`, through `clusters/lab/infrastructure-controllers.yaml`
+- `external-secrets`, through `gitops/clusters/lab/infrastructure-controllers.yaml`
 
 ## Where it is activated
 
-- `clusters/lab/infrastructure-controllers.yaml`
-- `clusters/lab/infrastructure-configs.yaml`
-- `infrastructure/configs/lab/vault/kustomization.yaml`
-- `infrastructure/configs/lab/vault/kustomization.yaml`
-- `infrastructure/controllers/base/vault/`
+- `gitops/clusters/lab/infrastructure-controllers.yaml`
+- `gitops/clusters/lab/infrastructure-configs.yaml`
+- `gitops/infrastructure/configs/lab/vault/kustomization.yaml`
+- `gitops/infrastructure/configs/lab/vault/kustomization.yaml`
+- `gitops/infrastructure/controllers/base/vault/`
 
 ## Important note
 

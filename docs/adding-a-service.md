@@ -9,17 +9,17 @@ This repository uses a `base/` and `lab/` overlay pattern so we can separate reu
 ## At a glance
 
 ```text
-apps/
-├── base/
-│   └── linkding/
-└── lab/
-    └── linkding/
-
-infrastructure/
-├── base/
-│   └── traefik/
-└── lab/
-    └── traefik/
+gitops/
+├── apps/
+│   ├── base/
+│   │   └── linkding/
+│   └── lab/
+│       └── linkding/
+└── infrastructure/
+    ├── base/
+    │   └── traefik/
+    └── lab/
+        └── traefik/
 ```
 
 The idea is simple:
@@ -54,7 +54,7 @@ resources:
   - service.yaml
 ```
 
-This is how `apps/base/linkding/kustomization.yaml` works.
+This is how `gitops/apps/base/linkding/kustomization.yaml` works.
 
 ## What goes in `lab/`
 
@@ -81,7 +81,7 @@ resources:
   - ingress.yaml
 ```
 
-This is how `apps/lab/linkding/kustomization.yaml` works.
+This is how `gitops/apps/lab/linkding/kustomization.yaml` works.
 
 ## Helm-based services
 
@@ -107,13 +107,13 @@ generatorOptions:
   disableNameSuffixHash: true
 ```
 
-This is the pattern used in `infrastructure/controllers/lab/traefik/kustomization.yaml` and `monitoring/lab/kube-prometheus-stack/kustomization.yaml`.
+This is the pattern used in `gitops/infrastructure/controllers/lab/traefik/kustomization.yaml` and `gitops/monitoring/lab/kube-prometheus-stack/kustomization.yaml`.
 
 ## How a new service gets added
 
 When adding a new service, use this flow:
 
-1. Decide where it belongs: `apps/`, `infrastructure/`, or `monitoring/`.
+1. Decide where it belongs: `gitops/apps/`, `gitops/infrastructure/`, or `gitops/monitoring/`.
 2. Create a `base/<service>/` folder for the reusable service definition.
 3. Create a `lab/<service>/` folder for homelab-specific configuration.
 4. Add the service to the parent `kustomization.yaml` in that layer.
@@ -124,7 +124,7 @@ When adding a new service, use this flow:
 If we add a new application called `mealie`, the structure would look like:
 
 ```text
-apps/
+gitops/apps/
 ├── base/
 │   └── mealie/
 │       ├── kustomization.yaml
@@ -139,7 +139,7 @@ apps/
         └── persistentVolumeClaim.yaml
 ```
 
-Then `apps/lab/kustomization.yaml` would include `mealie` as one of its resources.
+Then `gitops/apps/lab/kustomization.yaml` would include `mealie` as one of its resources.
 
 ## Why this pattern helps
 
@@ -158,9 +158,9 @@ The parent `kustomization.yaml` must include it, and the cluster entrypoint must
 
 For example:
 
-- `apps/lab/kustomization.yaml` decides which app overlays are part of `apps/lab`
-- `infrastructure/controllers/lab/kustomization.yaml` decides which controller overlays are enabled
-- `monitoring/lab/kustomization.yaml` decides which monitoring overlays are enabled
+- `gitops/apps/lab/kustomization.yaml` decides which app overlays are part of `gitops/apps/lab`
+- `gitops/infrastructure/controllers/lab/kustomization.yaml` decides which controller overlays are enabled
+- `gitops/monitoring/lab/kustomization.yaml` decides which monitoring overlays are enabled
 
 That is how a service can be present in the repository but still not active in the cluster.
 
@@ -170,14 +170,14 @@ Sometimes a service should not be bundled into a broad layer.
 
 Secret backends are the clearest example. In this repository:
 
-- `clusters/lab/infrastructure-controllers.yaml` reconciles `infrastructure/controllers/lab`
-- `clusters/lab/infrastructure-configs.yaml` reconciles `infrastructure/configs/lab`
-- `infrastructure/configs/lab/kustomization.yaml` bundles the shared infrastructure config overlays
+- `gitops/clusters/lab/infrastructure-controllers.yaml` reconciles `gitops/infrastructure/controllers/lab`
+- `gitops/clusters/lab/infrastructure-configs.yaml` reconciles `gitops/infrastructure/configs/lab`
+- `gitops/infrastructure/configs/lab/kustomization.yaml` bundles the shared infrastructure config overlays
 
-This keeps `clusters/lab` small while still letting Flux express the real dependency chain through `dependsOn` inside the infrastructure layer itself.
+This keeps `gitops/clusters/lab` small while still letting Flux express the real dependency chain through `dependsOn` inside the infrastructure layer itself.
 
 ```text
-infrastructure
+gitops/infrastructure
 └── vault
     └── external-secrets
         └── cloudflared

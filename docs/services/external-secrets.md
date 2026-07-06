@@ -10,20 +10,20 @@ In this repository, it is configured to read from Vault through a `ClusterSecret
 
 ## What it depends on
 
-- Vault, through `clusters/lab/infrastructure-configs.yaml`
-- The Vault-backed store definition in `infrastructure/configs/lab/external-secrets/clusterSecretStore.yaml`
+- Vault, through `gitops/clusters/lab/infrastructure-configs.yaml`
+- The Vault-backed store definition in `gitops/infrastructure/configs/lab/external-secrets/clusterSecretStore.yaml`
 
 ## What depends on it
 
-- `cloudflared`, through `infrastructure/configs/lab/cloudflared/externalSecret.yaml`
+- `cloudflared`, through `gitops/infrastructure/configs/lab/cloudflared/externalSecret.yaml`
 - Any future workload that should receive secrets from Vault instead of storing them in Git
 
 ## Where it is activated
 
-- `clusters/lab/infrastructure-controllers.yaml`
-- `clusters/lab/infrastructure-configs.yaml`
-- `infrastructure/controllers/lab/external-secrets/kustomization.yaml`
-- `infrastructure/controllers/base/external-secrets/`
+- `gitops/clusters/lab/infrastructure-controllers.yaml`
+- `gitops/clusters/lab/infrastructure-configs.yaml`
+- `gitops/infrastructure/controllers/lab/external-secrets/kustomization.yaml`
+- `gitops/infrastructure/controllers/base/external-secrets/`
 
 ## Current repository intent
 

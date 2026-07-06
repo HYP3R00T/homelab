@@ -29,4 +29,4 @@ spec:
     kind: GitRepository
     url: "https://github.com/HYP3R00T/homelab.git"
     ref: "refs/heads/main"
-    path: "clusters/lab"
+    path: "gitops/clusters/lab"

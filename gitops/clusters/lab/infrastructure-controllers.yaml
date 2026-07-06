@@ -10,7 +10,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./infrastructure/controllers/lab
+  path: ./gitops/infrastructure/controllers/lab
   prune: true
   healthChecks:
     - apiVersion: helm.toolkit.fluxcd.io/v2

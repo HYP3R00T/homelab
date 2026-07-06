@@ -12,5 +12,5 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./infrastructure/configs/lab
+  path: ./gitops/infrastructure/configs/lab
   prune: true

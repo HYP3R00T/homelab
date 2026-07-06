@@ -30,18 +30,22 @@ A self-hosted Kubernetes lab built for clean GitOps workflows, shared platform s
 
 ```text
 .
-├── apps/            # User-facing workloads
-├── infrastructure/  # Shared platform capabilities
-├── monitoring/      # Observability layer
-├── clusters/        # Flux entrypoints for the lab cluster
-└── docs/            # Documentation site
+├── gitops/                 # Flux-managed Kubernetes manifests
+│   ├── apps/              # User-facing workloads
+│   ├── infrastructure/    # Shared platform capabilities
+│   ├── monitoring/        # Observability layer
+│   └── clusters/          # Flux entrypoints for the lab cluster
+├── terraform/             # Terraform-managed platform config
+└── docs/                  # Documentation site
 ```
 
 > ✅ `base/` holds reusable service definitions.
 >
 > 🧪 `lab/` holds homelab-specific overlays.
 >
-> 🎛️ `clusters/` decides what Flux actually reconciles.
+> 🎛️ `gitops/clusters/` decides what Flux actually reconciles.
+>
+> 🏗️ `terraform/` is reserved for non-GitOps infrastructure configuration managed outside Kubernetes.
 
 ## 🚀 Current State
 
@@ -65,10 +69,10 @@ These exist in the repo because the design work is happening here first, but the
 
 ## 🧭 How It Flows
 
-1. Manifests live in `apps/`, `infrastructure/`, and `monitoring/`.
+1. Manifests live in `gitops/apps/`, `gitops/infrastructure/`, and `gitops/monitoring/`.
 2. `base/` defines the reusable service shape.
 3. `lab/` adds homelab-specific values, ingress, storage, and overlays.
-4. `clusters/lab/*.yaml` tells Flux what to reconcile and in what order.
+4. `gitops/clusters/lab/*.yaml` tells Flux what to reconcile and in what order.
 
 ## 📚 Documentation
 

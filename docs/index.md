@@ -16,10 +16,10 @@ This page reflects the current live homelab architecture.
 - Flux CD as the GitOps control plane syncing this repository
 - MetalLB advertising `192.168.0.60` on the local network
 - Traefik as the default ingress controller behind that VIP
-- Homepage and Linkding as the current user-facing workloads in `apps/lab`
+- Homepage and Linkding as the current user-facing workloads in `gitops/apps/lab`
 - NVIDIA GPU Operator and Node Feature Discovery active on the node
 
 ### Source of truth
 
 - Rendered asset: `docs/assets/images/homelab-current.svg`
-- This page is a documentation snapshot. Flux manifests under `clusters/lab/`, `apps/lab/`, and `infrastructure/` remain the operational source of truth.
+- This page is a documentation snapshot. Flux manifests under `gitops/clusters/lab/`, `gitops/apps/lab/`, and `gitops/infrastructure/` remain the operational source of truth.
