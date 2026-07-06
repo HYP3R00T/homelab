@@ -4,9 +4,13 @@ helm = "latest"
 prek = "latest"
 rumdl = "latest"
 uv = "latest"
+vault = "latest"
 
 [settings]
 experimental = true
+
+[env]
+_.file = '.env' # for sensitive data
 
 [shell_alias]
 k = "kubectl"
