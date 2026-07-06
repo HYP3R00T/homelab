@@ -23,10 +23,15 @@ server:
     periodSeconds: 10
     failureThreshold: 6
 
-  # Security context to make PV ownership less problematic (vault runs as uid 100)
+  # The chart expects pod/container security contexts under separate keys.
   securityContext:
-    runAsUser: 100
-    fsGroup: 100
+    pod:
+      runAsNonRoot: true
+      runAsUser: 100
+      runAsGroup: 1000
+      fsGroup: 1000
+    container:
+      allowPrivilegeEscalation: false
 
   standalone:
     enabled: false
@@ -56,6 +61,20 @@ server:
 
   dataStorage:
     enabled: false
+
+  extraInitContainers:
+    - name: vault-permissions
+      image: busybox:1.36
+      command:
+        - sh
+        - -c
+        - mkdir -p /data/vault && chown -R 100:1000 /data/vault && chmod 0770 /data/vault
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+      volumeMounts:
+        - name: vault-data
+          mountPath: /data/vault
 
   volumes:
     - name: vault-data
