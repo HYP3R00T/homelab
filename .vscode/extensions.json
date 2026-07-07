@@ -2,6 +2,8 @@
   "recommendations": [
     "christian-kohler.path-intellisense",
     "editorconfig.editorconfig",
+    "hashicorp.hcl",
+    "hashicorp.terraform",
     "hverlin.mise-vscode",
     "ms-kubernetes-tools.vscode-kubernetes-tools",
     "redhat.vscode-yaml",
