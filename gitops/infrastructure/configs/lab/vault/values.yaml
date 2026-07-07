@@ -14,6 +14,11 @@ injector:
       maxUnavailable: 1
 
 server:
+  # In this single-node homelab, automatic restarts are easier to reason about
+  # than OnDelete because Flux/Helm changes should take effect without a manual
+  # pod deletion step.
+  updateStrategyType: RollingUpdate
+
   resources:
     requests: { cpu: 100m, memory: 256Mi }
     limits: { cpu: 500m, memory: 512Mi }
