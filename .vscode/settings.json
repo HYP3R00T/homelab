@@ -1,5 +1,8 @@
 {
   "explorer.excludeGitIgnore": true,
+  "[terraform]": {
+    "editor.defaultFormatter": "hashicorp.terraform"
+  },
   "[yaml]": {
     "editor.defaultFormatter": "redhat.vscode-yaml"
   }
