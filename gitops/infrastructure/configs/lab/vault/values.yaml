@@ -51,7 +51,7 @@ server:
     enabled: true
     replicas: 1
     # make Vault advertise an externally-consistent api_addr for the UI/ingress
-    apiAddr: "http://vault.homelab.internal:8200"
+    apiAddr: "http://vault.homelab.internal"
     raft:
       enabled: true
       config: |
