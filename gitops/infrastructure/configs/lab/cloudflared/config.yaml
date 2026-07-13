@@ -1,0 +1,7 @@
+tunnel: 0d5a069a-778d-4538-b5e5-58b45532b12a
+credentials-file: /etc/cloudflared/credentials/credentials.json
+
+ingress:
+  - hostname: linkding.hyperoot.dev
+    service: http://linkding-service.linkding.svc.cluster.local:9090
+  - service: http_status:404

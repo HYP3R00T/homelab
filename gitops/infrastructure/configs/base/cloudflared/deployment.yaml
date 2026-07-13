@@ -13,22 +13,32 @@ spec:
       labels:
         app: cloudflared
     spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: cloudflared
           image: cloudflare/cloudflared:2025.11.1
-          env:
-            - name: TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: cloudflared-secret
-                  key: token
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
           command:
             - "cloudflared"
             - "--no-autoupdate"
             - "tunnel"
+            - "--config"
+            - "/etc/cloudflared/config/config.yaml"
             - "run"
-            - "--token"
-            - "$(TOKEN)"
+          volumeMounts:
+            - name: config
+              mountPath: /etc/cloudflared/config
+              readOnly: true
+            - name: credentials
+              mountPath: /etc/cloudflared/credentials
+              readOnly: true
           resources:
             limits:
               cpu: 500m
@@ -36,3 +46,13 @@ spec:
             requests:
               cpu: 100m
               memory: 128Mi
+      volumes:
+        - name: config
+          configMap:
+            name: cloudflared-config
+        - name: credentials
+          secret:
+            secretName: cloudflared-secret
+            items:
+              - key: credentials.json
+                path: credentials.json

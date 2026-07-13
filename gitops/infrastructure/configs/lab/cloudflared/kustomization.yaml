@@ -6,3 +6,11 @@ namespace: cloudflared
 resources:
   - ../../base/cloudflared/
   - externalSecret.yaml
+
+configMapGenerator:
+  - name: cloudflared-config
+    files:
+      - config.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
