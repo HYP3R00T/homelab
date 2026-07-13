@@ -1,0 +1,14 @@
+vault_addr      = "http://vault.homelab.internal"
+vault_token     = ""
+
+# Example:
+# kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}'
+kubernetes_host = ""
+
+# Example:
+# kubectl -n vault get secret vault-token-reviewer-token -o jsonpath='{.data.ca\.crt}' | base64 --decode
+kubernetes_ca_cert = ""
+
+# Example:
+# kubectl -n vault get secret vault-token-reviewer-token -o jsonpath='{.data.token}' | base64 --decode
+token_reviewer_jwt = ""
