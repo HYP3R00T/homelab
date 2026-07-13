@@ -25,7 +25,7 @@ In this repository, it is configured to read from Vault through a `ClusterSecret
 - `gitops/infrastructure/controllers/lab/external-secrets/kustomization.yaml`
 - `gitops/infrastructure/controllers/base/external-secrets/`
 
-## Current repository intent
+## Vault integration
 
 The repository already points External Secrets at Vault:
 
@@ -33,4 +33,11 @@ The repository already points External Secrets at Vault:
 - secret path: `external-secrets`
 - auth role: `eso`
 
-That means the Kubernetes side is wired, but it still depends on Vault being bootstrapped to match those settings.
+The Terraform workspace under `iac/vault` creates the matching mount, auth
+backend, policy, and role. The current Cloudflared integration reads the
+`credentials` property from `cloudflared/tunnel` and writes it to the
+`credentials.json` key in the `cloudflared-secret` Kubernetes Secret.
+
+See [Secrets flow](../architecture/secrets-flow.md) for the cross-service data
+path and [Bootstrap Vault](../runbooks/vault-bootstrap.md) for the setup
+procedure.

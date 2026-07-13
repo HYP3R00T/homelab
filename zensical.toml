@@ -8,13 +8,28 @@ copyright = "Copyright &copy; 2026 Rajesh Das"
 
 nav = [
   { Home = "index.md" },
-  { "Repository Structure" = "repository-structure.md" },
-  { "Adding a Service" = "adding-a-service.md" },
+  { Architecture = [
+    { Overview = "architecture/index.md" },
+    { "Secrets Flow" = "architecture/secrets-flow.md" },
+  ] },
+  { GitOps = [
+    { Overview = "gitops/index.md" },
+    { "Repository Structure" = "gitops/repository-structure.md" },
+    { Reconciliation = "gitops/reconciliation.md" },
+    { "Adding a Service" = "gitops/adding-a-service.md" },
+  ] },
   { Services = [
     { Overview = "services/index.md" },
     { Vault = "services/vault.md" },
     { "External Secrets" = "services/external-secrets.md" },
     { Cloudflared = "services/cloudflared.md" },
+  ] },
+  { Runbooks = [
+    { Overview = "runbooks/index.md" },
+    { "Bootstrap Vault" = "runbooks/vault-bootstrap.md" },
+    { "Recover Vault" = "runbooks/vault-recovery.md" },
+    { "Create Cloudflared Tunnel" = "runbooks/cloudflared-tunnel.md" },
+    { "Store Cloudflared Credentials" = "runbooks/cloudflared-vault-credentials.md" },
   ] },
 ]
 

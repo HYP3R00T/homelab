@@ -15,10 +15,10 @@ This repository is grouped by role. The goal is to keep it easy to understand wh
 │   ├── infrastructure/    # Platform services that support the cluster
 │   ├── monitoring/        # Observability and inspection layer
 │   └── clusters/          # Flux entrypoints that activate things in a cluster
-└── terraform/             # Terraform-managed infrastructure config
+└── iac/                   # OpenTofu/Terraform-style infrastructure as code
 ```
 
-At the simplest level, `gitops/` contains the Kubernetes manifests Flux applies to the cluster, while `terraform/` is reserved for infrastructure that will be managed outside the GitOps path. Inside `gitops/`, `apps/` is for things people use, `infrastructure/` is for the shared capabilities those apps need, `monitoring/` is for observing both layers, and `clusters/` is for deciding what actually goes live.
+At the simplest level, `gitops/` contains the Kubernetes manifests Flux applies to the cluster, while `iac/` is reserved for infrastructure that will be managed outside the GitOps path. Inside `gitops/`, `apps/` is for things people use, `infrastructure/` is for the shared capabilities those apps need, `monitoring/` is for observing both layers, and `clusters/` is for deciding what actually goes live.
 
 ## Apps
 
@@ -111,7 +111,9 @@ For infrastructure services that need stricter ordering, the cluster entrypoint 
 !!! note "Staged vs active"
     A service can belong to one of these folders even when it is not currently enabled.
 
-    In this repository, `Vault`, `External Secrets Operator`, `Cloudflared`, `CloudNativePG`, and the monitoring stack are staged or partially wired work, while `homepage`, `linkding`, `metallb`, and `traefik` represent the established active path.
+    In this repository, `homepage`, `linkding`, `metallb`, `traefik`, `Vault`,
+    `External Secrets Operator`, and `Cloudflared` are active. `CloudNativePG`
+    and the monitoring components remain staged or not enabled as workloads.
 
 ## Working principle going forward
 

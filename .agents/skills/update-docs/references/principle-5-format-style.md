@@ -46,6 +46,26 @@ Do not use decorative ASCII diagrams that add noise. Simple structural code bloc
 - Prose descriptions and numbered lists
 - Short repository trees or layout blocks when structure is the point
 
+## Mermaid Diagram Direction
+
+Use a top-to-bottom layout for Mermaid flowcharts so labels and relationships
+remain readable in the documentation content column.
+
+**DO:**
+
+```text
+flowchart TB
+```
+
+**DON'T:**
+
+```text
+flowchart LR
+```
+
+Use another direction only when the diagram has a specific layout requirement
+that remains readable at the rendered page width.
+
 ## Emoji Usage
 
 Professional documents should use little to no emoji. If used, keep emoji rare and never rely on them for meaning.

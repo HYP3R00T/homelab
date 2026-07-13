@@ -23,3 +23,10 @@ This page reflects the current live homelab architecture.
 
 - Rendered asset: `docs/assets/images/homelab-current.svg`
 - This page is a documentation snapshot. Flux manifests under `gitops/clusters/lab/`, `gitops/apps/lab/`, and `gitops/infrastructure/` remain the operational source of truth.
+
+## Documentation map
+
+- [Architecture](architecture/index.md) explains cross-service relationships.
+- [GitOps](gitops/index.md) explains repository layout and reconciliation.
+- [Services](services/index.md) documents individual components.
+- [Runbooks](runbooks/index.md) contains executable operational procedures.

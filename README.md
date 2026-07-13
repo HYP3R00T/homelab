@@ -35,7 +35,7 @@ A self-hosted Kubernetes lab built for clean GitOps workflows, shared platform s
 │   ├── infrastructure/    # Shared platform capabilities
 │   ├── monitoring/        # Observability layer
 │   └── clusters/          # Flux entrypoints for the lab cluster
-├── terraform/             # Terraform-managed platform config
+├── iac/                   # OpenTofu/Terraform-style infrastructure as code
 └── docs/                  # Documentation site
 ```
 
@@ -45,7 +45,7 @@ A self-hosted Kubernetes lab built for clean GitOps workflows, shared platform s
 >
 > 🎛️ `gitops/clusters/` decides what Flux actually reconciles.
 >
-> 🏗️ `terraform/` is reserved for non-GitOps infrastructure configuration managed outside Kubernetes.
+> 🏗️ `iac/` is reserved for non-GitOps infrastructure configuration managed outside Kubernetes.
 
 ## 🚀 Current State
 
@@ -54,14 +54,11 @@ A self-hosted Kubernetes lab built for clean GitOps workflows, shared platform s
 | Layer | Active services |
 |-------|-----------------|
 | Apps | `homepage`, `linkding` |
-| Infrastructure | `metallb`, `traefik` |
+| Infrastructure | `metallb`, `traefik`, `vault`, `external-secrets`, `cloudflared` |
 | Monitoring | none enabled right now |
 
 ### Staged in the repository
 
-- `vault`
-- `external-secrets`
-- `cloudflared`
 - `cnpg`
 - monitoring components
 
@@ -77,9 +74,10 @@ These exist in the repo because the design work is happening here first, but the
 ## 📚 Documentation
 
 - `docs/index.md` shows the current architecture
-- `docs/repository-structure.md` explains how services are grouped
-- `docs/adding-a-service.md` explains the `base/` and `lab/` overlay pattern
-- `docs/services/` documents individual infrastructure services and dependencies
+- `docs/architecture/` explains relationships that span multiple services
+- `docs/gitops/` explains repository structure, reconciliation, and service wiring
+- `docs/services/` documents individual services and dependencies
+- `docs/runbooks/` contains repeatable setup, operations, and recovery procedures
 
 ## 🧠 Philosophy
 
