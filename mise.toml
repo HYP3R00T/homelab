@@ -1,8 +1,10 @@
 [tools]
+cloudflared = "latest"
 flux2 = "latest"
 helm = "latest"
 prek = "latest"
 rumdl = "latest"
+terraform = "latest"
 uv = "latest"
 vault = "latest"
 
@@ -14,6 +16,7 @@ _.file = '.env' # for sensitive data
 
 [shell_alias]
 k = "kubectl"
+tf = "terraform"
 
 [hooks]
 enter = "{{config_root}}/scripts/enter_project.sh"
