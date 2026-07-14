@@ -1,0 +1,9 @@
+# Talos provides the NVIDIA kernel modules and container toolkit.
+driver:
+  enabled: false
+
+toolkit:
+  enabled: false
+
+hostPaths:
+  driverInstallDir: /usr/local

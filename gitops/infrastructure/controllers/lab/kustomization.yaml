@@ -5,3 +5,6 @@ resources:
   - metallb
   - traefik
   - external-secrets
+  - local-path-provisioner
+  - gpu-operator
+  - cnpg

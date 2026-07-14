@@ -1,14 +1,11 @@
-# https://developer.hashicorp.com/vault/docs/deploy/kubernetes
-
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: vault
+namespace: gpu-operator
 resources:
-  - ../../../controllers/base/vault/
-  - persistentVolumeClaim.yaml
+  - ../../base/gpu-operator
 
 configMapGenerator:
-  - name: vault-values
+  - name: gpu-operator-values
     files:
       - values.yaml
 
