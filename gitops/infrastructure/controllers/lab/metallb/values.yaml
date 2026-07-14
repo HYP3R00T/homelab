@@ -1,4 +1,9 @@
 crds:
   enabled: true
+
+speaker:
+  # This single-node cluster schedules its speaker on the control-plane node.
+  ignoreExcludeLB: true
+
 frrk8s:
   enabled: false
