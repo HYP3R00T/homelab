@@ -1,0 +1,21 @@
+name: homelab-homepage-preview
+
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:v1.13.2
+    container_name: homelab-homepage-preview
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      HOMEPAGE_ALLOWED_HOSTS: localhost:3000,127.0.0.1:3000
+      LOG_TARGETS: stdout
+    volumes:
+      - ./configs/bookmarks.yaml:/app/config/bookmarks.yaml:ro
+      - ./configs/custom.css:/app/config/custom.css:ro
+      - ./configs/custom.js:/app/config/custom.js:ro
+      - ./configs/docker.yaml:/app/config/docker.yaml:ro
+      - ./configs/kubernetes.yaml:/app/config/kubernetes.yaml:ro
+      - ./configs/proxmox.yaml:/app/config/proxmox.yaml:ro
+      - ./configs/services.yaml:/app/config/services.yaml:ro
+      - ./configs/settings.yaml:/app/config/settings.yaml:ro
+      - ./configs/widgets.yaml:/app/config/widgets.yaml:ro

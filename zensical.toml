@@ -42,6 +42,7 @@ nav = [
     { "Local Path Provisioner" = "services/local-path-provisioner.md" },
     { CloudNativePG = "services/cloudnative-pg.md" },
     { Monitoring = "services/kube-prometheus-stack.md" },
+    { "Metrics Server" = "services/metrics-server.md" },
   ] },
   { Runbooks = [
     { Overview = "runbooks/index.md" },

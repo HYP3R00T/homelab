@@ -1,1 +1,2 @@
-mode: disabled
+mode: cluster
+ingress: true

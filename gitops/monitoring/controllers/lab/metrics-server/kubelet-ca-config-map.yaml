@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: metrics-server-kubelet-ca
+  namespace: kube-system
+data:
+  ca.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIDEDCCAfigAwIBAgIIUwG0munN4EcwDQYJKoZIhvcNAQELBQAwJjEkMCIGA1UE
+    AwwbdGFsb3MtOXh5LXpoYi1jYUAxNzg0MDEzMDk5MB4XDTI2MDcxNDA2MTEzOVoX
+    DTI3MDcxNDA2MTEzOVowJjEkMCIGA1UEAwwbdGFsb3MtOXh5LXpoYi1jYUAxNzg0
+    MDEzMDk5MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4ldlEiY36V+z
+    rZLWtmBQobW64/Dcr7GqjsKTTKsJ/iLDhEe8EXJ8I+Nh4HSOyUTLB666mo2662vU
+    qtEFE+nXfX+E/l6itdIzMZnOAeHrqS0lFBDDmldX+kKphqJlzU86an/jWZ53lQoL
+    Ue0lfoiqvd/UDGkxsGWtHIg0TwWXOAlnT/BtErfGYXhJucCfxV89kcRhYAoWz2hp
+    kr4wYKFXgoBOgEa15uSfKlbz7U7OUnOqyIgJnyPwwyuqP0EL15GP6ZVGIzyJTXJL
+    zVYjCrVCuJbmaWd8ugUmBkHaX/s04sXeu9qu+Kj1LxZzXuRf3bhOIciHrJ0nMdRG
+    O2pkRtJWZwIDAQABo0IwQDAOBgNVHQ8BAf8EBAMCAqQwDwYDVR0TAQH/BAUwAwEB
+    /zAdBgNVHQ4EFgQUKIftX/Olh4BZ82hdKwytlVVtmMowDQYJKoZIhvcNAQELBQAD
+    ggEBANDvHB0gvg5wqkn+5mmhdnJ/fGNApMfzlJnHwRROA36YWyhiepTU7sm3m2Fv
+    nIuoISoDD9d/Ks3krBtY7lSSr+XBqKhKDtfwmYN27fJP4y34xGtaR1XMbTvjbhXW
+    uCRFxS32NLLp92O54qPoltg6aTP0cG7qLesISjpuJwRhPZiFM5l7R/RNgnKu+ioX
+    VpNHrEQqgDpsx5yUgrbtCefNvz4XNA6QJs/7kuspRNpfAsSUJL9b31+LjtwtaxLK
+    uje3kSpeJYvhJdYSBuyurxE4+4HwPlPd4R4ocNGxVtRK81uqSuiE2/4IeEL0MJgp
+    XlSoFBIAkugdqCQYJN5fmTtakbE=
+    -----END CERTIFICATE-----

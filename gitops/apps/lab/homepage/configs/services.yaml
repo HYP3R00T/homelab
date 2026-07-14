@@ -2,26 +2,22 @@
     - Linkding:
         icon: linkding.png
         href: http://linkding.homelab.internal/
-        description: Bookmark manager
         siteMonitor: http://linkding-service.linkding.svc.cluster.local:9090
         target: _self
 
-- Platform:
+- Infrastructure & Monitoring:
     - Flux Operator:
-        icon: flux-cd.png
+        icon: flux-operator.png
         href: http://flux.homelab.internal/
-        description: GitOps reconciliation and delivery
         target: _self
     - Vault:
         icon: vault.png
         href: http://vault.homelab.internal/
-        description: Secrets management
         siteMonitor: http://vault.vault.svc.cluster.local:8200/v1/sys/health
         target: _self
     - Traefik:
         icon: traefik-proxy.png
         href: http://traefik.homelab.internal/
-        description: Ingress and HTTP routing
         target: _self
         widget:
           type: traefik
@@ -29,23 +25,14 @@
           fields: ["routers", "services", "middleware"]
           headers:
             Host: traefik.homelab.internal
-    - Cloudflare Zero Trust:
-        icon: cloudflare-zero-trust.png
-        href: https://one.dash.cloudflare.com/
-        description: Tunnel and edge administration
-        target: _blank
-
-- Observability:
     - Grafana:
         icon: grafana.png
         href: http://grafana.homelab.internal/
-        description: Dashboards and alerts
         siteMonitor: http://kube-prometheus-stack-grafana.monitoring.svc.cluster.local/api/health
         target: _self
     - Prometheus:
         icon: prometheus.png
         href: http://prometheus.homelab.internal/
-        description: Metrics, targets, and PromQL
         siteMonitor: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090/-/healthy
         target: _self
         widget:
@@ -57,40 +44,32 @@
     - ChatGPT:
         icon: chatgpt.png
         href: https://chatgpt.com/
-        description: OpenAI assistant
         target: _blank
     - Claude:
         icon: claude-ai.png
         href: https://claude.ai/chats
-        description: Anthropic assistant
         target: _blank
     - Gemini:
         icon: google-gemini.png
         href: https://gemini.google.com/app
-        description: Google AI assistant
         target: _blank
     - Perplexity:
-        icon: si-perplexity
+        icon: perplexity.png
         href: https://www.perplexity.ai/
-        description: AI search and research
         target: _blank
     - Grok:
         icon: grok.png
         href: https://grok.com/
-        description: xAI assistant
         target: _blank
     - Microsoft Copilot:
         icon: microsoft-copilot.png
         href: https://copilot.microsoft.com/
-        description: Microsoft AI assistant
         target: _blank
     - GitHub Copilot:
-        icon: si-githubcopilot
+        icon: github-copilot.png
         href: https://github.com/copilot/
-        description: AI software development
         target: _blank
     - AI Fiesta:
         icon: https://chat.aifiesta.ai/static/images/logo/icon.png
         href: https://chat.aifiesta.ai/
-        description: Multi-model AI workspace
         target: _blank

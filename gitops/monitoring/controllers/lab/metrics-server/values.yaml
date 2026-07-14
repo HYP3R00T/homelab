@@ -1,0 +1,39 @@
+apiService:
+  insecureSkipTLSVerify: false
+
+tls:
+  type: helm
+
+defaultArgs:
+  - --cert-dir=/tmp
+  - --kubelet-preferred-address-types=Hostname
+  - --kubelet-use-node-status-port
+  - --metric-resolution=15s
+  - --kubelet-certificate-authority=/etc/kubelet-ca/ca.crt
+
+extraVolumes:
+  - name: kubelet-ca
+    configMap:
+      name: metrics-server-kubelet-ca
+
+extraVolumeMounts:
+  - name: kubelet-ca
+    mountPath: /etc/kubelet-ca
+    readOnly: true
+
+revisionHistoryLimit: 3
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 200Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi
+
+metrics:
+  enabled: true
+
+serviceMonitor:
+  enabled: true
+  interval: 1m

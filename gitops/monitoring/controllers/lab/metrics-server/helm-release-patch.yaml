@@ -1,0 +1,15 @@
+- op: add
+  path: /spec/postRenderers
+  value:
+    - kustomize:
+        patches:
+          - target:
+              kind: Deployment
+              name: metrics-server
+            patch: |-
+              - op: add
+                path: /spec/template/spec/hostAliases
+                value:
+                  - ip: 192.168.0.50
+                    hostnames:
+                      - talos-9xy-zhb

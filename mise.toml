@@ -24,3 +24,11 @@ enter = "{{config_root}}/scripts/enter_project.sh"
 [tasks.docs]
 run = "uvx zensical serve"
 description = "Serve the documentation locally"
+
+[tasks.homepage-preview]
+run = "docker compose -f gitops/apps/lab/homepage/compose.yaml up --pull missing --remove-orphans"
+description = "Preview the GitOps Homepage configuration at http://localhost:3000"
+
+[tasks.homepage-preview-stop]
+run = "docker compose -f gitops/apps/lab/homepage/compose.yaml down --remove-orphans"
+description = "Stop and remove the local Homepage preview"

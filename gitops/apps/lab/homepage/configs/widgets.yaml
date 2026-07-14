@@ -4,6 +4,18 @@
     cpu: true
     memory: true
     network: default
+- kubernetes:
+    cluster:
+      show: true
+      cpu: true
+      memory: true
+      showLabel: true
+      label: Homelab
+    nodes:
+      show: true
+      cpu: true
+      memory: true
+      showLabel: true
 - datetime:
     text_size: 3xl
     format:

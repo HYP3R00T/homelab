@@ -9,6 +9,7 @@ configMapGenerator:
   - name: homepage
     files:
       - configs/kubernetes.yaml
+      - configs/proxmox.yaml
       - configs/settings.yaml
       - configs/bookmarks.yaml
       - configs/services.yaml

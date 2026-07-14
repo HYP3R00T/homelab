@@ -11,21 +11,23 @@ title: Homelab
 description: Applications, platform services, and operational tools
 statusStyle: dot
 useEqualHeights: true
+quicklaunch:
+  searchDescriptions: false
+  hideInternetSearch: true
+  showSearchSuggestions: false
+  hideVisitURL: false
+  mobileButtonPosition: bottom-right
 # disableCollapse: true
 layout:
   Applications:
     style: row
-    columns: 4
-    icon: mdi-apps
-  Platform:
+    columns: 6
+    header: false
+  Infrastructure & Monitoring:
     style: row
-    columns: 4
-    icon: mdi-server-network
-  Observability:
-    style: row
-    columns: 4
-    icon: mdi-chart-line
+    columns: 6
+    header: false
   AI Assistants:
     style: row
-    columns: 4
-    icon: mdi-creation
+    columns: 6
+    header: false
