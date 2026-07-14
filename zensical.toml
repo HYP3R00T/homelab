@@ -10,7 +10,14 @@ nav = [
   { Home = "index.md" },
   { Architecture = [
     { Overview = "architecture/index.md" },
+    { Platform = "architecture/platform.md" },
+    { "Traffic Flow" = "architecture/traffic-flow.md" },
     { "Secrets Flow" = "architecture/secrets-flow.md" },
+  ] },
+  { "Platform Setup" = [
+    { Overview = "platform/index.md" },
+    { "Talos Linux" = "platform/talos-linux.md" },
+    { "NVIDIA GPU" = "platform/nvidia-gpu.md" },
   ] },
   { GitOps = [
     { Overview = "gitops/index.md" },
@@ -18,11 +25,23 @@ nav = [
     { Reconciliation = "gitops/reconciliation.md" },
     { "Adding a Service" = "gitops/adding-a-service.md" },
   ] },
+  { Applications = [
+    { Overview = "apps/index.md" },
+    { Homepage = "apps/homepage.md" },
+    { Linkding = "apps/linkding.md" },
+  ] },
   { Services = [
     { Overview = "services/index.md" },
+    { "Flux CD" = "services/flux.md" },
+    { MetalLB = "services/metallb.md" },
+    { Traefik = "services/traefik.md" },
     { Vault = "services/vault.md" },
     { "External Secrets" = "services/external-secrets.md" },
     { Cloudflared = "services/cloudflared.md" },
+    { "GPU Operator" = "services/gpu-operator.md" },
+    { "Local Path Provisioner" = "services/local-path-provisioner.md" },
+    { CloudNativePG = "services/cloudnative-pg.md" },
+    { Monitoring = "services/kube-prometheus-stack.md" },
   ] },
   { Runbooks = [
     { Overview = "runbooks/index.md" },

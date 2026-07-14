@@ -10,6 +10,9 @@ provide a readable model of how the pieces work together.
 
 ## Topics
 
+- [Platform architecture](platform.md): the node, GitOps layers, applications,
+  and shared services
+- [Traffic flow](traffic-flow.md): local ingress and public Cloudflare routing
 - [Secrets flow](secrets-flow.md): how Vault, External Secrets, Kubernetes, and
   Cloudflared exchange credentials
 

@@ -23,6 +23,9 @@ A self-hosted Kubernetes lab built for clean GitOps workflows, shared platform s
 | GitOps | [FluxCD](https://fluxcd.io/) |
 | Packaging | [Helm](https://helm.sh) + [Kustomize](https://kubectl.docs.kubernetes.io/references/kustomize/) |
 | Networking | [MetalLB](https://metallb.universe.tf/) + [Traefik](https://doc.traefik.io/traefik/) |
+| Secrets | Vault + External Secrets Operator |
+| Public access | Cloudflare Tunnel |
+| Hardware | NVIDIA GPU Operator |
 | Apps | Homepage + Linkding |
 | Documentation | Zensical in `docs/` |
 
@@ -54,15 +57,15 @@ A self-hosted Kubernetes lab built for clean GitOps workflows, shared platform s
 | Layer | Active services |
 |-------|-----------------|
 | Apps | `homepage`, `linkding` |
-| Infrastructure | `metallb`, `traefik`, `vault`, `external-secrets`, `cloudflared` |
+| Infrastructure | `metallb`, `traefik`, `vault`, `external-secrets`, `cloudflared`, `local-path-provisioner`, `gpu-operator`, `cnpg` |
 | Monitoring | none enabled right now |
 
 ### Staged in the repository
 
-- `cnpg`
 - monitoring components
 
-These exist in the repo because the design work is happening here first, but they are not all live in the cluster yet.
+The monitoring manifests exist in the repository, but the cluster-level
+monitoring Kustomization does not activate them yet.
 
 ## 🧭 How It Flows
 
@@ -76,6 +79,7 @@ These exist in the repo because the design work is happening here first, but the
 - `docs/index.md` shows the current architecture
 - `docs/architecture/` explains relationships that span multiple services
 - `docs/gitops/` explains repository structure, reconciliation, and service wiring
+- `docs/apps/` documents user-facing applications
 - `docs/services/` documents individual services and dependencies
 - `docs/runbooks/` contains repeatable setup, operations, and recovery procedures
 

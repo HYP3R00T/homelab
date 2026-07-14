@@ -16,7 +16,7 @@ repos:
       - id: detect-private-key
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v4.16.3
+    rev: v4.16.4
     hooks:
       - id: commitizen
         stages: [commit-msg]
@@ -27,7 +27,7 @@ repos:
       - id: shellcheck
 
   - repo: https://github.com/rvben/rumdl-pre-commit
-    rev: v0.2.26
+    rev: v0.2.32
     hooks:
       - id: rumdl
         args: ["--fix"]

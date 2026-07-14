@@ -8,6 +8,18 @@ Cloudflared is the tunnel client used to expose selected services outside the ho
 
 It is part of infrastructure because it is shared access plumbing, not a user-facing application.
 
+## Current implementation
+
+| Property | Value |
+|---|---|
+| Status | Active |
+| Image | `cloudflare/cloudflared:2026.7.1` |
+| Namespace | `cloudflared` |
+| Tunnel | Locally managed `homelab` tunnel |
+| Credential source | Vault through External Secrets |
+| Public hostname | `linkding.hyperoot.dev` |
+| Origin | `linkding-service.linkding.svc.cluster.local:9090` |
+
 ## What it depends on
 
 - External Secrets, through `gitops/clusters/lab/infrastructure-controllers.yaml`

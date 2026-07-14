@@ -8,6 +8,17 @@ External Secrets Operator reads values from an external secret backend and creat
 
 In this repository, it is configured to read from Vault through a `ClusterSecretStore`.
 
+## Current implementation
+
+| Property | Value |
+|---|---|
+| Status | Active |
+| Helm chart | `external-secrets` `0.20.3` |
+| Namespace | `external-secrets` |
+| Store | ClusterSecretStore `vault` |
+| Authentication | Vault Kubernetes auth, role `eso` |
+| Current consumer | Cloudflared credentials |
+
 ## What it depends on
 
 - Vault, through `gitops/clusters/lab/infrastructure-configs.yaml`
@@ -41,3 +52,11 @@ backend, policy, and role. The current Cloudflared integration reads the
 See [Secrets flow](../architecture/secrets-flow.md) for the cross-service data
 path and [Bootstrap Vault](../runbooks/vault-bootstrap.md) for the setup
 procedure.
+
+The operator owns generated Kubernetes Secrets. Application manifests should
+reference those Secrets rather than copying Vault values into Git.
+
+After a Kubernetes reinstall, the `ClusterSecretStore` remains invalid until
+Vault is updated with the new cluster CA and token-reviewer JWT. A secret value
+can exist at the correct Vault path while its consuming pod remains pending if
+this authentication layer is stale.

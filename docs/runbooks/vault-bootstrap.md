@@ -103,7 +103,9 @@ Populate it with:
 - `token_reviewer_jwt`: the token for `vault-token-reviewer`
 
 The example file contains commands for retrieving the Kubernetes values. Do
-not commit the populated file.
+not commit the populated file. Regenerate the CA and reviewer JWT after every
+Kubernetes reinstall; reusing the old file produces `403 permission denied`
+errors from `auth/kubernetes/login`.
 
 ## Configure Vault
 

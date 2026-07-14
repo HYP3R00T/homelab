@@ -2,39 +2,44 @@
 icon: lucide/blocks
 ---
 
-# Services
+# Platform Services
 
-This section documents individual platform services.
+Services provide capabilities shared by applications: reconciliation,
+networking, secret delivery, external access, hardware enablement, databases,
+and observability.
 
-Each page answers the same practical questions:
+## Active services
 
-- what the service is for
-- what it depends on
-- what depends on it
-- which files activate it in this repository
+| Service | Version | Responsibility | Managed here |
+|---|---|---|---|
+| [Flux CD](flux.md) | `2.x` | Reconciles Git into Kubernetes | Yes |
+| [MetalLB](metallb.md) | `0.16.1` | Advertises the LAN load-balancer address | Yes |
+| [Traefik](traefik.md) | Chart `41.0.2` | Routes local HTTP traffic | Yes |
+| [Vault](vault.md) | Chart `0.34.0` | Stores sensitive values | Yes |
+| [External Secrets](external-secrets.md) | Chart `0.20.3` | Synchronizes Vault values into Kubernetes | Yes |
+| [Cloudflared](cloudflared.md) | `2026.7.1` | Connects public Cloudflare traffic to services | Yes |
+| [NVIDIA GPU Operator](gpu-operator.md) | `v26.3.3` | Enables and validates GPU workloads | Yes |
+| [Local Path Provisioner](local-path-provisioner.md) | `v0.0.36` | Dynamically provisions local persistent storage | Yes |
+| [CloudNativePG](cloudnative-pg.md) | Chart `0.29.0` | Manages PostgreSQL clusters | Yes |
 
-## Current pages
+## Staged services
 
-- [Vault](vault.md): secret storage backend for the cluster
-- [External Secrets](external-secrets.md): syncs Kubernetes secrets from Vault
-  into workloads
-- [Cloudflared](cloudflared.md): consumes synced secrets to expose selected
-  services externally
+| Service | Status | What is missing |
+|---|---|---|
+| [kube-prometheus-stack](kube-prometheus-stack.md) | Staged | Monitoring resource is commented out |
 
-## Dependency chain
+## Dependency shape
 
-```text
-infrastructure
-└── vault
-    └── external-secrets
-        └── cloudflared
+```mermaid
+flowchart TB
+    Flux[Flux CD] --> Controllers[MetalLB, Traefik, External Secrets, Local Path, CNPG]
+    Controllers --> Configs[Vault, address pool, secret store, Cloudflared]
+    Vault --> ESO[External Secrets]
+    ESO --> Cloudflared[Cloudflared]
+    MetalLB --> Traefik[Traefik]
+    Traefik --> Apps[Applications]
+    Cloudflared --> Apps
 ```
 
-The rollout wiring for that chain lives in:
-
-- `gitops/clusters/lab/infrastructure-controllers.yaml`
-- `gitops/clusters/lab/infrastructure-configs.yaml`
-- `gitops/infrastructure/configs/lab/kustomization.yaml`
-
-For procedures, use the [Runbooks](../runbooks/index.md) section. For the
-cross-service data path, see [Secrets flow](../architecture/secrets-flow.md).
+For procedures, use [Runbooks](../runbooks/index.md). For request and secret
+paths, use [Architecture](../architecture/index.md).

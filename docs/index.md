@@ -2,31 +2,87 @@
 icon: lucide/rocket
 ---
 
-# Homelab
+# Hyperoot Homelab
 
-This page reflects the current live homelab architecture.
+Welcome to a single-node Kubernetes platform built to make infrastructure
+understandable, reproducible, and pleasant to operate. Talos Linux provides the
+immutable host, Flux continuously reconciles this repository, and every active
+application sits on a small set of shared platform services.
 
-## Current Architecture
+<div class="grid cards" markdown>
 
-![Current homelab architecture](assets/images/homelab-current.svg)
+-   **Understand the platform**
 
-### What this diagram shows
+    Start with the [architecture overview](architecture/platform.md) to see
+    how Git, Flux, networking, secrets, and workloads fit together.
 
-- Single-node Talos Linux Kubernetes cluster running on a Lenovo Legion Y540
-- Flux CD as the GitOps control plane syncing this repository
-- MetalLB advertising `192.168.0.60` on the local network
-- Traefik as the default ingress controller behind that VIP
-- Homepage and Linkding as the current user-facing workloads in `gitops/apps/lab`
-- NVIDIA GPU Operator and Node Feature Discovery active on the node
+-   **Recreate the host**
 
-### Source of truth
+    Follow the [platform setup](platform/index.md) to understand the Talos
+    installation, NVIDIA host support, and local storage foundation.
 
-- Rendered asset: `docs/assets/images/homelab-current.svg`
-- This page is a documentation snapshot. Flux manifests under `gitops/clusters/lab/`, `gitops/apps/lab/`, and `gitops/infrastructure/` remain the operational source of truth.
+-   **Explore what is running**
 
-## Documentation map
+    Browse [applications](apps/index.md) and [platform services](services/index.md),
+    with status, dependencies, configuration paths, and ownership on each page.
 
-- [Architecture](architecture/index.md) explains cross-service relationships.
-- [GitOps](gitops/index.md) explains repository layout and reconciliation.
-- [Services](services/index.md) documents individual components.
-- [Runbooks](runbooks/index.md) contains executable operational procedures.
+-   **Learn the GitOps model**
+
+    Read the [GitOps overview](gitops/index.md) before changing manifests or
+    adding a service.
+
+-   **Operate the cluster**
+
+    Use [runbooks](runbooks/index.md) for repeatable bootstrap, recovery, and
+    credential-management procedures.
+
+</div>
+
+## Platform at a glance
+
+```mermaid
+flowchart TB
+    Git[GitHub repository] --> Flux[Flux CD]
+    Flux --> Controllers[Infrastructure controllers]
+    Controllers --> Configs[Infrastructure configuration]
+    Configs --> Apps[Homepage and Linkding]
+
+    LAN[Home network] --> MetalLB[MetalLB VIP]
+    MetalLB --> Traefik[Traefik ingress]
+    Traefik --> Apps
+
+    Internet[Internet] --> Cloudflare[Cloudflare edge]
+    Cloudflare --> Cloudflared[Cloudflared tunnel]
+    Cloudflared --> Linkding[Linkding]
+
+    Vault[Vault] --> ESO[External Secrets]
+    ESO --> Cloudflared
+
+    Talos[Talos XFS user volume] --> LocalPath[Local Path Provisioner]
+    LocalPath --> CNPG[CloudNativePG]
+```
+
+## Current state
+
+| Area | Status | Components |
+|---|---|---|
+| Platform | Active | Talos Linux, Kubernetes, Flux CD, NVIDIA GPU Operator, local storage |
+| Networking | Active | MetalLB, Traefik, Cloudflared |
+| Secrets | Active | Vault, External Secrets Operator |
+| Applications | Active | Homepage, Linkding |
+| Databases | Operator enabled | CloudNativePG is installed; no application database cluster exists yet |
+| Monitoring | Staged | kube-prometheus-stack manifests exist but are not enabled |
+
+## How to read these docs
+
+1. [Architecture](architecture/index.md) explains relationships across the
+   whole platform.
+2. [Platform setup](platform/index.md) explains the Talos host foundation.
+3. [GitOps](gitops/index.md) explains how repository changes become live state.
+4. [Applications](apps/index.md) documents user-facing workloads.
+5. [Services](services/index.md) documents shared infrastructure components.
+6. [Runbooks](runbooks/index.md) provides commands for operational procedures.
+
+!!! note "Source of truth"
+    These pages explain the current system. Flux manifests under `gitops/` and
+    Terraform under `iac/` remain the operational source of truth.

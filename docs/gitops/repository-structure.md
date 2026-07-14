@@ -105,15 +105,18 @@ For infrastructure services that need stricter ordering, the cluster entrypoint 
 ## Applying this to services in the repository
 
 - `gitops/apps/`: `Homepage`, `Linkding`
-- `gitops/infrastructure/`: `Traefik`, `MetalLB`, `Vault`, `External Secrets Operator`, `Cloudflared`
+- `gitops/infrastructure/`: `Traefik`, `MetalLB`, `Vault`, `External Secrets
+  Operator`, `Cloudflared`, `Local Path Provisioner`, `NVIDIA GPU Operator`,
+  `CloudNativePG`
 - `gitops/monitoring/`: `Prometheus`, `Grafana`
 
 !!! note "Staged vs active"
     A service can belong to one of these folders even when it is not currently enabled.
 
-    In this repository, `homepage`, `linkding`, `metallb`, `traefik`, `Vault`,
-    `External Secrets Operator`, and `Cloudflared` are active. `CloudNativePG`
-    and the monitoring components remain staged or not enabled as workloads.
+    In this repository, the application and infrastructure services listed
+    above are active. CloudNativePG is installed as an operator, but no
+    PostgreSQL `Cluster` resource exists yet. The monitoring components remain
+    staged and are not enabled as workloads.
 
 ## Working principle going forward
 
