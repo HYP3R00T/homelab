@@ -57,9 +57,11 @@ flowchart TB
 
     Vault[Vault] --> ESO[External Secrets]
     ESO --> Cloudflared
+    ESO --> Monitoring[Prometheus and Grafana]
 
     Talos[Talos XFS user volume] --> LocalPath[Local Path Provisioner]
     LocalPath --> CNPG[CloudNativePG]
+    LocalPath --> Monitoring
 ```
 
 ## Current state
@@ -71,7 +73,7 @@ flowchart TB
 | Secrets | Active | Vault, External Secrets Operator |
 | Applications | Active | Homepage, Linkding |
 | Databases | Operator enabled | CloudNativePG is installed; no application database cluster exists yet |
-| Monitoring | Staged | kube-prometheus-stack manifests exist but are not enabled |
+| Monitoring | Active | Prometheus, Alertmanager, Grafana, and cluster exporters |
 
 ## How to read these docs
 

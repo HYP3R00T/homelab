@@ -21,12 +21,7 @@ and observability.
 | [NVIDIA GPU Operator](gpu-operator.md) | `v26.3.3` | Enables and validates GPU workloads | Yes |
 | [Local Path Provisioner](local-path-provisioner.md) | `v0.0.36` | Dynamically provisions local persistent storage | Yes |
 | [CloudNativePG](cloudnative-pg.md) | Chart `0.29.0` | Manages PostgreSQL clusters | Yes |
-
-## Staged services
-
-| Service | Status | What is missing |
-|---|---|---|
-| [kube-prometheus-stack](kube-prometheus-stack.md) | Staged | Monitoring resource is commented out |
+| [kube-prometheus-stack](kube-prometheus-stack.md) | Chart `87.15.2` | Collects metrics, evaluates alerts, and serves dashboards | Yes |
 
 ## Dependency shape
 
@@ -36,8 +31,10 @@ flowchart TB
     Controllers --> Configs[Vault, address pool, secret store, Cloudflared]
     Vault --> ESO[External Secrets]
     ESO --> Cloudflared[Cloudflared]
+    ESO --> Monitoring[Prometheus and Grafana]
     MetalLB --> Traefik[Traefik]
     Traefik --> Apps[Applications]
+    Traefik --> Monitoring
     Cloudflared --> Apps
 ```
 

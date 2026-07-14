@@ -58,14 +58,11 @@ A self-hosted Kubernetes lab built for clean GitOps workflows, shared platform s
 |-------|-----------------|
 | Apps | `homepage`, `linkding` |
 | Infrastructure | `metallb`, `traefik`, `vault`, `external-secrets`, `cloudflared`, `local-path-provisioner`, `gpu-operator`, `cnpg` |
-| Monitoring | none enabled right now |
+| Monitoring | Prometheus, Alertmanager, Grafana, node-exporter, kube-state-metrics |
 
-### Staged in the repository
-
-- monitoring components
-
-The monitoring manifests exist in the repository, but the cluster-level
-monitoring Kustomization does not activate them yet.
+Grafana is available on the local network at
+`http://grafana.homelab.internal`. Prometheus and Alertmanager remain internal
+to the cluster.
 
 ## 🧭 How It Flows
 

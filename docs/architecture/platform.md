@@ -24,7 +24,8 @@ The order is intentional:
 1. Flux installs operators and controllers.
 2. Configuration custom resources are applied after their controllers exist.
 3. Applications reconcile after shared infrastructure is ready.
-4. Monitoring has its own layer and is currently empty by design.
+4. Monitoring installs after shared infrastructure, followed by ecosystem
+   monitors after the Prometheus CRDs are healthy.
 
 ## Runtime foundation
 
@@ -37,6 +38,7 @@ The order is intentional:
 | CoreDNS | Cluster service discovery |
 | NVIDIA GPU Operator `v26.3.3` | GPU discovery, validation, metrics, and device plugin |
 | Local Path Provisioner `v0.0.36` | Dynamic local PersistentVolumes on the Talos NVMe filesystem |
+| kube-prometheus-stack `87.15.2` | Cluster metrics, dashboards, and alert evaluation |
 
 The initial Talos machine configuration includes the NVIDIA extensions, kernel
 modules, single-node scheduling policy, and NVMe volume layout. Flux owns the
@@ -50,7 +52,7 @@ capabilities to Kubernetes. The boundaries are documented on the
 - `gitops/clusters/lab` activates the reconciliation layers.
 - `gitops/apps` owns user-facing workloads.
 - `gitops/infrastructure` owns shared controllers and configuration.
-- `gitops/monitoring` contains the staged observability stack.
+- `gitops/monitoring` owns the observability stack and ecosystem monitors.
 - `iac/vault` owns configuration inside Vault that Kubernetes cannot bootstrap.
 
 Continue with [Traffic flow](traffic-flow.md), [Secrets flow](secrets-flow.md),

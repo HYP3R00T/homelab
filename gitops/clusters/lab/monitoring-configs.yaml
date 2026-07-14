@@ -1,16 +1,16 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: monitoring
+  name: monitoring-configs
   namespace: flux-system
 spec:
   interval: 1m0s
   retryInterval: 1m
   timeout: 5m
   dependsOn:
-    - name: infrastructure-configs
+    - name: monitoring-controllers
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./gitops/monitoring/lab
+  path: ./gitops/monitoring/configs/lab
   prune: true

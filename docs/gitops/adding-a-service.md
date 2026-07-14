@@ -107,7 +107,9 @@ generatorOptions:
   disableNameSuffixHash: true
 ```
 
-This is the pattern used in `gitops/infrastructure/controllers/lab/traefik/kustomization.yaml` and `gitops/monitoring/lab/kube-prometheus-stack/kustomization.yaml`.
+This is the pattern used in
+`gitops/infrastructure/controllers/lab/traefik/kustomization.yaml` and
+`gitops/monitoring/controllers/lab/kube-prometheus-stack/kustomization.yaml`.
 
 ## How a new service gets added
 
@@ -160,7 +162,10 @@ For example:
 
 - `gitops/apps/lab/kustomization.yaml` decides which app overlays are part of `gitops/apps/lab`
 - `gitops/infrastructure/controllers/lab/kustomization.yaml` decides which controller overlays are enabled
-- `gitops/monitoring/lab/kustomization.yaml` decides which monitoring overlays are enabled
+- `gitops/monitoring/controllers/lab/kustomization.yaml` decides which
+  monitoring controllers are enabled.
+- `gitops/monitoring/configs/lab/kustomization.yaml` decides which monitoring
+  configurations are enabled.
 
 That is how a service can be present in the repository but still not active in the cluster.
 

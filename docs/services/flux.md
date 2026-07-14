@@ -45,8 +45,9 @@ flowchart TB
     Configs --> Monitoring[monitoring]
 ```
 
-The monitoring Kustomization is healthy even though its overlay currently
-contains no enabled resources.
+The `monitoring-controllers` Kustomization installs kube-prometheus-stack after
+infrastructure configuration is healthy. A separate `monitoring-configs`
+Kustomization then applies ecosystem monitors after the Prometheus CRDs exist.
 
 ## Repository locations
 

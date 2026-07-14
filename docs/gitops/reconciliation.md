@@ -15,7 +15,10 @@ because it exists; it must be reachable from one of those cluster entrypoints.
   `gitops/infrastructure/controllers/lab`.
 - `infrastructure-configs.yaml` reconciles environment configuration from
   `gitops/infrastructure/configs/lab` after the controllers are healthy.
-- `monitoring.yaml` controls the monitoring layer when enabled.
+- `monitoring-controllers.yaml` installs kube-prometheus-stack after
+  infrastructure configuration is healthy and delivers the Grafana credential.
+- `monitoring-configs.yaml` applies ecosystem monitors after the stack is
+  healthy.
 
 ## Dependency ordering
 
@@ -28,6 +31,8 @@ flowchart TB
     Source[GitRepository] --> Controllers[Infrastructure controllers]
     Controllers --> Configs[Infrastructure configs]
     Configs --> Services[Configured platform services]
+    Configs --> Monitoring[Monitoring stack]
+    Monitoring --> Monitors[Ecosystem monitors]
 ```
 
 Dependency details live in the Flux Kustomizations under

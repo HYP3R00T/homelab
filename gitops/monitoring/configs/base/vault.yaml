@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: vault
+  namespace: vault
+spec:
+  selector:
+    matchLabels:
+      monitoring.homelab/service: vault
+  endpoints:
+    - port: metrics
+      path: /v1/sys/metrics
+      params:
+        format:
+          - prometheus

@@ -83,6 +83,13 @@ If its primary job is to measure, record, alert, or explain what is happening in
 
 Keep `gitops/monitoring/` as a separate top-level folder. It has a different responsibility from infrastructure: infrastructure enables workloads, while monitoring observes infrastructure and applications together.
 
+Monitoring is split again by lifecycle:
+
+- `monitoring/controllers/{base,lab}` installs the Prometheus Operator and
+  bundled monitoring workloads, including resources required during startup.
+- `monitoring/configs/{base,lab}` applies `PodMonitor`, `ServiceMonitor`, and
+  supporting resources only after the controller CRDs are healthy.
+
 ## What `gitops/clusters/` does
 
 `gitops/clusters/` is the activation layer.
@@ -98,7 +105,11 @@ That means a manifest can exist in the repository without being live in the clus
 
 This is why commented entries in a `kustomization.yaml` matter so much. The files may exist, but the cluster will not reconcile them until the cluster wiring includes them.
 
-For simple layers, a cluster entrypoint can target the whole overlay such as `./gitops/apps/lab` or `./gitops/monitoring/lab`.
+For simple layers, a cluster entrypoint can target the whole overlay, such as
+`./gitops/apps/lab`. Monitoring uses separate
+`./gitops/monitoring/controllers/lab` and
+`./gitops/monitoring/configs/lab` entrypoints so monitor custom resources are
+not applied before their CRDs exist.
 
 For infrastructure services that need stricter ordering, the cluster entrypoint can point directly at the environment overlays. In this repository, `gitops/clusters/lab/infrastructure-controllers.yaml` points to `gitops/infrastructure/controllers/lab`, and `gitops/clusters/lab/infrastructure-configs.yaml` points to `gitops/infrastructure/configs/lab`. The controller stage waits for the controller Helm releases to become healthy, and the config stage applies shared resources such as Vault, MetalLB config, External Secrets store config, and Cloudflared.
 
@@ -110,13 +121,9 @@ For infrastructure services that need stricter ordering, the cluster entrypoint 
   `CloudNativePG`
 - `gitops/monitoring/`: `Prometheus`, `Grafana`
 
-!!! note "Staged vs active"
-    A service can belong to one of these folders even when it is not currently enabled.
-
-    In this repository, the application and infrastructure services listed
-    above are active. CloudNativePG is installed as an operator, but no
-    PostgreSQL `Cluster` resource exists yet. The monitoring components remain
-    staged and are not enabled as workloads.
+CloudNativePG is installed as an operator, but no PostgreSQL `Cluster` resource
+exists yet. The monitoring layer is active and applies its monitor resources
+only after the Prometheus Operator CRDs are healthy.
 
 ## Working principle going forward
 

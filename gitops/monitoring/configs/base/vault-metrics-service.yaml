@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vault-metrics
+  namespace: vault
+  labels:
+    monitoring.homelab/service: vault
+spec:
+  selector:
+    app.kubernetes.io/instance: vault
+    app.kubernetes.io/name: vault
+    component: server
+  ports:
+    - name: metrics
+      port: 8200
+      targetPort: 8200
