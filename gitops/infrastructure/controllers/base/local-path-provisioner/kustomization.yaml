@@ -3,11 +3,11 @@ kind: Kustomization
 # Vendored from rancher/local-path-provisioner v0.0.36.
 resources:
   - namespace.yaml
-  - storageclass.yaml
-  - serviceaccount.yaml
+  - storage-class.yaml
+  - service-account.yaml
   - role.yaml
-  - clusterrole.yaml
-  - rolebinding.yaml
-  - clusterrolebinding.yaml
-  - configmap.yaml
+  - cluster-role.yaml
+  - role-binding.yaml
+  - cluster-role-binding.yaml
+  - config-map.yaml
   - deployment.yaml

@@ -7,6 +7,10 @@
         icon: grafana.png
         href: http://grafana.homelab.internal/
         target: _self
+    - Prometheus:
+        icon: prometheus.png
+        href: http://prometheus.homelab.internal/
+        target: _self
     - Linkding:
         icon: linkding.png
         href: http://linkding.homelab.internal/

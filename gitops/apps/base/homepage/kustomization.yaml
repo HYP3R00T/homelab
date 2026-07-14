@@ -3,9 +3,9 @@ kind: Kustomization
 namespace: homepage
 resources:
   - namespace.yaml
-  - secret.yaml
-  - serviceaccount.yaml
-  - clusterrole.yaml
-  - clusterrolebinding.yaml
+  - service-account-token-secret.yaml
+  - service-account.yaml
+  - cluster-role.yaml
+  - cluster-role-binding.yaml
   - deployment.yaml
   - service.yaml

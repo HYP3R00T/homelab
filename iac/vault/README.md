@@ -88,4 +88,4 @@ The first-pass configuration aligns Vault with the current GitOps resources by:
 
 These settings match the current ClusterSecretStore definition under:
 
-- `gitops/infrastructure/configs/lab/external-secrets/clusterSecretStore.yaml`
+- `gitops/infrastructure/configs/lab/external-secrets/cluster-secret-store.yaml`

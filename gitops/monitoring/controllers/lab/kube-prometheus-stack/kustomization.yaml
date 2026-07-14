@@ -3,7 +3,10 @@ kind: Kustomization
 namespace: monitoring
 resources:
   - ../../base/kube-prometheus-stack/
-  - externalSecret.yaml
+  - grafana-external-secret.yaml
+  - prometheus-external-secret.yaml
+  - prometheus-ingress.yaml
+  - prometheus-middleware.yaml
 
 configMapGenerator:
   - name: kube-prometheus-stack-values

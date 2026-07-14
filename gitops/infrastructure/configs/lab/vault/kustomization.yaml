@@ -5,7 +5,7 @@ kind: Kustomization
 namespace: vault
 resources:
   - ../../../controllers/base/vault/
-  - persistentVolumeClaim.yaml
+  - persistent-volume-claim.yaml
 
 configMapGenerator:
   - name: vault-values

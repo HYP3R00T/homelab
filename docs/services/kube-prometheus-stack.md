@@ -16,29 +16,84 @@ Prometheus Operator.
 | Helm chart | `kube-prometheus-stack` `87.15.2` |
 | Namespace | `monitoring` |
 | Grafana | `http://grafana.homelab.internal` |
+| Prometheus | `http://prometheus.homelab.internal` |
 | Prometheus storage request | 10 GiB |
 | Grafana storage request | 2 GiB |
 | Alertmanager storage request | 2 GiB |
 | Prometheus retention | 10 days, limited to 8 GB |
 
-Only Grafana is exposed through Traefik. Prometheus and Alertmanager remain
-cluster-internal and can be reached temporarily with `kubectl port-forward`
-when direct access is needed.
+Grafana and Prometheus are exposed on the internal network through Traefik.
+Prometheus has a query UI but no account-based login page or session system.
+The Prometheus server can enforce experimental Basic Auth through a separate
+web configuration file, but the Prometheus Operator API used by this stack
+does not expose its `basic_auth_users` setting. The ingress is therefore
+protected at the existing Traefik boundary with a Basic Auth middleware.
+Alertmanager remains cluster-internal.
 
 ## Credentials
+
+The operator owns these credential values. Creating the GitOps references does
+not authorize writing anything to Vault. Before creating or rotating either
+credential, ask whether the operator already has a password and wait for
+explicit approval of the exact Vault operation.
+
+The current Grafana and Prometheus records were initialized with randomly
+generated passwords during the monitoring deployment on 14 July 2026. They
+are stored outside Git and are not regenerated during reconciliation.
 
 The Grafana administrator credential is stored at
 `external-secrets/data/monitoring/grafana` in Vault. External Secrets writes it
 to the `grafana-admin` Kubernetes Secret before Flux installs the chart. No
 password is stored in Git.
 
-Retrieve the password from an authenticated workstation when needed:
+The Grafana username is `admin`. Retrieve its password from an authenticated
+workstation when needed:
 
 ```shell
 set -a
 source .env
 set +a
 vault kv get -field=password -mount=external-secrets monitoring/grafana
+```
+
+To use an operator-selected Grafana password, collect it without echoing it and
+write it only after explicit approval:
+
+```shell
+read -rs "GRAFANA_ADMIN_PASSWORD?Grafana password: "
+printf '\n'
+vault kv put -mount=external-secrets monitoring/grafana \
+  username=admin password="$GRAFANA_ADMIN_PASSWORD"
+unset GRAFANA_ADMIN_PASSWORD
+```
+
+Prometheus uses a separate credential stored at
+`external-secrets/data/monitoring/prometheus`. External Secrets synchronizes
+only the bcrypt `htpasswd` entry required by Traefik; the plaintext password
+remains in Vault and is never copied to a Kubernetes Secret.
+
+Retrieve its username and password with:
+
+```shell
+set -a
+source .env
+set +a
+vault kv get -field=username -mount=external-secrets monitoring/prometheus
+vault kv get -field=password -mount=external-secrets monitoring/prometheus
+```
+
+Prometheus requires an `htpasswd` entry in addition to the chosen password.
+Generate that bcrypt entry and write the record only after explicit approval:
+
+```shell
+read -rs "PROMETHEUS_PASSWORD?Prometheus password: "
+printf '\n'
+PROMETHEUS_HASH="$(PROMETHEUS_PASSWORD="$PROMETHEUS_PASSWORD" python3 -c \
+  'import bcrypt, os; print(bcrypt.hashpw(os.environ["PROMETHEUS_PASSWORD"].encode(), bcrypt.gensalt(rounds=12)).decode())')"
+vault kv put -mount=external-secrets monitoring/prometheus \
+  username=prometheus password="$PROMETHEUS_PASSWORD" \
+  users="prometheus:$PROMETHEUS_HASH"
+unset PROMETHEUS_PASSWORD PROMETHEUS_HASH
 ```
 
 ## Storage and retention
@@ -82,3 +137,4 @@ remain enabled.
 - Ecosystem monitors: `gitops/monitoring/configs/base`
 - Lab monitor activation: `gitops/monitoring/configs/lab`
 - Grafana secret delivery: `gitops/monitoring/controllers/lab/kube-prometheus-stack`
+- Prometheus ingress authentication: `gitops/monitoring/controllers/lab/kube-prometheus-stack`

@@ -17,16 +17,17 @@ In this repository, it is configured to read from Vault through a `ClusterSecret
 | Namespace | `external-secrets` |
 | Store | ClusterSecretStore `vault` |
 | Authentication | Vault Kubernetes auth, role `eso` |
-| Current consumer | Cloudflared credentials |
+| Current consumers | Cloudflared, Grafana, Prometheus |
 
 ## What it depends on
 
 - Vault, through `gitops/clusters/lab/infrastructure-configs.yaml`
-- The Vault-backed store definition in `gitops/infrastructure/configs/lab/external-secrets/clusterSecretStore.yaml`
+- The Vault-backed store definition in `gitops/infrastructure/configs/lab/external-secrets/cluster-secret-store.yaml`
 
 ## What depends on it
 
-- `cloudflared`, through `gitops/infrastructure/configs/lab/cloudflared/externalSecret.yaml`
+- `cloudflared`, through `gitops/infrastructure/configs/lab/cloudflared/external-secret.yaml`
+- Grafana and Prometheus, through `gitops/monitoring/controllers/lab/kube-prometheus-stack/`
 - Any future workload that should receive secrets from Vault instead of storing them in Git
 
 ## Where it is activated
@@ -45,9 +46,10 @@ The repository already points External Secrets at Vault:
 - auth role: `eso`
 
 The Terraform workspace under `iac/vault` creates the matching mount, auth
-backend, policy, and role. The current Cloudflared integration reads the
-`credentials` property from `cloudflared/tunnel` and writes it to the
-`credentials.json` key in the `cloudflared-secret` Kubernetes Secret.
+backend, policy, and role. Cloudflared reads the `credentials` property from
+`cloudflared/tunnel`. Grafana reads its administrator username and password
+from `monitoring/grafana`. Prometheus reads only the bcrypt `users` entry from
+`monitoring/prometheus` for Traefik Basic Auth.
 
 See [Secrets flow](../architecture/secrets-flow.md) for the cross-service data
 path and [Bootstrap Vault](../runbooks/vault-bootstrap.md) for the setup

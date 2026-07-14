@@ -19,6 +19,10 @@ spec:
       kind: ExternalSecret
       name: grafana-admin
       namespace: monitoring
+    - apiVersion: external-secrets.io/v1
+      kind: ExternalSecret
+      name: prometheus-basic-auth
+      namespace: monitoring
     - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
       name: kube-prometheus-stack

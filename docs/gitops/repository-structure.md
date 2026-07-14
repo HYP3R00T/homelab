@@ -20,6 +20,30 @@ This repository is grouped by role. The goal is to keep it easy to understand wh
 
 At the simplest level, `gitops/` contains the Kubernetes manifests Flux applies to the cluster, while `iac/` is reserved for infrastructure that will be managed outside the GitOps path. Inside `gitops/`, `apps/` is for things people use, `infrastructure/` is for the shared capabilities those apps need, `monitoring/` is for observing both layers, and `clusters/` is for deciding what actually goes live.
 
+## File naming convention
+
+Manifest filenames under `gitops/` use lowercase kebab-case. Name a file after
+the Kubernetes resource kind when the component directory contains only one of
+that kind:
+
+- `service-account.yaml`
+- `cluster-role-binding.yaml`
+- `helm-repository.yaml`
+- `persistent-volume-claim.yaml`
+
+When a directory contains multiple resources of the same kind, prefix the kind
+with the workload or purpose so each file is unambiguous:
+
+- `grafana-external-secret.yaml`
+- `prometheus-external-secret.yaml`
+- `vault-service-monitor.yaml`
+- `traefik-pod-monitor.yaml`
+
+Keep the standard tool filenames `kustomization.yaml` and `values.yaml`.
+Application configuration files such as Homepage's `services.yaml` retain the
+names expected by that application. Do not introduce camelCase, snake_case, or
+concatenated multiword Kubernetes kinds in new filenames.
+
 ## Apps
 
 `gitops/apps/` is for services that are the actual destination.

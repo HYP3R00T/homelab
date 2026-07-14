@@ -22,10 +22,24 @@ flowchart TB
 ## Ownership boundaries
 
 - Terraform under `iac/vault` owns Vault auth, mounts, policies, and roles.
-- Operators write application secret values to Vault through the Vault CLI.
+- The operator chooses or explicitly approves every application secret value.
+- Operators write approved application secret values to Vault through the
+  Vault CLI.
 - External Secrets owns the generated Kubernetes Secret.
 - Workload manifests consume the Kubernetes Secret without embedding values.
 - Cloudflare owns the external tunnel endpoint and DNS routing.
+
+## Operator approval boundary
+
+Declaring a Vault path in Git does not authorize creating or changing the value
+at that path. Before any credential generation, Vault write, rotation,
+deletion, secret read, or unseal operation, the exact action must be presented
+to the operator and must receive explicit approval. The operator must first be
+asked whether an existing value should be used.
+
+Automation must not treat access to `.env`, a Vault token, or an unseal key as
+permission to use it. GitOps owns references and delivery; the operator owns
+the secret material and every security-sensitive mutation.
 
 ## Cloudflared implementation
 

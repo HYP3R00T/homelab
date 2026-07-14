@@ -20,7 +20,7 @@ inside Vault:
 - an `eso` role for the `external-secrets` service account
 
 The `ClusterSecretStore` in
-`gitops/infrastructure/configs/lab/external-secrets/clusterSecretStore.yaml`
+`gitops/infrastructure/configs/lab/external-secrets/cluster-secret-store.yaml`
 uses those names exactly.
 
 ## Prerequisites

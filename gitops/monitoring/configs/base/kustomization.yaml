@@ -1,11 +1,11 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - cnpg-operator.yaml
-  - external-secrets.yaml
-  - flux-controllers.yaml
-  - flux-operator.yaml
-  - nvidia-dcgm-exporter.yaml
-  - traefik.yaml
+  - cnpg-operator-pod-monitor.yaml
+  - external-secrets-pod-monitor.yaml
+  - flux-controllers-pod-monitor.yaml
+  - flux-operator-pod-monitor.yaml
+  - nvidia-dcgm-exporter-service-monitor.yaml
+  - traefik-pod-monitor.yaml
   - vault-metrics-service.yaml
-  - vault.yaml
+  - vault-service-monitor.yaml

@@ -35,7 +35,7 @@ It is part of infrastructure because it is shared access plumbing, not a user-fa
 - `gitops/clusters/lab/infrastructure-controllers.yaml`
 - `gitops/clusters/lab/infrastructure-configs.yaml`
 - `gitops/infrastructure/configs/lab/cloudflared/kustomization.yaml`
-- `gitops/infrastructure/configs/lab/cloudflared/externalSecret.yaml`
+- `gitops/infrastructure/configs/lab/cloudflared/external-secret.yaml`
 - `gitops/infrastructure/configs/base/cloudflared/`
 
 ## Current repository intent

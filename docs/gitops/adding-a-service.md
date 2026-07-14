@@ -39,9 +39,9 @@ For an application, that usually means things like:
 
 For Helm-managed infrastructure, that usually means things like:
 
-- namespace
-- repository definition
-- Helm release
+- `namespace.yaml`
+- `helm-repository.yaml`
+- `helm-release.yaml`
 
 Example:
 
@@ -76,8 +76,8 @@ kind: Kustomization
 namespace: linkding
 resources:
   - ../../base/linkding/
-  - persistentVolume.yaml
-  - persistentVolumeClaim.yaml
+  - persistent-volume.yaml
+  - persistent-volume-claim.yaml
   - ingress.yaml
 ```
 
@@ -137,8 +137,8 @@ gitops/apps/
     └── mealie/
         ├── kustomization.yaml
         ├── ingress.yaml
-        ├── persistentVolume.yaml
-        └── persistentVolumeClaim.yaml
+        ├── persistent-volume.yaml
+        └── persistent-volume-claim.yaml
 ```
 
 Then `gitops/apps/lab/kustomization.yaml` would include `mealie` as one of its resources.
