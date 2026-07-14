@@ -22,6 +22,22 @@ The workload uses a dedicated ServiceAccount and read-only RBAC so Homepage can
 discover selected Kubernetes resources. Dashboard configuration, bookmarks,
 widgets, CSS, and JavaScript live under `gitops/apps/lab/homepage/configs`.
 
+## Dashboard sections
+
+The dashboard is organized by responsibility:
+
+- **Applications** contains user-facing workloads such as Linkding.
+- **Platform** contains Flux Operator, Vault, Traefik, and the Cloudflare Zero
+  Trust administration console.
+- **Observability** contains Grafana and Prometheus.
+- **AI Assistants** contains external AI and developer-assistant services.
+
+Service descriptions make each destination explicit. Internal health endpoints
+are used for site monitoring where they do not require credentials. Prometheus
+and Traefik use Homepage's credential-free service widgets. Grafana and
+Cloudflare widgets are intentionally omitted because they require credentials
+or API tokens; adding either requires an approved secret-delivery design.
+
 ## Repository locations
 
 - Reusable workload: `gitops/apps/base/homepage`
@@ -35,6 +51,7 @@ widgets, CSS, and JavaScript live under `gitops/apps/lab/homepage/configs`.
 - Traefik serves the local hostname.
 - CoreDNS and local DNS resolve cluster and homelab names.
 
-Homepage currently lists a Mealie shortcut even though no Mealie workload is
-defined in this repository. Treat dashboard links as navigation configuration,
-not proof that a workload is deployed.
+Only deployed local web interfaces are listed. Platform components without a
+web interface, such as MetalLB, External Secrets Operator, CloudNativePG,
+NVIDIA GPU Operator, and Local Path Provisioner, are represented through
+Grafana and Prometheus rather than misleading dashboard links.

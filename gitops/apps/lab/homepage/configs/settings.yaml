@@ -7,21 +7,25 @@ background:
 theme: dark
 color: zinc
 headerStyle: clean
+title: Homelab
+description: Applications, platform services, and operational tools
+statusStyle: dot
+useEqualHeights: true
 # disableCollapse: true
 layout:
-  AI:
+  Applications:
     style: row
-    header: false
-    columns: 6
-  Misc:
+    columns: 4
+    icon: mdi-apps
+  Platform:
     style: row
-    columns: 6
-    header: false
-  Homelab:
+    columns: 4
+    icon: mdi-server-network
+  Observability:
     style: row
-    header: false
-    columns: 6
-  Homelab2:
+    columns: 4
+    icon: mdi-chart-line
+  AI Assistants:
     style: row
-    columns: 3
-    header: false
+    columns: 4
+    icon: mdi-creation

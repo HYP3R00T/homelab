@@ -1,61 +1,96 @@
-- Homelab:
-    - Flux:
-        icon: flux-cd.png
-        href: http://flux.homelab.internal/
-        target: _self
-    - Grafana:
-        icon: grafana.png
-        href: http://grafana.homelab.internal/
-        target: _self
-    - Prometheus:
-        icon: prometheus.png
-        href: http://prometheus.homelab.internal/
-        target: _self
+- Applications:
     - Linkding:
         icon: linkding.png
         href: http://linkding.homelab.internal/
-        # siteMonitor: http://linkding.linkding.svc.cluster.local
+        description: Bookmark manager
+        siteMonitor: http://linkding-service.linkding.svc.cluster.local:9090
         target: _self
-    - Mealie:
-        icon: mealie.png
-        href: http://mealie.homelab.internal/
-        # siteMonitor: http://mealie.mealie.svc.cluster.local
+
+- Platform:
+    - Flux Operator:
+        icon: flux-cd.png
+        href: http://flux.homelab.internal/
+        description: GitOps reconciliation and delivery
         target: _self
     - Vault:
         icon: vault.png
         href: http://vault.homelab.internal/
-        # siteMonitor: http://vault.vault.svc.cluster.local
+        description: Secrets management
+        siteMonitor: http://vault.vault.svc.cluster.local:8200/v1/sys/health
         target: _self
-- AI:
+    - Traefik:
+        icon: traefik-proxy.png
+        href: http://traefik.homelab.internal/
+        description: Ingress and HTTP routing
+        target: _self
+        widget:
+          type: traefik
+          url: http://traefik.traefik.svc.cluster.local
+          fields: ["routers", "services", "middleware"]
+          headers:
+            Host: traefik.homelab.internal
+    - Cloudflare Zero Trust:
+        icon: cloudflare-zero-trust.png
+        href: https://one.dash.cloudflare.com/
+        description: Tunnel and edge administration
+        target: _blank
+
+- Observability:
+    - Grafana:
+        icon: grafana.png
+        href: http://grafana.homelab.internal/
+        description: Dashboards and alerts
+        siteMonitor: http://kube-prometheus-stack-grafana.monitoring.svc.cluster.local/api/health
+        target: _self
+    - Prometheus:
+        icon: prometheus.png
+        href: http://prometheus.homelab.internal/
+        description: Metrics, targets, and PromQL
+        siteMonitor: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090/-/healthy
+        target: _self
+        widget:
+          type: prometheus
+          url: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
+          fields: ["targets_up", "targets_down", "targets_total"]
+
+- AI Assistants:
     - ChatGPT:
         icon: chatgpt.png
         href: https://chatgpt.com/
-        target: _self
-    - AI Fiesta:
-        icon: https://chat.aifiesta.ai/static/images/logo/icon.png
-        href: https://chat.aifiesta.ai/
-        target: _self
-    - Gemini:
-        icon: google-gemini.png
-        href: https://gemini.google.com/app
-        target: _self
+        description: OpenAI assistant
+        target: _blank
     - Claude:
         icon: claude-ai.png
         href: https://claude.ai/chats
-        target: _self
-    - Microsoft Copilot:
-        icon: microsoft-copilot.png
-        href: https://copilot.microsoft.com
-        target: _self
-    - GitHub Copilot:
-        icon: https://registry.npmmirror.com/@lobehub/icons-static-png/1.62.0/files/light/githubcopilot.png
-        href: https://github.com/copilot/
-        target: _self
+        description: Anthropic assistant
+        target: _blank
+    - Gemini:
+        icon: google-gemini.png
+        href: https://gemini.google.com/app
+        description: Google AI assistant
+        target: _blank
+    - Perplexity:
+        icon: si-perplexity
+        href: https://www.perplexity.ai/
+        description: AI search and research
+        target: _blank
     - Grok:
         icon: grok.png
         href: https://grok.com/
-        target: _self
-    - Perplexity:
-        icon: https://registry.npmmirror.com/@lobehub/icons-static-png/1.62.0/files/light/perplexity-color.png
-        href: https://www.perplexity.ai/
-        target: _self
+        description: xAI assistant
+        target: _blank
+    - Microsoft Copilot:
+        icon: microsoft-copilot.png
+        href: https://copilot.microsoft.com/
+        description: Microsoft AI assistant
+        target: _blank
+    - GitHub Copilot:
+        icon: si-githubcopilot
+        href: https://github.com/copilot/
+        description: AI software development
+        target: _blank
+    - AI Fiesta:
+        icon: https://chat.aifiesta.ai/static/images/logo/icon.png
+        href: https://chat.aifiesta.ai/
+        description: Multi-model AI workspace
+        target: _blank
