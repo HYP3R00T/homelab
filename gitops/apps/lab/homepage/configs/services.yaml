@@ -1,4 +1,8 @@
 - Homelab:
+    - Flux:
+        icon: flux-cd.png
+        href: http://flux.homelab.internal/
+        target: _self
     - Linkding:
         icon: linkding.png
         href: http://linkding.homelab.internal/
