@@ -12,10 +12,16 @@
       showLabel: true
       label: Homelab
     nodes:
-      show: true
-      cpu: true
-      memory: true
-      showLabel: true
+      show: false
+- openmeteo:
+    label: Jagatsinghpur
+    latitude: 20.2557
+    longitude: 86.17112
+    timezone: Asia/Kolkata
+    units: metric
+    cache: 5
+    format:
+      maximumFractionDigits: 1
 - datetime:
     text_size: 3xl
     format:

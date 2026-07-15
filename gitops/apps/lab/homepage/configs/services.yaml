@@ -15,16 +15,6 @@
         href: http://vault.homelab.internal/
         siteMonitor: http://vault.vault.svc.cluster.local:8200/v1/sys/health
         target: _self
-    - Traefik:
-        icon: traefik-proxy.png
-        href: http://traefik.homelab.internal/
-        target: _self
-        widget:
-          type: traefik
-          url: http://traefik.traefik.svc.cluster.local
-          fields: ["routers", "services", "middleware"]
-          headers:
-            Host: traefik.homelab.internal
     - Grafana:
         icon: grafana.png
         href: http://grafana.homelab.internal/
@@ -39,6 +29,16 @@
           type: prometheus
           url: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
           fields: ["targets_up", "targets_down", "targets_total"]
+    - Traefik:
+        icon: traefik-proxy.png
+        href: http://traefik.homelab.internal/
+        target: _self
+        widget:
+          type: traefik
+          url: http://traefik.traefik.svc.cluster.local
+          fields: ["routers", "services", "middleware"]
+          headers:
+            Host: traefik.homelab.internal
 
 - AI Assistants:
     - ChatGPT:
