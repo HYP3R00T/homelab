@@ -28,7 +28,6 @@ In this repository, it is configured to read from Vault through a `ClusterSecret
 
 - `cloudflared`, through `gitops/infrastructure/configs/lab/cloudflared/external-secret.yaml`
 - Grafana and Prometheus, through `gitops/monitoring/controllers/lab/kube-prometheus-stack/`
-- Any future workload that should receive secrets from Vault instead of storing them in Git
 
 ## Where it is activated
 

@@ -28,7 +28,7 @@ It is part of infrastructure because it is shared access plumbing, not a user-fa
 
 ## What depends on it
 
-- Any application that you later choose to publish through a Cloudflare tunnel
+- Public access to Linkding at `linkding.hyperoot.dev`
 
 ## Where it is activated
 

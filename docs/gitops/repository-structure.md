@@ -15,10 +15,15 @@ This repository is grouped by role. The goal is to keep it easy to understand wh
 │   ├── infrastructure/    # Platform services that support the cluster
 │   ├── monitoring/        # Observability and inspection layer
 │   └── clusters/          # Flux entrypoints that activate things in a cluster
-└── iac/                   # OpenTofu/Terraform-style infrastructure as code
+└── iac/                   # Terraform configuration for Vault
 ```
 
-At the simplest level, `gitops/` contains the Kubernetes manifests Flux applies to the cluster, while `iac/` is reserved for infrastructure that will be managed outside the GitOps path. Inside `gitops/`, `apps/` is for things people use, `infrastructure/` is for the shared capabilities those apps need, `monitoring/` is for observing both layers, and `clusters/` is for deciding what actually goes live.
+At the simplest level, `gitops/` contains the Kubernetes manifests Flux applies
+to the cluster, while `iac/vault/` manages authentication, policy, and secret
+engine configuration inside Vault. Inside `gitops/`, `apps/` is for things
+people use, `infrastructure/` is for the shared capabilities those apps need,
+`monitoring/` is for observing both layers, and `clusters/` decides what is
+active.
 
 ## File naming convention
 
@@ -54,7 +59,6 @@ Examples:
 
 - Homepage
 - Linkding
-- Mealie
 
 !!! tip "Ask yourself"
     Is this something I or another person would actively use?
@@ -120,14 +124,13 @@ Monitoring is split again by lifecycle:
 
 This folder does not define the services themselves. It tells Flux which parts of the repository should be applied to a given cluster.
 
-That means a manifest can exist in the repository without being live in the cluster yet.
+That means a manifest is active only when it is reachable from a reconciled
+cluster entrypoint.
 
 !!! warning "Important distinction"
     A service can be present in the repo but absent from the cluster.
     The folder tells us what the service is for.
     The cluster wiring tells us whether it is currently active.
-
-This is why commented entries in a `kustomization.yaml` matter so much. The files may exist, but the cluster will not reconcile them until the cluster wiring includes them.
 
 For simple layers, a cluster entrypoint can target the whole overlay, such as
 `./gitops/apps/lab`. Monitoring uses separate
@@ -149,7 +152,7 @@ CloudNativePG is installed as an operator, but no PostgreSQL `Cluster` resource
 exists yet. The monitoring layer is active and applies its monitor resources
 only after the Prometheus Operator CRDs are healthy.
 
-## Working principle going forward
+## Classification rule
 
 Before adding a new service, answer one question first: what role does this service play in the homelab?
 

@@ -28,13 +28,8 @@ CloudNativePG creates a PVC for every PostgreSQL instance. The cluster uses the
 default `local-path` StorageClass, backed by the Talos XFS user volume mounted
 at `/var/mnt/local-path-provisioner`.
 
-Because the platform has one node and one physical disk, the initial database
-design uses one PostgreSQL instance rather than replicas that share the same
-failure domain. Important databases require backups outside their primary PVC.
-
-No application database `Cluster` resource has been defined yet. Installing
-the operator and creating a database are deliberately separate lifecycle
-steps.
+No PostgreSQL `Cluster` resource or database PVC is currently defined. The
+installed operator therefore does not host application data.
 
 See [Local Path Provisioner](local-path-provisioner.md) for the storage
 boundary and operational constraints.

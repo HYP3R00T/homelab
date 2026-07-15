@@ -11,7 +11,7 @@ Managed resources:
 - Kubernetes auth configuration
 - the `eso` policy and Kubernetes auth role
 
-Out of scope for the first pass:
+Not managed by this workspace:
 
 - bulk secret values
 - unrelated cloud/provider infrastructure
@@ -36,10 +36,10 @@ actually route to it directly.
 ## State Recovery
 
 If the local state file goes missing while the managed Vault resources still
-exist, import them before planning. Imports are explicit so a new Vault
-installation can plan and create resources that do not exist yet.
+exist, import them before planning. A new, empty Vault installation has no
+resources to import and uses the normal plan-and-apply workflow instead.
 
-Recovery workflow:
+Recovery workflow for an existing Vault installation:
 
 ```shell
 terraform -chdir=iac/vault init
@@ -65,7 +65,7 @@ Important notes:
 - if the state file is gone, import is how Terraform rebuilds resource tracking
 - recovery succeeds only if the live Vault objects still match this configuration
 - import only resources that already exist in Vault
-- if you rename the auth path, mount path, or role name later, update the import IDs too
+- import IDs must match the configured auth path, mount path, and role name
 
 For safety, keep a backup of:
 
@@ -77,9 +77,9 @@ For initialization and configuration, see
 `docs/runbooks/vault-bootstrap.md`. For state and data recovery, see
 `docs/runbooks/vault-recovery.md`.
 
-## First-pass scope
+## Managed scope
 
-The first-pass configuration aligns Vault with the current GitOps resources by:
+The configuration aligns Vault with the current GitOps resources by:
 
 - enabling the Kubernetes auth backend at `kubernetes`
 - configuring Kubernetes auth for this cluster

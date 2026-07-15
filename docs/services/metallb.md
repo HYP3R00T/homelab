@@ -44,8 +44,7 @@ speaker:
 ```
 
 This value adds `--ignore-exclude-lb` to the MetalLB speaker. It is an
-intentional single-node exception; a future multi-node cluster should revisit
-whether external traffic belongs on control-plane nodes.
+intentional exception for the current single-node topology.
 
 ## Verify advertisement
 

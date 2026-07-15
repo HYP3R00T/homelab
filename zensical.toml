@@ -1,6 +1,6 @@
 [project]
 site_name = "Homelab"
-site_description = "A production-grade, self-hosted Kubernetes homelab powered by Talos Linux and FluxCD."
+site_description = "A self-hosted, single-node Kubernetes homelab powered by Talos Linux and Flux CD."
 repo_name = "HYP3R00T/homelab"
 repo_url = "https://github.com/HYP3R00T/homelab"
 site_author = "Rajesh Das"

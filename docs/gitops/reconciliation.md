@@ -16,7 +16,8 @@ because it exists; it must be reachable from one of those cluster entrypoints.
 - `infrastructure-configs.yaml` reconciles environment configuration from
   `gitops/infrastructure/configs/lab` after the controllers are healthy.
 - `monitoring-controllers.yaml` installs kube-prometheus-stack after
-  infrastructure configuration is healthy and delivers the Grafana credential.
+  infrastructure configuration is healthy and delivers the Grafana and
+  Prometheus ingress credentials.
 - `monitoring-configs.yaml` applies ecosystem monitors after the stack is
   healthy.
 
@@ -31,6 +32,7 @@ flowchart TB
     Source[GitRepository] --> Controllers[Infrastructure controllers]
     Controllers --> Configs[Infrastructure configs]
     Configs --> Services[Configured platform services]
+    Configs --> Apps[Applications]
     Configs --> Monitoring[Monitoring stack]
     Monitoring --> Monitors[Ecosystem monitors]
 ```

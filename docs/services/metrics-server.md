@@ -6,8 +6,9 @@ icon: lucide/gauge
 
 Metrics Server collects recent CPU and memory usage from each kubelet and
 publishes it through the Kubernetes Resource Metrics API. Homepage uses that
-API for its cluster and node information widget. Kubernetes can also use the
-same API for `kubectl top` and resource-based autoscaling.
+API for its aggregate cluster information widget. Per-node display is hidden
+while the homelab has only one node. Kubernetes can also use the same API for
+`kubectl top` and resource-based autoscaling.
 
 ## Current status
 

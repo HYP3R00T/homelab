@@ -18,8 +18,8 @@ Regenerate `kubernetes_ca_cert` and `token_reviewer_jwt` in the ignored
 `terraform.tfvars.example`, then apply the workspace:
 
 ```shell
-tf -chdir=iac/vault plan -out=tfplan
-tf -chdir=iac/vault apply tfplan
+terraform -chdir=iac/vault plan -out=tfplan
+terraform -chdir=iac/vault apply tfplan
 ```
 
 Do not accept a clean plan as proof that the credentials belong to the current
@@ -45,13 +45,13 @@ Use this path when Vault still contains the managed resources but
 `iac/vault/terraform.tfstate` is missing.
 
 ```shell
-tf -chdir=iac/vault init
-tf -chdir=iac/vault import vault_auth_backend.kubernetes kubernetes
-tf -chdir=iac/vault import vault_kubernetes_auth_backend_config.this kubernetes
-tf -chdir=iac/vault import vault_mount.external_secrets external-secrets
-tf -chdir=iac/vault import module.eso.vault_policy.this eso
-tf -chdir=iac/vault import module.eso.vault_kubernetes_auth_backend_role.this auth/kubernetes/role/eso
-tf -chdir=iac/vault plan
+terraform -chdir=iac/vault init
+terraform -chdir=iac/vault import vault_auth_backend.kubernetes kubernetes
+terraform -chdir=iac/vault import vault_kubernetes_auth_backend_config.this kubernetes
+terraform -chdir=iac/vault import vault_mount.external_secrets external-secrets
+terraform -chdir=iac/vault import module.eso.vault_policy.this eso
+terraform -chdir=iac/vault import module.eso.vault_kubernetes_auth_backend_role.this auth/kubernetes/role/eso
+terraform -chdir=iac/vault plan
 ```
 
 Import only objects that already exist. The final plan should be reviewed for

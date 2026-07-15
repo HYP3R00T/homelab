@@ -72,11 +72,11 @@ a narrower administrative token for routine Terraform use when possible.
 
 ## Unseal Vault
 
-Mise loads `.env`, so the repository task can unseal Vault without placing the
-key directly in shell history:
+Mise loads `.env`, so the unseal key does not need to be entered interactively
+or placed directly in shell history:
 
 ```shell
-mise run unseal
+vault operator unseal "$VAULT_UNSEAL_KEY"
 vault status
 ```
 
@@ -112,16 +112,16 @@ errors from `auth/kubernetes/login`.
 Initialize providers, review a saved plan, and apply it:
 
 ```shell
-tf -chdir=iac/vault init
-tf -chdir=iac/vault plan -out=tfplan
-tf -chdir=iac/vault apply tfplan
+terraform -chdir=iac/vault init
+terraform -chdir=iac/vault plan -out=tfplan
+terraform -chdir=iac/vault apply tfplan
 ```
 
 The expected first apply creates five resources. A clean follow-up plan should
 report no changes:
 
 ```shell
-tf -chdir=iac/vault plan
+terraform -chdir=iac/vault plan
 ```
 
 The saved plan, variable file, provider directory, and state are ignored by
@@ -133,7 +133,7 @@ Terraform state for this workspace.
 Check the Terraform state and the Vault-backed store:
 
 ```shell
-tf -chdir=iac/vault plan
+terraform -chdir=iac/vault plan
 kubectl get clustersecretstore vault
 ```
 

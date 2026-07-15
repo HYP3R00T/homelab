@@ -37,10 +37,6 @@ not authorize writing anything to Vault. Before creating or rotating either
 credential, ask whether the operator already has a password and wait for
 explicit approval of the exact Vault operation.
 
-The current Grafana and Prometheus records were initialized with randomly
-generated passwords during the monitoring deployment on 14 July 2026. They
-are stored outside Git and are not regenerated during reconciliation.
-
 The Grafana administrator credential is stored at
 `external-secrets/data/monitoring/grafana` in Vault. External Secrets writes it
 to the `grafana-admin` Kubernetes Secret before Flux installs the chart. No
@@ -121,8 +117,8 @@ collect metrics from:
 - Vault
 
 Prometheus discovers `ServiceMonitor` and `PodMonitor` resources across all
-namespaces. Future CloudNativePG database clusters should enable their own
-`PodMonitor` in the `Cluster` specification.
+namespaces. The current CloudNativePG coverage monitors the operator; no
+PostgreSQL database cluster exists.
 
 Talos binds the scheduler and controller-manager metrics endpoints to loopback,
 and etcd metrics require an explicit Talos machine configuration change.

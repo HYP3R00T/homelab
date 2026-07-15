@@ -11,7 +11,7 @@ hostnames. MetalLB exposes it on `192.168.0.60`.
 
 | Property | Value |
 |---|---|
-| Helm chart | `traefik` `41.0.2` |
+| Helm chart version policy | `traefik` `41.x.x` |
 | Namespace | `traefik` |
 | Ingress class | `traefik` (default) |
 | Service type | LoadBalancer |

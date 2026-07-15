@@ -16,10 +16,11 @@ gitops/
 │   └── lab/
 │       └── linkding/
 └── infrastructure/
-    ├── base/
-    │   └── traefik/
-    └── lab/
-        └── traefik/
+    └── controllers/
+        ├── base/
+        │   └── traefik/
+        └── lab/
+            └── traefik/
 ```
 
 The idea is simple:
@@ -64,7 +65,7 @@ This is where we add the things that belong to this homelab in particular:
 
 - namespace assignment for the overlay
 - ingress
-- persistent volumes or claims
+- persistent volume claims
 - Helm values
 - extra manifests needed only in this environment
 
@@ -76,7 +77,6 @@ kind: Kustomization
 namespace: linkding
 resources:
   - ../../base/linkding/
-  - persistent-volume.yaml
   - persistent-volume-claim.yaml
   - ingress.yaml
 ```
@@ -121,27 +121,27 @@ When adding a new service, use this flow:
 4. Add the service to the parent `kustomization.yaml` in that layer.
 5. Make sure the cluster entrypoint already points at that layer.
 
-## Example flow
+## Current Linkding example
 
-If we add a new application called `mealie`, the structure would look like:
+Linkding uses this exact structure:
 
 ```text
 gitops/apps/
 ├── base/
-│   └── mealie/
+│   └── linkding/
 │       ├── kustomization.yaml
 │       ├── namespace.yaml
 │       ├── deployment.yaml
 │       └── service.yaml
 └── lab/
-    └── mealie/
+    └── linkding/
         ├── kustomization.yaml
         ├── ingress.yaml
-        ├── persistent-volume.yaml
         └── persistent-volume-claim.yaml
 ```
 
-Then `gitops/apps/lab/kustomization.yaml` would include `mealie` as one of its resources.
+`gitops/apps/lab/kustomization.yaml` includes `linkding`, making the overlay
+reachable from the `apps` Flux Kustomization.
 
 ## Why this pattern helps
 
@@ -150,7 +150,8 @@ This split keeps the repository easier to reason about.
 - `base/` tells us what the service needs in general
 - `lab/` tells us what this homelab adds or changes
 
-That makes it easier to reuse, stage, review, and enable services without mixing common definitions with local decisions.
+That makes it easier to reuse, review, and activate services without mixing
+common definitions with local decisions.
 
 ## Important distinction
 
@@ -169,23 +170,27 @@ For example:
 
 That is how a service can be present in the repository but still not active in the cluster.
 
-## When ordering matters
+## Current ordering boundary
 
-Sometimes a service should not be bundled into a broad layer.
-
-Secret backends are the clearest example. In this repository:
+The cluster currently has one explicit infrastructure boundary:
 
 - `gitops/clusters/lab/infrastructure-controllers.yaml` reconciles `gitops/infrastructure/controllers/lab`
 - `gitops/clusters/lab/infrastructure-configs.yaml` reconciles `gitops/infrastructure/configs/lab`
 - `gitops/infrastructure/configs/lab/kustomization.yaml` bundles the shared infrastructure config overlays
 
-This keeps `gitops/clusters/lab` small while still letting Flux express the real dependency chain through `dependsOn` inside the infrastructure layer itself.
+`infrastructure-configs` depends on `infrastructure-controllers`, so Flux waits
+for controller health checks before applying configuration resources. The
+configuration layer itself has no per-service Flux `dependsOn` chain: Vault,
+the `ClusterSecretStore`, Cloudflared, MetalLB configuration, and the Flux Web
+Ingress are applied by the same Kustomization.
 
-```text
-gitops/infrastructure
-└── vault
-    └── external-secrets
-        └── cloudflared
+```mermaid
+flowchart TB
+    Vault[Vault] --> Store[ClusterSecretStore]
+    Store --> ExternalSecret[Cloudflared ExternalSecret]
+    ExternalSecret --> Secret[cloudflared-secret]
+    Secret --> Cloudflared[Cloudflared pod]
 ```
 
-Use this pattern when one service needs another service to be ready first.
+That chain converges through the Kubernetes controllers. Until External Secrets
+creates `cloudflared-secret`, the Cloudflared pod cannot mount its credential.

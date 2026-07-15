@@ -13,7 +13,7 @@ A self-hosted Kubernetes lab built for clean GitOps workflows, shared platform s
 
 </div>
 
-> ⚙️ The repository is the source of truth for the cluster. Some services are active today, while others are staged here before they are reconciled.
+> ⚙️ The repository is the source of truth for the cluster resources managed by Flux.
 
 ## 🧰 Stack Overview
 
@@ -38,7 +38,7 @@ A self-hosted Kubernetes lab built for clean GitOps workflows, shared platform s
 │   ├── infrastructure/    # Shared platform capabilities
 │   ├── monitoring/        # Observability layer
 │   └── clusters/          # Flux entrypoints for the lab cluster
-├── iac/                   # OpenTofu/Terraform-style infrastructure as code
+├── iac/                   # Terraform configuration for Vault
 └── docs/                  # Documentation site
 ```
 
@@ -48,7 +48,7 @@ A self-hosted Kubernetes lab built for clean GitOps workflows, shared platform s
 >
 > 🎛️ `gitops/clusters/` decides what Flux actually reconciles.
 >
-> 🏗️ `iac/` is reserved for non-GitOps infrastructure configuration managed outside Kubernetes.
+> 🏗️ `iac/vault/` manages configuration inside Vault that Kubernetes manifests do not own.
 
 ## 🚀 Current State
 
@@ -58,11 +58,11 @@ A self-hosted Kubernetes lab built for clean GitOps workflows, shared platform s
 |-------|-----------------|
 | Apps | `homepage`, `linkding` |
 | Infrastructure | `metallb`, `traefik`, `vault`, `external-secrets`, `cloudflared`, `local-path-provisioner`, `gpu-operator`, `cnpg` |
-| Monitoring | Prometheus, Alertmanager, Grafana, node-exporter, kube-state-metrics |
+| Monitoring | Prometheus, Alertmanager, Grafana, Metrics Server, node-exporter, kube-state-metrics |
 
-Grafana is available on the local network at
-`http://grafana.homelab.internal`. Prometheus and Alertmanager remain internal
-to the cluster.
+Grafana and Prometheus are available on the local network at
+`http://grafana.homelab.internal` and `http://prometheus.homelab.internal`.
+Alertmanager remains internal to the cluster.
 
 ## 🧭 How It Flows
 
@@ -84,6 +84,6 @@ to the cluster.
 
 - Keep the cluster declarative.
 - Separate apps from shared infrastructure.
-- Stage services before enabling them.
+- Activate services explicitly through the cluster entrypoints.
 - Keep monitoring as its own concern.
 - Make the repo easier to understand before making it more powerful.

@@ -36,14 +36,19 @@ to keep the dashboard compact. Service cards also omit descriptions. Icons use
 Homepage's built-in Dashboard Icons integration when the service has a matching
 asset. AI Fiesta retains its own logo because Dashboard Icons does not provide
 one. Internal health endpoints are used for site monitoring where they do not
-require credentials. Prometheus and Traefik use Homepage's credential-free
-service widgets. The Grafana widget is intentionally omitted because it
-requires credentials; adding it requires an approved secret-delivery design.
+require credentials. Prometheus and Traefik service widgets show summary
+metadata on their cards. Equal-height cards keep every service in that row
+aligned with those two widget-enabled cards.
 
 Quick Launch is enabled for keyboard navigation. Start typing anywhere on the
 dashboard to search service and bookmark names. Internet search suggestions are
 excluded so results remain focused on configured dashboard items. A launcher
 button is also available in the bottom-right corner on mobile layouts.
+
+Information widgets show host resources, aggregate Kubernetes cluster usage,
+current weather for Jagatsinghpur, Odisha, and the local time. Per-node usage is
+hidden while the cluster has only one node. The weather data comes from
+Open-Meteo in metric units and does not require an API key.
 
 Homepage uses Kubernetes `cluster` mode with its dedicated ServiceAccount and
 read-only RBAC. Ingress discovery is enabled. The Kubernetes information widget
@@ -78,9 +83,9 @@ mise run homepage-preview-stop
 ```
 
 Links remain usable when the WSL workstation can resolve the homelab domains.
-Server-side monitors and widgets that use `*.svc.cluster.local` addresses will
-show unavailable in Docker because those names exist only inside Kubernetes;
-that is expected and does not affect layout testing.
+Server-side site monitors and service widgets that use `*.svc.cluster.local`
+addresses will show unavailable in Docker because those names exist only
+inside Kubernetes; that is expected and does not affect layout testing.
 
 ## Repository locations
 
