@@ -26,7 +26,7 @@ A self-hosted Kubernetes lab built for clean GitOps workflows, shared platform s
 | Secrets | Vault + External Secrets Operator |
 | Public access | Cloudflare Tunnel |
 | Hardware | NVIDIA GPU Operator |
-| Apps | Homepage + Linkding |
+| Apps | Homepage + Linkding + Postiz |
 | Documentation | Zensical in `docs/` |
 
 ## 📁 Repository Structure
@@ -56,7 +56,7 @@ A self-hosted Kubernetes lab built for clean GitOps workflows, shared platform s
 
 | Layer | Active services |
 |-------|-----------------|
-| Apps | `homepage`, `linkding` |
+| Apps | `homepage`, `linkding`, `postiz` |
 | Infrastructure | `metallb`, `traefik`, `vault`, `external-secrets`, `cloudflared`, `local-path-provisioner`, `gpu-operator`, `cnpg` |
 | Monitoring | Prometheus, Alertmanager, Grafana, Metrics Server, node-exporter, kube-state-metrics |
 

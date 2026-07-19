@@ -15,6 +15,7 @@ flowchart TB
     Vault -->|approved secret data| ESO
     ESO --> Secret[Kubernetes Secret]
     Secret --> Cloudflared[Cloudflared]
+    Secret --> Postiz[Postiz stack]
     Cloudflared --> Tunnel[Cloudflare Tunnel]
     Tunnel --> Service[Internal Kubernetes Service]
 ```
@@ -41,12 +42,14 @@ Automation must not treat access to `.env`, a Vault token, or an unseal key as
 permission to use it. GitOps owns references and delivery; the operator owns
 the secret material and every security-sensitive mutation.
 
-## Cloudflared implementation
+## Application implementation
 
 The Cloudflared deployment mounts the locally managed tunnel credential from a
-Kubernetes Secret. Its local configuration sends requests for
-`linkding.hyperoot.dev` to the Linkding Service and returns a 404 response for
-unmatched hostnames.
+Kubernetes Secret. Its local configuration routes Linkding and returns a 404
+response for unmatched hostnames. Postiz consumes Vault-backed JWT, database,
+and Redis credentials through namespaced Secrets. Optional provider
+credentials can be added later. OAuth tokens created after authorization
+remain in the Postiz PostgreSQL database.
 
 See [Vault](../services/vault.md),
 [External Secrets](../services/external-secrets.md), and

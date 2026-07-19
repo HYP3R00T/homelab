@@ -26,7 +26,7 @@ widgets, CSS, and JavaScript live under `gitops/apps/lab/homepage/configs`.
 
 The dashboard is organized by responsibility:
 
-- **Applications** contains user-facing workloads such as Linkding.
+- **Applications** contains user-facing workloads such as Linkding and Postiz.
 - **Infrastructure & Monitoring** contains Flux Operator, Vault, Traefik,
   Grafana, and Prometheus.
 - **AI Assistants** contains external AI and developer-assistant services.

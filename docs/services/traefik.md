@@ -19,7 +19,8 @@ hostnames. MetalLB exposes it on `192.168.0.60`.
 | Dashboard route | `traefik.homelab.internal` |
 
 Traefik watches Kubernetes Ingress resources and publishes the address of its
-own Service. Homepage, Linkding, and Vault define local routes through it.
+own Service. Homepage, Linkding, Postiz, and Vault define local routes through
+it.
 
 ## Repository locations
 

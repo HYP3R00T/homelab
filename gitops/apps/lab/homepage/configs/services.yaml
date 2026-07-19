@@ -4,6 +4,11 @@
         href: http://linkding.homelab.internal/
         siteMonitor: http://linkding-service.linkding.svc.cluster.local:9090
         target: _self
+    - Postiz:
+        icon: postiz.png
+        href: http://postiz.homelab.internal/
+        siteMonitor: http://postiz.postiz.svc.cluster.local:5000
+        target: _self
 
 - Infrastructure & Monitoring:
     - Flux Operator:

@@ -45,7 +45,7 @@ flowchart TB
     Git[GitHub repository] --> Flux[Flux CD]
     Flux --> Controllers[Infrastructure controllers]
     Controllers --> Configs[Infrastructure configuration]
-    Configs --> Apps[Homepage and Linkding]
+    Configs --> Apps[Homepage, Linkding, and Postiz]
 
     LAN[Home network] --> MetalLB[MetalLB VIP]
     MetalLB --> Traefik[Traefik ingress]
@@ -58,10 +58,12 @@ flowchart TB
     Vault[Vault] --> ESO[External Secrets]
     ESO --> Cloudflared
     ESO --> Monitoring[Prometheus and Grafana]
+    ESO --> Postiz
 
     Talos[Talos XFS user volume] --> LocalPath[Local Path Provisioner]
     LocalPath --> CNPG[CloudNativePG]
     LocalPath --> Monitoring
+    LocalPath --> Postiz
 ```
 
 ## Current state
@@ -71,8 +73,8 @@ flowchart TB
 | Platform | Active | Talos Linux, Kubernetes, Flux CD, NVIDIA GPU Operator, local storage |
 | Networking | Active | MetalLB, Traefik, Cloudflared |
 | Secrets | Active | Vault, External Secrets Operator |
-| Applications | Active | Homepage, Linkding |
-| Databases | Operator enabled | CloudNativePG is installed; no application database cluster exists yet |
+| Applications | Active | Homepage, Linkding, Postiz |
+| Databases | Active | CloudNativePG hosts the Postiz and Temporal databases |
 | Monitoring | Active | Prometheus, Alertmanager, Grafana, and cluster exporters |
 
 ## How to read these docs

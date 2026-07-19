@@ -59,6 +59,7 @@ Examples:
 
 - Homepage
 - Linkding
+- Postiz
 
 !!! tip "Ask yourself"
     Is this something I or another person would actively use?
@@ -142,15 +143,16 @@ For infrastructure services that need stricter ordering, the cluster entrypoint 
 
 ## Applying this to services in the repository
 
-- `gitops/apps/`: `Homepage`, `Linkding`
+- `gitops/apps/`: `Homepage`, `Linkding`, `Postiz`
 - `gitops/infrastructure/`: `Traefik`, `MetalLB`, `Vault`, `External Secrets
   Operator`, `Cloudflared`, `Local Path Provisioner`, `NVIDIA GPU Operator`,
   `CloudNativePG`
 - `gitops/monitoring/`: `Prometheus`, `Grafana`
 
-CloudNativePG is installed as an operator, but no PostgreSQL `Cluster` resource
-exists yet. The monitoring layer is active and applies its monitor resources
-only after the Prometheus Operator CRDs are healthy.
+CloudNativePG is installed as an operator and manages the PostgreSQL cluster
+defined with the Postiz application. The monitoring layer is active and
+applies its monitor resources only after the Prometheus Operator CRDs are
+healthy.
 
 ## Classification rule
 

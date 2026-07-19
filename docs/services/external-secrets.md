@@ -17,7 +17,7 @@ In this repository, it is configured to read from Vault through a `ClusterSecret
 | Namespace | `external-secrets` |
 | Store | ClusterSecretStore `vault` |
 | Authentication | Vault Kubernetes auth, role `eso` |
-| Current consumers | Cloudflared, Grafana, Prometheus |
+| Current consumers | Cloudflared, Grafana, Prometheus, Postiz |
 
 ## What it depends on
 
@@ -28,6 +28,7 @@ In this repository, it is configured to read from Vault through a `ClusterSecret
 
 - `cloudflared`, through `gitops/infrastructure/configs/lab/cloudflared/external-secret.yaml`
 - Grafana and Prometheus, through `gitops/monitoring/controllers/lab/kube-prometheus-stack/`
+- Postiz, through `gitops/apps/lab/postiz/`
 
 ## Where it is activated
 
@@ -48,7 +49,9 @@ The Terraform workspace under `iac/vault` creates the matching mount, auth
 backend, policy, and role. Cloudflared reads the `credentials` property from
 `cloudflared/tunnel`. Grafana reads its administrator username and password
 from `monitoring/grafana`. Prometheus reads only the bcrypt `users` entry from
-`monitoring/prometheus` for Traefik Basic Auth.
+`monitoring/prometheus` for Traefik Basic Auth. Postiz reads its application,
+database, and Redis credentials from `postiz`; optional provider credentials
+can be added there later.
 
 See [Secrets flow](../architecture/secrets-flow.md) for the cross-service data
 path and [Bootstrap Vault](../runbooks/vault-bootstrap.md) for the setup
