@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: postiz
+resources:
+  - ../../base/postiz/
+  - postiz-external-secret.yaml
+  - postiz-database-external-secret.yaml
+  - temporal-database-external-secret.yaml
+  - redis-external-secret.yaml
+  - postgresql-cluster.yaml
+  - temporal-database.yaml
+  - temporal-visibility-database.yaml
+  - uploads-persistent-volume-claim.yaml
+  - redis-persistent-volume-claim.yaml
+  - ingress.yaml

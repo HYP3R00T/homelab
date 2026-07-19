@@ -17,26 +17,29 @@ flowchart TB
     VIP --> Traefik[Traefik]
     Traefik --> Homepage[Homepage service]
     Traefik --> Linkding[Linkding service]
+    Traefik --> Postiz[Postiz service]
     Traefik --> Vault[Vault service]
 ```
 
 MetalLB advertises a single address, `192.168.0.60`. Traefik receives traffic
 on that address and selects a backend from the request hostname.
 
-## Public Linkding access
+## Public application access
 
 ```mermaid
 flowchart TB
     Browser[Internet browser] --> Edge[Cloudflare edge]
     Edge --> Tunnel[homelab tunnel]
     Tunnel --> Connector[Cloudflared pod]
-    Connector --> Service[linkding-service:9090]
-    Service --> App[Linkding]
+    Connector --> LinkdingService[linkding-service:9090]
+    Connector --> PostizService[postiz:5000]
+    LinkdingService --> Linkding[Linkding]
+    PostizService --> Postiz[Postiz]
 ```
 
-`linkding.hyperoot.dev` is the only public application route currently defined.
-The tunnel is outbound-only, so the home router does not expose an inbound
-application port.
+The tunnel routes `linkding.hyperoot.dev` and `postiz.hyperoot.dev` to their
+cluster Services. The tunnel is outbound-only, so the home router does not
+expose an inbound application port.
 
 See [MetalLB](../services/metallb.md), [Traefik](../services/traefik.md), and
 [Cloudflared](../services/cloudflared.md) for ownership details.

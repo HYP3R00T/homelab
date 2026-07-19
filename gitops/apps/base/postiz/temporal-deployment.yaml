@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postiz-temporal
+  namespace: postiz
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: postiz
+      app.kubernetes.io/component: temporal
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: postiz
+        app.kubernetes.io/component: temporal
+    spec:
+      containers:
+        - name: temporal
+          image: temporalio/auto-setup:1.28.4
+          env:
+            - name: DB
+              value: postgres12
+            - name: DB_PORT
+              value: "5432"
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postiz-temporal-database
+                  key: username
+            - name: POSTGRES_PWD
+              valueFrom:
+                secretKeyRef:
+                  name: postiz-temporal-database
+                  key: password
+            - name: POSTGRES_SEEDS
+              value: postiz-postgres-rw
+            - name: DBNAME
+              value: temporal
+            - name: VISIBILITY_DBNAME
+              value: temporal_visibility
+            - name: SKIP_DB_CREATE
+              value: "true"
+            - name: SKIP_ADD_CUSTOM_SEARCH_ATTRIBUTES
+              value: "true"
+            - name: DYNAMIC_CONFIG_FILE_PATH
+              value: config/dynamicconfig/development-sql.yaml
+            - name: TEMPORAL_NAMESPACE
+              value: default
+          ports:
+            - name: grpc
+              containerPort: 7233
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: grpc
+            failureThreshold: 60
+            periodSeconds: 5
+          readinessProbe:
+            tcpSocket:
+              port: grpc
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: grpc
+            periodSeconds: 30
+          volumeMounts:
+            - name: dynamic-config
+              mountPath: /etc/temporal/config/dynamicconfig/development-sql.yaml
+              subPath: development-sql.yaml
+              readOnly: true
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+      volumes:
+        - name: dynamic-config
+          configMap:
+            name: postiz-temporal-dynamic-config

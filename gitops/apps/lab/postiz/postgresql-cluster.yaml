@@ -1,0 +1,32 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postiz-postgres
+  namespace: postiz
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.9
+  bootstrap:
+    initdb:
+      database: postiz
+      owner: postiz
+      secret:
+        name: postiz-database
+      dataChecksums: true
+  managed:
+    roles:
+      - name: temporal
+        ensure: present
+        login: true
+        passwordSecret:
+          name: postiz-temporal-database
+  storage:
+    storageClass: local-path
+    size: 10Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi

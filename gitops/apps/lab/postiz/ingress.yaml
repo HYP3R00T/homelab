@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: postiz
+  namespace: postiz
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: postiz.homelab.internal
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: postiz
+                port:
+                  number: 5000

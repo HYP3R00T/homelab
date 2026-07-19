@@ -4,4 +4,6 @@ credentials-file: /etc/cloudflared/credentials/credentials.json
 ingress:
   - hostname: linkding.hyperoot.dev
     service: http://linkding-service.linkding.svc.cluster.local:9090
+  - hostname: postiz.hyperoot.dev
+    service: http://postiz.postiz.svc.cluster.local:5000
   - service: http_status:404

@@ -29,6 +29,7 @@ nav = [
     { Overview = "apps/index.md" },
     { Homepage = "apps/homepage.md" },
     { Linkding = "apps/linkding.md" },
+    { Postiz = "apps/postiz.md" },
   ] },
   { Services = [
     { Overview = "services/index.md" },

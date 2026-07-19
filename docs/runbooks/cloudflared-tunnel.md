@@ -62,10 +62,11 @@ cloudflared tunnel info "$CLOUDFLARE_TUNNEL_ID"
 The message `does not have any active connection` is expected until a local or
 Kubernetes Cloudflared process starts using the credential.
 
-Create the Linkding DNS route:
+Create the application DNS routes:
 
 ```shell
 cloudflared tunnel route dns "$CLOUDFLARE_TUNNEL_ID" linkding.hyperoot.dev
+cloudflared tunnel route dns "$CLOUDFLARE_TUNNEL_ID" postiz.hyperoot.dev
 ```
 
 Continue with

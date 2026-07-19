@@ -1,0 +1,11 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: postiz-temporal-visibility
+  namespace: postiz
+spec:
+  name: temporal_visibility
+  owner: temporal
+  cluster:
+    name: postiz-postgres
+  databaseReclaimPolicy: retain

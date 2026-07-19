@@ -1,0 +1,123 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postiz
+  namespace: postiz
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: postiz
+      app.kubernetes.io/component: application
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: postiz
+        app.kubernetes.io/component: application
+    spec:
+      containers:
+        - name: postiz
+          image: ghcr.io/gitroomhq/postiz-app:v2.21.7
+          env:
+            - name: MAIN_URL
+              value: https://postiz.hyperoot.dev
+            - name: FRONTEND_URL
+              value: https://postiz.hyperoot.dev
+            - name: NEXT_PUBLIC_BACKEND_URL
+              value: https://postiz.hyperoot.dev/api
+            - name: BACKEND_INTERNAL_URL
+              value: http://127.0.0.1:3000
+            - name: TEMPORAL_ADDRESS
+              value: postiz-temporal:7233
+            - name: STORAGE_PROVIDER
+              value: local
+            - name: UPLOAD_DIRECTORY
+              value: /uploads
+            - name: NEXT_PUBLIC_UPLOAD_DIRECTORY
+              value: /uploads
+            - name: IS_GENERAL
+              value: "true"
+            - name: DISABLE_REGISTRATION
+              value: "true"
+            - name: NOT_SECURED
+              value: "false"
+            - name: RUN_CRON
+              value: "true"
+            - name: NX_ADD_PLUGINS
+              value: "false"
+            - name: API_LIMIT
+              value: "30"
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: postiz-app
+                  key: JWT_SECRET
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: postiz-app
+                  key: DATABASE_URL
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: postiz-app
+                  key: REDIS_URL
+            - name: LINKEDIN_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: postiz-app
+                  key: LINKEDIN_CLIENT_ID
+            - name: LINKEDIN_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: postiz-app
+                  key: LINKEDIN_CLIENT_SECRET
+          ports:
+            - name: http
+              containerPort: 5000
+              protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /api/
+              port: http
+            failureThreshold: 120
+            periodSeconds: 5
+            timeoutSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /api/
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 3
+          livenessProbe:
+            httpGet:
+              path: /api/
+              port: http
+            periodSeconds: 30
+            timeoutSeconds: 5
+          volumeMounts:
+            - name: uploads
+              mountPath: /uploads
+            - name: config
+              mountPath: /config
+            - name: nginx-runtime
+              mountPath: /var/lib/nginx
+          securityContext:
+            allowPrivilegeEscalation: false
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "2"
+              memory: 4Gi
+      volumes:
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: postiz-uploads
+        - name: config
+          emptyDir: {}
+        - name: nginx-runtime
+          emptyDir: {}

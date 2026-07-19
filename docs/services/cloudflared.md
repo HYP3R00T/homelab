@@ -17,8 +17,8 @@ It is part of infrastructure because it is shared access plumbing, not a user-fa
 | Namespace | `cloudflared` |
 | Tunnel | Locally managed `homelab` tunnel |
 | Credential source | Vault through External Secrets |
-| Public hostname | `linkding.hyperoot.dev` |
-| Origin | `linkding-service.linkding.svc.cluster.local:9090` |
+| Public hostnames | `linkding.hyperoot.dev`, `postiz.hyperoot.dev` |
+| Origins | Linkding and Postiz cluster Services |
 
 ## What it depends on
 
@@ -29,6 +29,7 @@ It is part of infrastructure because it is shared access plumbing, not a user-fa
 ## What depends on it
 
 - Public access to Linkding at `linkding.hyperoot.dev`
+- Public access to Postiz at `postiz.hyperoot.dev`
 
 ## Where it is activated
 
@@ -46,7 +47,8 @@ The repository expects this flow:
 2. External Secrets reads that value from Vault.
 3. A Kubernetes secret named `cloudflared-secret` is created in the `cloudflared` namespace.
 4. The Cloudflared deployment mounts that secret as `credentials.json`.
-5. A local configuration routes `linkding.hyperoot.dev` to the Linkding Service.
+5. A local configuration routes each public hostname to its application
+   Service.
 
 If any earlier step is missing, the Cloudflared connector cannot establish the
 tunnel.
@@ -55,6 +57,7 @@ tunnel.
 
 - `linkding.hyperoot.dev` routes to
   `linkding-service.linkding.svc.cluster.local:9090`.
+- `postiz.hyperoot.dev` routes to `postiz.postiz.svc.cluster.local:5000`.
 
 The cross-service relationship is described in
 [Secrets flow](../architecture/secrets-flow.md).

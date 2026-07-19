@@ -11,6 +11,7 @@ such as ingress, secrets, and external access remain in the Services layer.
 |---|---|---|---|---|
 | [Homepage](homepage.md) | Active | `homepage.homelab.internal` | No | ConfigMap from Git; ephemeral logs |
 | [Linkding](linkding.md) | Active | `linkding.homelab.internal` | `linkding.hyperoot.dev` | 10 GiB retained volume |
+| [Postiz](postiz.md) | Active | `postiz.homelab.internal` | `postiz.hyperoot.dev` | Local uploads, Redis, and PostgreSQL volumes |
 
-Both overlays are enabled by `gitops/apps/lab/kustomization.yaml` and reconcile
+All overlays are enabled by `gitops/apps/lab/kustomization.yaml` and reconcile
 through the `apps` Flux Kustomization.
