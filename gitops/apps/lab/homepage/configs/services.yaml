@@ -6,7 +6,7 @@
         target: _self
     - Postiz:
         icon: postiz.png
-        href: http://postiz.homelab.internal/
+        href: https://postiz.hyperoot.dev
         siteMonitor: http://postiz.postiz.svc.cluster.local:5000
         target: _self
 
