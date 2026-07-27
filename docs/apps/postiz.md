@@ -8,6 +8,9 @@ Postiz schedules and publishes social media posts. This installation is sized
 for one user and runs the application with dedicated Redis and Temporal
 processes in the `postiz` namespace.
 
+For the complete reconciliation chain and a file-by-file explanation, see
+[Postiz architecture](postiz-architecture.md).
+
 ## Current implementation
 
 | Property | Value |
