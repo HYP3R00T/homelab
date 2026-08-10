@@ -8,3 +8,6 @@ spec:
   url: oci://ghcr.io/traefik/helm/traefik
   ref:
     semver: "41.x.x"
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
