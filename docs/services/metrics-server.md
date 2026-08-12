@@ -37,7 +37,7 @@ validates the kubelet certificate with that CA. The deployment does not use
 `--kubelet-insecure-tls`. The Kubernetes API aggregation connection also
 validates a Helm-managed Metrics Server certificate.
 
-The current kubelet CA expires on 14 July 2027. After reinstalling Talos or
+The current kubelet CA expires on 10 August 2027. After reinstalling Talos or
 rotating its kubelet certificate authority, replace the public CA in
 `kubelet-ca-config-map.yaml` before reconciling Metrics Server. Also update the
 hostname and IP in `helm-release-patch.yaml` if the node identity changes.
