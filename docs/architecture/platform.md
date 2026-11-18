@@ -1,60 +1,19 @@
----
-icon: lucide/boxes
----
+# Platform architecture
 
-# Platform Architecture
-
-The homelab runs on one Lenovo Legion Y540 node. Talos Linux supplies an
-immutable Kubernetes host, while Flux turns the `main` branch of this
-repository into the desired cluster state.
-
-## Reconciliation layers
+The two service areas are apps for end-user applications and infrastructure for administrative and shared platform services. Monitoring lives under infrastructure/kube-prometheus-stack. Each shared component has one owner. K3s owns packaged platform components; Flux does not redeclare their deployments.
 
 ```mermaid
 flowchart TB
-    Git[GitHub main branch] --> Source[Flux GitRepository]
-    Source --> Controllers[Infrastructure controllers]
-    Controllers --> Configs[Infrastructure configuration]
-    Configs --> Workloads[Applications]
-    Configs --> Monitoring[Monitoring layer]
+    Git[Git main] --> Flux[Flux]
+    Flux --> Apps[Homepage and Linkding]
+    Flux --> Core[Retained class and Flux ingress]
+    Core --> Secrets[Vault and ESO]
+    Secrets --> Store[Vault ClusterSecretStore]
+    Store --> Credentials[Monitoring ExternalSecrets]
+    Credentials --> Stack[Prometheus Grafana Alertmanager]
+    Stack --> Monitors[Custom monitors]
 ```
 
-The order is intentional:
+Arrows after Flux indicate readiness dependencies, not ownership of the downstream data. Apps do not wait for Vault, so a sealed Vault or unfinished bootstrap does not block Homepage and Linkding updates. Core infrastructure does not wait for monitoring, so Flux UI remains available while diagnosing bootstrap failures.
 
-1. Flux installs operators and controllers.
-2. Configuration custom resources are applied after their controllers exist.
-3. Applications reconcile after shared infrastructure is ready.
-4. Monitoring installs after shared infrastructure, followed by ecosystem
-   monitors after the Prometheus CRDs are healthy.
-
-## Runtime foundation
-
-| Component | Current role |
-|---|---|
-| Talos Linux `v1.13.6` | Immutable operating system and Kubernetes lifecycle |
-| Kubernetes `v1.36.2` | Workload scheduler and control plane |
-| containerd `2.2.5` | Container runtime |
-| Flannel | Pod networking |
-| CoreDNS | Cluster service discovery |
-| NVIDIA GPU Operator `v26.3.3` | GPU discovery, validation, metrics, and device plugin |
-| Local Path Provisioner `v0.0.36` | Dynamic local PersistentVolumes on the Talos NVMe filesystem |
-| kube-prometheus-stack `87.15.2` | Cluster metrics, dashboards, and alert evaluation |
-
-The initial Talos machine configuration includes the NVIDIA extensions, kernel
-modules, single-node scheduling policy, and NVMe volume layout. Flux owns the
-GPU Operator Helm release and Local Path Provisioner that expose those host
-capabilities to Kubernetes. The boundaries are documented on the
-[GPU Operator](../services/gpu-operator.md) and
-[Local Path Provisioner](../services/local-path-provisioner.md) pages.
-
-## Repository ownership
-
-- `gitops/clusters/lab` activates the reconciliation layers.
-- `gitops/apps` owns user-facing workloads.
-- `gitops/infrastructure` owns shared controllers and configuration.
-- `gitops/monitoring` owns the observability stack and ecosystem monitors.
-- `iac/vault` owns configuration inside Vault that Kubernetes cannot bootstrap.
-
-Continue with [Traffic flow](traffic-flow.md), [Secrets flow](secrets-flow.md),
-the [platform setup](../platform/index.md), or the
-[repository structure](../gitops/repository-structure.md).
+Cloudflared, CloudNativePG, and Postiz have service directories but no active reconciliation entry. Operators and their custom resources are kept on opposite sides of a readiness boundary when needed. See [reconciliation](../gitops/reconciliation.md).

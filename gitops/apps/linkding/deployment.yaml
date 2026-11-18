@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: linkding-deployment
+  namespace: linkding
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: linkding
+  template:
+    metadata:
+      labels:
+        app: linkding
+    spec:
+      securityContext:
+        runAsUser: 33
+        runAsGroup: 33
+        fsGroup: 33
+      containers:
+      - name: linkding
+        image: sissbruecker/linkding:1.45.0
+        env:
+        - name: LD_CSRF_TRUSTED_ORIGINS
+          value: http://linkding.homelab.internal,https://linkding.homelab.internal
+        ports:
+        - name: http
+          containerPort: 9090
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /etc/linkding/data
+          name: linkding-data
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: 500m
+          requests:
+            memory: 100Mi
+            cpu: 100m
+      volumes:
+      - name: linkding-data
+        persistentVolumeClaim:
+          claimName: linkding-data

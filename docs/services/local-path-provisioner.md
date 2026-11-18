@@ -1,89 +1,20 @@
----
-icon: lucide/folder-cog
----
-
 # Local Path Provisioner
 
-Local Path Provisioner supplies dynamic local PersistentVolumes for workloads
-that request the `local-path` StorageClass.
+K3s runs Rancher's Local Path Provisioner in `kube-system`. This repository does not install another provisioner or change its existing configuration.
 
-## Current implementation
+| Class | Provisioner | Reclaim policy | Use |
+| --- | --- | --- | --- |
+| local-path | rancher.io/local-path | Existing K3s default, inspected as Delete | Existing Linkding claim remains unchanged |
+| local-path-retain | rancher.io/local-path | Retain | New monitoring and Vault claims |
 
-| Property | Value |
-|---|---|
-| Version | `v0.0.36` |
-| Namespace | `local-path-storage` |
-| StorageClass | `local-path` (default) |
-| Binding mode | `WaitForFirstConsumer` |
-| Reclaim policy | `Retain` |
-| Host root | `/var/mnt/local-path-provisioner` |
+The additional class is non-default and defined in `gitops/infrastructure/core/storage-class.yaml`. Both use WaitForFirstConsumer; each new claim gets a dynamically created PV. There is no duplicate controller and no need for one static PV YAML file per application.
 
-The upstream resources are vendored in
-`gitops/infrastructure/controllers/base/local-path-provisioner`. The lab overlay
-owns the Talos path, namespace policy, default-class annotation, and reclaim
-policy.
-
-The controller has explicit resource requests and limits. Its short-lived
-helper pod also has a resource envelope, avoiding unbounded scheduling and
-noisy-neighbor warnings.
-
-## Talos dependency
-
-The provisioner assumes the host mount already exists. Talos creates and
-manages it as a dedicated XFS partition through `UserVolumeConfig`; Flux does
-not manage that machine configuration.
-
-The volume was defined in `controlplane.yaml` as part of the original Talos
-installation, not added later. See
-[Configure the control plane](../platform/talos-linux.md#configure-the-control-plane)
-for the exact machine-configuration diff that was applied.
-
-Verify the host volume before troubleshooting the Kubernetes provisioner:
+The inspected K3s storage root is `/var/lib/rancher/k3s/storage`. Each PV points at a directory and has node affinity. Inspect actual paths before backing up or recovering data. Requested capacities do not enforce a directory quota; watch free disk space on the VM.
 
 ```shell
-talosctl get volumestatus u-local-path-provisioner
-talosctl get mountstatus u-local-path-provisioner
-talosctl ls /var/mnt/local-path-provisioner
+kubectl get storageclass
+kubectl get pvc -A
+kubectl get pv -o custom-columns=NAME:.metadata.name,CLAIM:.spec.claimRef.name,NAMESPACE:.spec.claimRef.namespace,POLICY:.spec.persistentVolumeReclaimPolicy,HOSTPATH:.spec.hostPath.path,LOCAL:.spec.local.path
 ```
 
-The XFS filesystem is mounted at `/var/mnt/local-path-provisioner`. The current
-node reports `EPHEMERAL` on `/dev/nvme0n1p4` and the user volume on
-`/dev/nvme0n1p5`.
-
-## Data lifecycle
-
-Each dynamically provisioned volume becomes a directory beneath the configured
-root. The PV includes node affinity, keeping the consuming pod on the node that
-contains its data.
-
-Vault and Linkding request this StorageClass directly. Dynamic provisioning
-avoids static PV manifests that embed a generated Talos hostname and become
-unschedulable after a reinstall changes the node identity.
-
-`Retain` is chosen for safety. Deleting a PVC leaves its PV and directory for
-manual recovery or cleanup. Operators must verify that data is no longer needed
-before removing retained directories.
-
-The requested PVC size is not an enforced filesystem quota. Monitor the free
-space on `/var/mnt/local-path-provisioner` independently of Kubernetes PVC
-capacity. A workload can fill the shared user volume and affect other workloads
-using it, although it cannot consume the separate `EPHEMERAL` filesystem.
-
-Data survives pod restarts, node reboots, and normal Talos upgrades. It does
-not survive an NVMe failure or a reinstall that wipes and repartitions the
-disk. Local persistent storage is not a backup; important data needs an
-off-volume backup.
-
-Verify the Kubernetes side of the storage chain with:
-
-```shell
-kubectl get storageclass local-path
-kubectl get pvc --all-namespaces
-kubectl get pv
-kubectl get pods --namespace local-path-storage
-```
-
-## References
-
-- [Talos user volumes](https://docs.siderolabs.com/talos/v1.13/configure-your-talos-cluster/storage-and-disk-management/disk-management/user)
-- [Rancher Local Path Provisioner](https://github.com/rancher/local-path-provisioner)
+Retain keeps the data after explicit claim deletion, but a released PV needs manual rebinding. It does not make a backup or protect storage from host deletion, VM disk failure, or K3s uninstall. Read [storage recovery](../runbooks/storage-recovery.md) before rebuilding the cluster.

@@ -1,37 +1,7 @@
----
-icon: lucide/database
----
-
 # CloudNativePG
 
-CloudNativePG provides a Kubernetes operator for PostgreSQL clusters. The
-operator is enabled in the lab controller overlay; application database
-clusters are defined separately when a workload needs PostgreSQL.
+CloudNativePG is retained at chart version 0.29.0 in `gitops/infrastructure/cnpg`, but no active Flux group includes it. Its optional PodMonitor is `monitor.yaml`, excluded from the service Kustomization so installing the operator does not require Prometheus CRDs.
 
-## Current status
+The inactive Postiz bundle declares a CloudNativePG Cluster named postiz-postgres and Database resources for Temporal. That deployment therefore requires this operator; it is not an unused dependency that can simply be deleted while keeping the current Postiz design.
 
-| Property | Value |
-|---|---|
-| Status | Enabled in GitOps |
-| Namespace | `cnpg` |
-| Helm chart | `cloudnative-pg` |
-| Chart version | `0.29.0` |
-| Database clusters | `postiz-postgres` in the `postiz` namespace |
-
-The lab overlay is included by
-`gitops/infrastructure/controllers/lab/kustomization.yaml`, and the HelmRelease
-is part of the infrastructure controller health checks.
-
-## Storage model
-
-CloudNativePG creates a PVC for every PostgreSQL instance. The cluster uses the
-default `local-path` StorageClass, backed by the Talos XFS user volume mounted
-at `/var/mnt/local-path-provisioner`.
-
-The single-instance `postiz-postgres` cluster has a 10 GiB local volume. It
-hosts the Postiz application database and the two databases required by
-Temporal. CloudNativePG manages the `postiz` and `temporal` roles from
-Vault-backed `kubernetes.io/basic-auth` Secrets.
-
-See [Local Path Provisioner](local-path-provisioner.md) for the storage
-boundary and operational constraints.
+Before enabling Postiz, add a separate dependency-ordered group for CNPG, wait for the operator, prepare application credentials, and choose storage/backup settings. Do not activate Postiz merely by adding it to the independent Homepage/Linkding apps group. No database deployment is part of the cleanup rollout.

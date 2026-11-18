@@ -9,7 +9,7 @@ Managed resources:
 - the `external-secrets` KV v2 mount
 - Kubernetes authentication at `kubernetes`
 - Kubernetes auth configuration
-- the `eso` policy and Kubernetes auth role
+- the `eso` policy and Kubernetes auth role with audience `vault`
 
 Not managed by this workspace:
 
@@ -88,4 +88,4 @@ The configuration aligns Vault with the current GitOps resources by:
 
 These settings match the current ClusterSecretStore definition under:
 
-- `gitops/infrastructure/configs/lab/external-secrets/cluster-secret-store.yaml`
+- `gitops/infrastructure/secret-store/cluster-secret-store.yaml`

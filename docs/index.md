@@ -1,92 +1,28 @@
----
-icon: lucide/rocket
----
+# Homelab
 
-# Hyperoot Homelab
+This homelab uses one Ubuntu VM running K3s. Flux manages service manifests from the main branch. Homepage and Linkding are independent of the secret and monitoring bootstrap chain.
 
-Welcome to a single-node Kubernetes platform built to make infrastructure
-understandable, reproducible, and pleasant to operate. Talos Linux provides the
-immutable host, Flux continuously reconciles this repository, and every active
-application sits on a small set of shared platform services.
+## Configuration at a glance
 
-<div class="grid cards" markdown>
+| Area | Owner | Included configuration |
+| --- | --- | --- |
+| Cluster platform | K3s | CoreDNS, Traefik, ServiceLB, Local Path Provisioner, Metrics Server |
+| Applications | Flux apps group | Homepage and Linkding |
+| Shared infrastructure | Flux infrastructure group | Retained storage class and Flux UI ingress |
+| Secret delivery | Flux secrets and secret-store groups | Vault, ESO, and the Vault ClusterSecretStore |
+| Monitoring | Flux monitoring groups | Secret delivery, kube-prometheus-stack, custom monitors |
+| Optional workloads | Not activated | Cloudflared, CloudNativePG, Postiz |
 
--   **Understand the platform**
+Vault and monitoring are declared in the entrypoint, but a fresh cluster cannot complete their bootstrap automatically. See [rollout](runbooks/gitops-rollout.md) before merging changes to the watched branch.
 
-    Start with the [architecture overview](architecture/platform.md) to see
-    how Git, Flux, networking, secrets, and workloads fit together.
+## Where to start
 
--   **Recreate the host**
+- [Platform](platform/index.md) explains K3s ownership.
+- [Architecture](architecture/index.md) explains traffic and secret dependencies.
+- [Repository structure](gitops/repository-structure.md) describes the apps and infrastructure service areas.
+- [Reconciliation](gitops/reconciliation.md) describes Flux dependencies.
+- [Services](services/index.md) documents shared capabilities.
+- [Applications](apps/index.md) lists the enabled applications.
+- [Storage recovery](runbooks/storage-recovery.md) covers retained data and backups.
 
-    Follow the [platform setup](platform/index.md) to understand the Talos
-    installation, NVIDIA host support, and local storage foundation.
-
--   **Explore what is running**
-
-    Browse [applications](apps/index.md) and [platform services](services/index.md),
-    with status, dependencies, configuration paths, and ownership on each page.
-
--   **Learn the GitOps model**
-
-    Read the [GitOps overview](gitops/index.md) before changing manifests or
-    adding a service.
-
--   **Operate the cluster**
-
-    Use [runbooks](runbooks/index.md) for repeatable bootstrap, recovery, and
-    credential-management procedures.
-
-</div>
-
-## Platform at a glance
-
-```mermaid
-flowchart TB
-    Git[GitHub repository] --> Flux[Flux CD]
-    Flux --> Controllers[Infrastructure controllers]
-    Controllers --> Configs[Infrastructure configuration]
-    Configs --> Apps[Homepage, Linkding, and Postiz]
-
-    LAN[Home network] --> MetalLB[MetalLB VIP]
-    MetalLB --> Traefik[Traefik ingress]
-    Traefik --> Apps
-
-    Internet[Internet] --> Cloudflare[Cloudflare edge]
-    Cloudflare --> Cloudflared[Cloudflared tunnel]
-    Cloudflared --> Linkding[Linkding]
-
-    Vault[Vault] --> ESO[External Secrets]
-    ESO --> Cloudflared
-    ESO --> Monitoring[Prometheus and Grafana]
-    ESO --> Postiz
-
-    Talos[Talos XFS user volume] --> LocalPath[Local Path Provisioner]
-    LocalPath --> CNPG[CloudNativePG]
-    LocalPath --> Monitoring
-    LocalPath --> Postiz
-```
-
-## Current state
-
-| Area | Status | Components |
-|---|---|---|
-| Platform | Active | Talos Linux, Kubernetes, Flux CD, NVIDIA GPU Operator, local storage |
-| Networking | Active | MetalLB, Traefik, Cloudflared |
-| Secrets | Active | Vault, External Secrets Operator |
-| Applications | Active | Homepage, Linkding, Postiz |
-| Databases | Active | CloudNativePG hosts the Postiz and Temporal databases |
-| Monitoring | Active | Prometheus, Alertmanager, Grafana, and cluster exporters |
-
-## How to read these docs
-
-1. [Architecture](architecture/index.md) explains relationships across the
-   whole platform.
-2. [Platform setup](platform/index.md) explains the Talos host foundation.
-3. [GitOps](gitops/index.md) explains how repository changes become live state.
-4. [Applications](apps/index.md) documents user-facing workloads.
-5. [Services](services/index.md) documents shared infrastructure components.
-6. [Runbooks](runbooks/index.md) provides commands for operational procedures.
-
-!!! note "Source of truth"
-    These pages explain the current system. Flux manifests under `gitops/` and
-    Terraform under `iac/` remain the operational source of truth.
+The manifests are the source of truth for declared state. A configured service is not proof of a successful rollout; check Flux readiness and the live workload.

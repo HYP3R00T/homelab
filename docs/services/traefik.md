@@ -1,36 +1,14 @@
----
-icon: lucide/signpost
----
-
 # Traefik
 
-Traefik is the default Kubernetes ingress controller for local homelab
-hostnames. MetalLB exposes it on `192.168.0.60`.
+K3s manages Traefik in `kube-system`. Its LoadBalancer service uses K3s ServiceLB and the node's LAN address, `192.168.0.61`, on ports 80 and 443. No separate Flux HelmRelease or MetalLB deployment is required.
 
-## Current implementation
+Application and infrastructure Ingress objects use `ingressClassName: traefik`. The retained monitoring PodMonitor selects `app.kubernetes.io/name=traefik` and `app.kubernetes.io/instance=traefik-kube-system`, and scrapes the existing metrics port 9100. Those labels and the enabled Prometheus endpoint were inspected on this cluster; recheck them after K3s upgrades.
 
-| Property | Value |
-|---|---|
-| Helm chart version policy | `traefik` `41.x.x` |
-| Namespace | `traefik` |
-| Ingress class | `traefik` (default) |
-| Service type | LoadBalancer |
-| External address | `192.168.0.60` |
-| Dashboard route | `traefik.homelab.internal` |
+The dashboard is not exposed by this repository. Homepage reports its pod metrics instead of requesting the removed standalone Traefik dashboard endpoint.
 
-Traefik watches Kubernetes Ingress resources and publishes the address of its
-own Service. Homepage, Linkding, Postiz, and Vault define local routes through
-it.
+```shell
+kubectl get deployment,service -n kube-system -l app.kubernetes.io/name=traefik
+kubectl get ingress -A
+```
 
-## Repository locations
-
-- Helm release and OCI source: `gitops/infrastructure/controllers/base/traefik`
-- Lab values: `gitops/infrastructure/controllers/lab/traefik`
-- Application ingresses: `gitops/apps/lab`
-- Vault ingress values: `gitops/infrastructure/configs/lab/vault/values.yaml`
-
-## Dependencies
-
-Traefik depends on MetalLB for LAN exposure. Applications depend on Traefik for
-local hostname routing. Public Linkding traffic bypasses Traefik and travels
-directly from Cloudflared to the Linkding Service.
+[K3s networking documentation](https://docs.k3s.io/networking/networking-services) describes packaged-chart customization through HelmChartConfig if a later change needs it.

@@ -4,7 +4,7 @@ icon: lucide/calendar-clock
 
 # Postiz
 
-Postiz schedules and publishes social media posts. This installation is sized
+Postiz is retained but inactive; no active Flux group includes this bundle. It schedules and publishes social media posts when deliberately deployed. This installation is sized
 for one user and runs the application with dedicated Redis and Temporal
 processes in the `postiz` namespace.
 
@@ -21,9 +21,9 @@ For the complete reconciliation chain and a file-by-file explanation, see
 | Local hostname | `postiz.homelab.internal` |
 | Public hostname | `postiz.hyperoot.dev` through Cloudflared |
 | Replicas | 1 |
-| Upload storage | 20 GiB retained local volume |
-| Redis storage | 1 GiB retained local volume |
-| PostgreSQL storage | 10 GiB retained local volume |
+| Upload storage | 20 GiB local claim (inactive) |
+| Redis storage | 1 GiB local claim (inactive) |
+| PostgreSQL storage | 10 GiB local claim (inactive) |
 
 The Postiz container uses local upload storage. Redis persists its append-only
 log locally. CloudNativePG runs one PostgreSQL instance containing the `postiz`,
@@ -63,7 +63,7 @@ Vault.
 
 ## Registration
 
-The owner account has been created and `DISABLE_REGISTRATION` is enabled. Use
+The retained configuration has `DISABLE_REGISTRATION` enabled; this does not establish that an owner account exists on a future installation. Review account bootstrap before activation. Use
 `https://postiz.hyperoot.dev` for sign-in and OAuth provider callbacks. The
 local hostname remains available for diagnostics, but the public HTTPS hostname
 is the canonical application URL.
@@ -104,15 +104,14 @@ Temporal converge.
 ## Data lifecycle
 
 Postiz uploads, Redis data, and PostgreSQL data use the `local-path`
-StorageClass. They survive pod restarts and normal node reboots, but not an NVMe
-failure or a Talos reinstall that repartitions the disk. PostgreSQL contains
+StorageClass. They survive pod restarts and normal node reboots, but do not provide a backup or protection from VM disk loss or K3s uninstall. PostgreSQL contains
 OAuth tokens and should be treated as sensitive data.
 
 ## Repository locations
 
-- Reusable workloads: `gitops/apps/base/postiz`
-- Lab storage, databases, secrets, and ingress: `gitops/apps/lab/postiz`
-- Activation: `gitops/apps/lab/kustomization.yaml`
+- Reusable workloads: `gitops/apps/postiz`
+- Lab storage, databases, secrets, and ingress: `gitops/apps/postiz`
+- Activation: `gitops/apps/kustomization.yaml`
 
 ## References
 

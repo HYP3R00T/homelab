@@ -1,65 +1,9 @@
----
-icon: lucide/lock-keyhole
----
-
 # Vault
 
-Vault is the secret storage backend for this homelab.
+Vault holds application and monitoring credentials outside Git. Its chart remains pinned at 0.34.0 in `gitops/infrastructure/vault/helm-release.yaml`, with values in the same directory. The secrets Flux group installs it alongside ESO after core infrastructure is available.
 
-Its job is to hold values that should not live directly in Git, such as API tokens that other services need at runtime.
+The existing single-replica Raft configuration and server resource envelope are retained. The unused Vault Agent injector is disabled; workloads receive secrets through ESO, and no workload requests injection. A 10 GiB claim uses `local-path-retain`; the claim and namespace are protected from Flux pruning. The ingress is `vault.homelab.internal`. This is a one-node deployment, not a highly available storage system.
 
-## Current implementation
+Applying manifests does not initialize Vault, unseal it, configure auth, or create credential values. The [bootstrap runbook](../runbooks/vault-bootstrap.md) covers those operator steps, and `iac/vault` manages Kubernetes auth, the KV mount, policies, and role. No auto-unseal provider is configured, so a restart requires manual unseal.
 
-| Property | Value |
-|---|---|
-| Status | Active |
-| Helm chart | `vault` `0.34.0` |
-| Namespace | `vault` |
-| Mode | Single-replica HA with integrated Raft storage |
-| Local hostname | `vault.homelab.internal` |
-| Persistent storage | 10 GiB retained local volume |
-| Managed KV mount | `external-secrets` (KV v2) |
-
-## What it depends on
-
-- Core infrastructure from `gitops/clusters/lab/infrastructure-controllers.yaml`
-- The Vault overlay in `gitops/infrastructure/configs/lab/vault`
-
-## What depends on it
-
-- `external-secrets`, through `gitops/clusters/lab/infrastructure-controllers.yaml`
-
-## Where it is activated
-
-- `gitops/clusters/lab/infrastructure-controllers.yaml`
-- `gitops/clusters/lab/infrastructure-configs.yaml`
-- `gitops/infrastructure/configs/lab/vault/kustomization.yaml`
-- `gitops/infrastructure/controllers/base/vault/`
-
-## Important note
-
-Applying the Kubernetes manifests is only the first half of the setup.
-
-External Secrets also needs Vault to be bootstrapped with:
-
-- a KV mount for the shared secret path
-- Kubernetes auth enabled
-- a role for the External Secrets Operator
-- policies that allow the operator to read the expected paths
-
-The Terraform workspace under `iac/vault` manages this bootstrap. The broader
-relationship is described in [Secrets flow](../architecture/secrets-flow.md).
-
-Vault seals after a pod restart because no auto-unseal provider is configured.
-Recovery keys, administrative tokens, Raft snapshots, Terraform state, and
-secret values must remain outside Git.
-
-A Talos or Kubernetes reinstall creates a new cluster CA and new service-account
-tokens. Refresh the Vault Kubernetes auth inputs after a reinstall even when
-the API endpoint and Terraform state are unchanged.
-
-## Runbooks
-
-- [Bootstrap Vault](../runbooks/vault-bootstrap.md)
-- [Recover Vault](../runbooks/vault-recovery.md)
-- [Store Cloudflared credentials in Vault](../runbooks/cloudflared-vault-credentials.md)
+Monitoring and secret-store readiness wait on successful bootstrap. Homepage and Linkding remain independent. Credential material, recovery keys, Raft snapshots, and Terraform state stay outside Git. A Kubernetes reinstall requires refreshing cluster CA and reviewer-token inputs even when the address is unchanged.

@@ -1,89 +1,37 @@
-<div align="center">
+# Homelab
 
-# 🏡 homelab
+A private, single-node Ubuntu K3s homelab managed with Flux, Kustomize, and Helm. The VM has 4 vCPUs and approximately 5.28 GiB RAM. Configuration is kept small so application and platform costs can be measured before adding workloads.
 
-## Talos Linux homelab managed with FluxCD, Kustomize, and Helm
+## What stays
 
-[![Talos Linux](https://img.shields.io/badge/OS-Talos_Linux-0f62fe?style=for-the-badge&logo=linux&logoColor=white)](https://www.talos.dev/)
-[![Kubernetes](https://img.shields.io/badge/Kubernetes-Single_Node-326ce5?style=for-the-badge&logo=kubernetes&logoColor=white)](https://kubernetes.io/)
-[![FluxCD](https://img.shields.io/badge/GitOps-FluxCD-5468ff?style=for-the-badge&logo=flux&logoColor=white)](https://fluxcd.io/)
-[![Docs](https://img.shields.io/badge/Docs-Zensical-0f766e?style=for-the-badge)](docs/)
+| Area | Configuration | Activation |
+| --- | --- | --- |
+| Apps | Homepage and Linkding | Enabled independently of secret infrastructure |
+| K3s | Traefik, ServiceLB, CoreDNS, local storage, Metrics Server | Packaged and managed by K3s, not duplicated in GitOps |
+| Infrastructure | Retained storage class and Flux UI ingress | Enabled |
+| Secrets | Vault, External Secrets, Vault store | Enabled in dependency order; manual Vault bootstrap required |
+| Monitoring | Prometheus, Grafana, Alertmanager, exporters | Enabled after Vault credentials synchronize |
+| Optional | Cloudflared, CloudNativePG, Postiz | Retained but not activated |
 
-A self-hosted Kubernetes lab built for clean GitOps workflows, shared platform services, and a small but intentional app layer.
+Enabled means included in the GitOps configuration, not that a fresh installation is already bootstrapped. Vault initialization, unseal, Kubernetes authentication, and monitoring credential values remain operator tasks. No credentials are committed.
 
-</div>
+## Structure
 
-> ⚙️ The repository is the source of truth for the cluster resources managed by Flux.
+- `gitops/apps/<service>/`: applications used by end users.
+- `gitops/infrastructure/<service>/`: administrative and shared platform services; `core/` contains storage and Flux ingress, and `secrets/` assembles Vault and ESO.
+- `gitops/infrastructure/kube-prometheus-stack/`: the monitoring infrastructure, with its Helm resources and values at the root, and `secrets/` and `monitors/` subdirectories for readiness ordering.
+- `gitops/clusters/lab`: individual Flux application-group files and their dependencies.
+- `iac/vault/`: Vault authentication, policies, and role configuration.
+- `docs/`: current ownership, activation, and operations.
 
-## 🧰 Stack Overview
+Each Kubernetes resource has its own named YAML file, assembled by the service Kustomization. Helm values and Homepage configuration remain separate because they are inputs to generated ConfigMaps. There is one environment; unused base/lab layering has been removed.
 
-| Layer | Tooling |
-|-------|---------|
-| Kubernetes | [Talos Linux](https://www.talos.dev/) |
-| GitOps | [FluxCD](https://fluxcd.io/) |
-| Packaging | [Helm](https://helm.sh) + [Kustomize](https://kubectl.docs.kubernetes.io/references/kustomize/) |
-| Networking | [MetalLB](https://metallb.universe.tf/) + [Traefik](https://doc.traefik.io/traefik/) |
-| Secrets | Vault + External Secrets Operator |
-| Public access | Cloudflare Tunnel |
-| Hardware | NVIDIA GPU Operator |
-| Apps | Homepage + Linkding + Postiz |
-| Documentation | Zensical in `docs/` |
+## Access
 
-## 📁 Repository Structure
+Resolve these names to `192.168.0.61` on the workstation: `homepage.homelab.internal`, `linkding.homelab.internal`, `flux.homelab.internal`, `vault.homelab.internal`, `grafana.homelab.internal`, and `prometheus.homelab.internal`. K3s Traefik uses the VM's LAN address. Cloudflared is not active and no public route is enabled by this configuration.
 
-```text
-.
-├── gitops/                 # Flux-managed Kubernetes manifests
-│   ├── apps/              # User-facing workloads
-│   ├── infrastructure/    # Shared platform capabilities
-│   ├── monitoring/        # Observability layer
-│   └── clusters/          # Flux entrypoints for the lab cluster
-├── iac/                   # Terraform configuration for Vault
-└── docs/                  # Documentation site
-```
+## Operations
 
-> ✅ `base/` holds reusable service definitions.
->
-> 🧪 `lab/` holds homelab-specific overlays.
->
-> 🎛️ `gitops/clusters/` decides what Flux actually reconciles.
->
-> 🏗️ `iac/vault/` manages configuration inside Vault that Kubernetes manifests do not own.
+Start with [the rollout runbook](docs/runbooks/gitops-rollout.md), [Vault bootstrap](docs/runbooks/vault-bootstrap.md), and [persistent storage recovery](docs/runbooks/storage-recovery.md). Monitoring keeps the existing resource allocations and retention limits for the first measured trial. Notification delivery is deferred. New Vault and monitoring volumes use `local-path-retain`; Linkding's existing volume is untouched.
 
-## 🚀 Current State
-
-### Active now
-
-| Layer | Active services |
-|-------|-----------------|
-| Apps | `homepage`, `linkding`, `postiz` |
-| Infrastructure | `metallb`, `traefik`, `vault`, `external-secrets`, `cloudflared`, `local-path-provisioner`, `gpu-operator`, `cnpg` |
-| Monitoring | Prometheus, Alertmanager, Grafana, Metrics Server, node-exporter, kube-state-metrics |
-
-Grafana and Prometheus are available on the local network at
-`http://grafana.homelab.internal` and `http://prometheus.homelab.internal`.
-Alertmanager remains internal to the cluster.
-
-## 🧭 How It Flows
-
-1. Manifests live in `gitops/apps/`, `gitops/infrastructure/`, and `gitops/monitoring/`.
-2. `base/` defines the reusable service shape.
-3. `lab/` adds homelab-specific values, ingress, storage, and overlays.
-4. `gitops/clusters/lab/*.yaml` tells Flux what to reconcile and in what order.
-
-## 📚 Documentation
-
-- `docs/index.md` shows the current architecture
-- `docs/architecture/` explains relationships that span multiple services
-- `docs/gitops/` explains repository structure, reconciliation, and service wiring
-- `docs/apps/` documents user-facing applications
-- `docs/services/` documents individual services and dependencies
-- `docs/runbooks/` contains repeatable setup, operations, and recovery procedures
-
-## 🧠 Philosophy
-
-- Keep the cluster declarative.
-- Separate apps from shared infrastructure.
-- Activate services explicitly through the cluster entrypoints.
-- Keep monitoring as its own concern.
-- Make the repo easier to understand before making it more powerful.
+Changes are reviewed in small stages. Git history holds removed configuration; there is no archive tree. Committing or pushing a feature branch does not deploy it: Flux watches `main`.

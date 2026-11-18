@@ -10,7 +10,7 @@ must be rebuilt. Determine which failure occurred before running commands.
 ## Refresh authentication after a cluster reinstall
 
 A Kubernetes reinstall changes the cluster CA and service-account tokens even
-when the API remains at `https://192.168.0.50:6443`. Vault Kubernetes auth must
+when the API remains at `https://192.168.0.61:6443`. Vault Kubernetes auth must
 be updated with values from the new cluster.
 
 Regenerate `kubernetes_ca_cert` and `token_reviewer_jwt` in the ignored
@@ -30,13 +30,13 @@ Verify the complete authentication and synchronization path:
 
 ```shell
 kubectl get clustersecretstore vault
-kubectl -n cloudflared annotate externalsecret cloudflared-external-secret \
+kubectl -n monitoring annotate externalsecret grafana-admin \
   force-sync="$(date +%s)" --overwrite
-kubectl -n cloudflared get externalsecret,secret,pod
+kubectl -n monitoring get externalsecret,secret,pod
 ```
 
 The store should report `Valid`, the ExternalSecret should report
-`SecretSynced`, and Cloudflared should become ready. A Vault secret existing at
+`SecretSynced`, and the monitoring credential gate should become ready. A Vault secret existing at
 the correct path does not bypass this authentication requirement.
 
 ## Recover lost Terraform state
@@ -77,7 +77,7 @@ For a completely empty Vault:
 1. Reconcile the Vault and External Secrets manifests with Flux.
 2. Follow [Bootstrap Vault](vault-bootstrap.md) without running imports.
 3. Restore application secrets from a secure backup or source system.
-4. Recreate the Cloudflared tunnel credentials in Vault.
+4. Restore the monitoring credentials needed by the active configuration. Cloudflared credentials are optional while its bundle is inactive.
 5. Verify the `ClusterSecretStore`, `ExternalSecret`, and generated Secret.
 
 Do not run `vault operator init` against an existing initialized Vault.

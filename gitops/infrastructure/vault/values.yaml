@@ -1,0 +1,89 @@
+global:
+  enabled: true
+  tlsDisable: true
+injector:
+  enabled: false
+server:
+  updateStrategyType: RollingUpdate
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  readinessProbe:
+    enabled: true
+    path: /v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204
+    failureThreshold: 10
+  livenessProbe:
+    enabled: true
+    path: /v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204
+    initialDelaySeconds: 60
+    periodSeconds: 10
+    failureThreshold: 6
+  securityContext:
+    pod:
+      runAsNonRoot: true
+      runAsUser: 100
+      runAsGroup: 1000
+      fsGroup: 1000
+    container:
+      allowPrivilegeEscalation: false
+  standalone:
+    enabled: false
+  ha:
+    enabled: true
+    replicas: 1
+    apiAddr: http://vault.homelab.internal
+    raft:
+      enabled: true
+      config: "ui = true\n\nlistener \"tcp\" {\n  tls_disable = 1\n  address = \"\
+        [::]:8200\"\n  cluster_address = \"[::]:8201\"\n  telemetry {\n    unauthenticated_metrics_access\
+        \ = \"true\"\n  }\n}\n\ntelemetry {\n  prometheus_retention_time = \"30s\"\
+        \n  disable_hostname = true\n}\n\nstorage \"raft\" {\n  path = \"/data/vault\"\
+        \n}\n"
+  dataStorage:
+    enabled: false
+  extraInitContainers:
+  - name: vault-permissions
+    image: busybox:1.36
+    command:
+    - sh
+    - -c
+    - mkdir -p /data/vault && chown -R 100:1000 /data/vault && chmod 0770 /data/vault
+    securityContext:
+      runAsNonRoot: false
+      runAsUser: 0
+      runAsGroup: 0
+      allowPrivilegeEscalation: false
+    volumeMounts:
+    - name: vault-data
+      mountPath: /data/vault
+  volumes:
+  - name: vault-data
+    persistentVolumeClaim:
+      claimName: vault-data
+  volumeMounts:
+  - name: vault-data
+    mountPath: /data/vault
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    activeService: false
+    hosts:
+    - host: vault.homelab.internal
+      extraPaths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: vault
+            port:
+              number: 8200
+ui:
+  enabled: true
+  serviceType: ClusterIP
+  externalPort: 8200
+  targetPort: 8200
+  publishNotReadyAddresses: true

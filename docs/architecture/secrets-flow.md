@@ -14,10 +14,8 @@ flowchart TB
     ESO[External Secrets Operator] -->|Kubernetes auth| Vault
     Vault -->|approved secret data| ESO
     ESO --> Secret[Kubernetes Secret]
-    Secret --> Cloudflared[Cloudflared]
+    Secret --> Monitoring[Grafana and Prometheus]
     Secret --> Postiz[Postiz stack]
-    Cloudflared --> Tunnel[Cloudflare Tunnel]
-    Tunnel --> Service[Internal Kubernetes Service]
 ```
 
 ## Ownership boundaries
@@ -42,9 +40,9 @@ Automation must not treat access to `.env`, a Vault token, or an unseal key as
 permission to use it. GitOps owns references and delivery; the operator owns
 the secret material and every security-sensitive mutation.
 
-## Application implementation
+## Retained optional applications
 
-The Cloudflared deployment mounts the locally managed tunnel credential from a
+Cloudflared and Postiz are inactive. If enabled later, the Cloudflared deployment mounts the locally managed tunnel credential from a
 Kubernetes Secret. Its local configuration routes Linkding and returns a 404
 response for unmatched hostnames. Postiz consumes Vault-backed JWT, database,
 and Redis credentials through namespaced Secrets. Optional provider

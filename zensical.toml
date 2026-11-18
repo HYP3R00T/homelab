@@ -1,6 +1,6 @@
 [project]
 site_name = "Homelab"
-site_description = "A self-hosted, single-node Kubernetes homelab powered by Talos Linux and Flux CD."
+site_description = "A private single-node Ubuntu K3s homelab managed with Flux CD."
 repo_name = "HYP3R00T/homelab"
 repo_url = "https://github.com/HYP3R00T/homelab"
 site_author = "Rajesh Das"
@@ -16,8 +16,7 @@ nav = [
   ] },
   { "Platform Setup" = [
     { Overview = "platform/index.md" },
-    { "Talos Linux" = "platform/talos-linux.md" },
-    { "NVIDIA GPU" = "platform/nvidia-gpu.md" },
+    { K3s = "platform/k3s.md" },
   ] },
   { GitOps = [
     { Overview = "gitops/index.md" },
@@ -37,12 +36,10 @@ nav = [
   { Services = [
     { Overview = "services/index.md" },
     { "Flux CD" = "services/flux.md" },
-    { MetalLB = "services/metallb.md" },
     { Traefik = "services/traefik.md" },
     { Vault = "services/vault.md" },
     { "External Secrets" = "services/external-secrets.md" },
     { Cloudflared = "services/cloudflared.md" },
-    { "GPU Operator" = "services/gpu-operator.md" },
     { "Local Path Provisioner" = "services/local-path-provisioner.md" },
     { CloudNativePG = "services/cloudnative-pg.md" },
     { Monitoring = "services/kube-prometheus-stack.md" },
@@ -50,6 +47,8 @@ nav = [
   ] },
   { Runbooks = [
     { Overview = "runbooks/index.md" },
+    { "GitOps Rollout" = "runbooks/gitops-rollout.md" },
+    { "Storage Recovery" = "runbooks/storage-recovery.md" },
     { "Bootstrap Vault" = "runbooks/vault-bootstrap.md" },
     { "Recover Vault" = "runbooks/vault-recovery.md" },
     { "Create Cloudflared Tunnel" = "runbooks/cloudflared-tunnel.md" },
