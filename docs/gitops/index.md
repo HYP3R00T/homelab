@@ -13,8 +13,7 @@ live homelab cluster.
   infrastructure, monitoring, clusters, and IaC belong
 - [Reconciliation](reconciliation.md): how Flux activates layers and enforces
   dependency order
-- [Adding a service](adding-a-service.md): how to use the `base/` and `lab/`
-  overlay pattern
+- [Adding a service](adding-a-service.md): how to add a service directory and its dependency boundary
 
 Service-specific architecture belongs under [Services](../services/index.md).
 Operational commands belong under [Runbooks](../runbooks/index.md).

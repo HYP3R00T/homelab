@@ -1,77 +1,15 @@
----
-icon: lucide/bookmark
----
-
 # Linkding
 
-Linkding is the bookmark application and the first workload exposed publicly
-through the Cloudflare Tunnel.
+Linkding is the owner's private bookmark application at `http://linkding.homelab.internal`. Its bundle is `gitops/apps/linkding`; it uses image sissbruecker/linkding:1.45.0 and service linkding-service:9090.
 
-## Current implementation
+The cleanup preserves its namespace, Deployment, Service, Ingress, PVC name, and resource configuration. The container runs as UID/GID 33 and mounts /etc/linkding/data. Its existing 10 GiB claim uses the K3s default local-path class; the inspected PV has Delete reclaim policy. Do not delete this claim or assume it inherited the newly introduced retained class. A policy migration for existing application data is a separate operation requiring a backup and explicit scope.
 
-| Property | Value |
-|---|---|
-| Image | `sissbruecker/linkding:1.45.0` |
-| Namespace | `linkding` |
-| Service | `linkding-service:9090` |
-| Local hostname | `linkding.homelab.internal` |
-| Public hostname | `linkding.hyperoot.dev` |
-| Replicas | 1 |
-| Persistence | 10 GiB retained local volume |
+K3s ServiceLB and Traefik provide LAN access. No public tunnel is activated. Homepage selects its pods by app=linkding to show live CPU/memory.
 
-The container runs as UID/GID `33`, drops Linux capabilities, and mounts its
-data at `/etc/linkding/data`. Its PVC requests the `local-path` StorageClass;
-the provisioner creates a node-affine PV on the dedicated Talos XFS user volume
-with a `Retain` reclaim policy.
-
-## Create the initial superuser
-
-After the Linkding pod is running, create the first superuser interactively:
+For a new installation only, create the owner account interactively after the pod is Ready:
 
 ```shell
-kubectl exec --interactive --tty \
-  --namespace linkding \
-  deployment/linkding-deployment \
-  -- python manage.py createsuperuser
+kubectl exec --interactive --tty --namespace linkding deployment/linkding-deployment -- python manage.py createsuperuser
 ```
 
-Follow the prompts to enter the username, email address, and password, then sign
-in through the local or public Linkding URL. The account is written to the
-persistent Linkding database and survives pod restarts. Do not store the
-credentials in Git.
-
-The command targets the Deployment instead of a generated pod name, so it keeps
-working after Kubernetes replaces or rolls out the pod.
-
-## Request paths
-
-```mermaid
-flowchart TB
-    Local[Local browser] --> Traefik[Traefik ingress]
-    Traefik --> Service[linkding-service:9090]
-    Public[Public browser] --> Cloudflare[Cloudflare edge]
-    Cloudflare --> Cloudflared[Cloudflared]
-    Cloudflared --> Service
-    Service --> Linkding[Linkding pod]
-```
-
-## Repository locations
-
-- Reusable workload: `gitops/apps/base/linkding`
-- Lab storage and ingress: `gitops/apps/lab/linkding`
-- Public tunnel route: `gitops/infrastructure/configs/lab/cloudflared/config.yaml`
-- Activation: `gitops/apps/lab/kustomization.yaml`
-
-## Dependencies
-
-- Traefik and MetalLB provide local access.
-- Cloudflared provides public access.
-- Vault and External Secrets provide the tunnel credential to Cloudflared.
-
-See [Traffic flow](../architecture/traffic-flow.md) for the complete request
-path.
-
-## References
-
-- [Linkding](https://linkding.link/)
-- [Linkding on GitHub](https://github.com/sissbruecker/linkding)
+Do not recreate an existing account or put credentials in Git. Read [storage recovery](../runbooks/storage-recovery.md) before changing persistent data.

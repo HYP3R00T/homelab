@@ -1,17 +1,9 @@
----
-icon: lucide/layout-grid
----
-
 # Applications
 
-Applications are the user-facing destination of the platform. Shared concerns
-such as ingress, secrets, and external access remain in the Services layer.
+| Application | Activation | Access | Data |
+| --- | --- | --- | --- |
+| [Homepage](homepage.md) | Included | homepage.homelab.internal | Git-backed ConfigMap; temporary logs |
+| [Linkding](linkding.md) | Included | linkding.homelab.internal | Existing 10 GiB local-path claim, unchanged |
+| [Postiz](postiz.md) | Not included | No active route | Retained deployment design only |
 
-| Application | Status | Local access | Public access | Storage |
-|---|---|---|---|---|
-| [Homepage](homepage.md) | Active | `homepage.homelab.internal` | No | ConfigMap from Git; ephemeral logs |
-| [Linkding](linkding.md) | Active | `linkding.homelab.internal` | `linkding.hyperoot.dev` | 10 GiB retained volume |
-| [Postiz](postiz.md) | Active | `postiz.homelab.internal` | `postiz.hyperoot.dev` | Local uploads, Redis, and PostgreSQL volumes |
-
-All overlays are enabled by `gitops/apps/lab/kustomization.yaml` and reconcile
-through the `apps` Flux Kustomization.
+`gitops/apps/kustomization.yaml` includes only Homepage and Linkding. The apps Flux group has no dependency on Vault or monitoring. Future applications needing operators or secrets should get their own dependency boundary rather than blocking these two applications.

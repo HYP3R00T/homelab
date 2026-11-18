@@ -47,13 +47,12 @@ Verify metadata without printing the credential:
 vault kv metadata get -mount=external-secrets cloudflared/tunnel
 ```
 
-## Reconcile the GitOps configuration
+## Reconcile an explicitly enabled tunnel
 
-After the Cloudflared manifest changes are committed and pushed, reconcile the
-Git source and infrastructure configuration:
+Cloudflared is inactive in the current entrypoint. Only after a separate public-access decision, add its own Flux group depending on the secret store and explicitly enable it. Then reconcile that group (named cloudflared in this example):
 
 ```shell
-flux reconcile kustomization infrastructure-configs --with-source
+flux reconcile kustomization cloudflared --with-source
 kubectl -n cloudflared annotate externalsecret cloudflared-external-secret \
   force-sync="$(date +%s)" --overwrite
 kubectl -n cloudflared rollout status deployment/cloudflared --timeout=180s

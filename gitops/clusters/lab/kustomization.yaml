@@ -1,9 +1,11 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - flux-system/flux-instance.yaml
-  - apps.yaml
-  # - infrastructure-controllers.yaml
-  # - infrastructure-configs.yaml
-  # - monitoring-controllers.yaml
-  # - monitoring-configs.yaml
+- flux-system/flux-instance.yaml
+- apps.yaml
+- infrastructure.yaml
+- secrets.yaml
+- secret-store.yaml
+- monitoring-secrets.yaml
+- monitoring.yaml
+- monitoring-monitors.yaml

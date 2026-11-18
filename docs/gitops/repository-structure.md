@@ -1,163 +1,40 @@
----
-icon: lucide/folders
----
+# Repository structure
 
-# Repository Structure
-
-This repository is grouped by role. The goal is to keep it easy to understand what supports the platform, what users actually consume, and what observes the whole system.
-
-## At a glance
+Use two service areas: apps for end-user applications, and infrastructure for administrative or shared platform services. Monitoring belongs to infrastructure even though Grafana and Prometheus have web interfaces. Within an area, each service owns a directory with one YAML file per Kubernetes resource rather than duplicated base and environment overlays.
 
 ```text
-.
-├── gitops/
-│   ├── apps/              # User-facing workloads
-│   ├── infrastructure/    # Platform services that support the cluster
-│   ├── monitoring/        # Observability and inspection layer
-│   └── clusters/          # Flux entrypoints that activate things in a cluster
-└── iac/                   # Terraform configuration for Vault
+gitops/
+  apps/
+    homepage/
+    linkding/
+    postiz/                 # not included by apps/kustomization.yaml
+  infrastructure/
+    core/                   # retained storage class and Flux ingress
+    secrets/                # assembles Vault and ESO
+    vault/
+    external-secrets/
+    secret-store/           # waits for ESO and manual Vault bootstrap
+    cnpg/                   # inactive
+    cloudflared/            # inactive
+    kube-prometheus-stack/  # Helm source/release, values, ingress
+      secrets/              # namespace and ExternalSecrets
+      monitors/             # CRs requiring Prometheus Operator
+  clusters/lab/
+    flux-system/
+    apps.yaml               # one file per Flux group
+    infrastructure.yaml
+    secrets.yaml
+    secret-store.yaml
+    monitoring-secrets.yaml
+    monitoring.yaml
+    monitoring-monitors.yaml
+    kustomization.yaml
 ```
 
-At the simplest level, `gitops/` contains the Kubernetes manifests Flux applies
-to the cluster, while `iac/vault/` manages authentication, policy, and secret
-engine configuration inside Vault. Inside `gitops/`, `apps/` is for things
-people use, `infrastructure/` is for the shared capabilities those apps need,
-`monitoring/` is for observing both layers, and `clusters/` decides what is
-active.
+Use one YAML file per Kubernetes object, with descriptive names such as deployment.yaml, service.yaml, or redis-deployment.yaml. Do not combine resources into multi-document manifests. `kustomization.yaml` assembles the service and generates ConfigMaps when needed. `values.yaml` is a Helm input, not a directly applied Kubernetes object. Homepage keeps its configuration files because the application consumes them individually.
 
-## File naming convention
+The monitoring directory is one service structure, but its three Flux groups remain separate: secrets must synchronize before the chart installs, and custom monitors require the chart's CRDs. A directory boundary expresses ownership; a Flux group expresses readiness.
 
-Manifest filenames under `gitops/` use lowercase kebab-case. Name a file after
-the Kubernetes resource kind when the component directory contains only one of
-that kind:
+Only paths reachable from the cluster entrypoint are reconciled. The optional CloudNativePG monitor is retained separately as `gitops/infrastructure/cnpg/monitor.yaml`; apply it only after both the operator namespace and Prometheus CRDs exist. A monitor must not create a namespace for an otherwise inactive service.
 
-- `service-account.yaml`
-- `cluster-role-binding.yaml`
-- `helm-repository.yaml`
-- `persistent-volume-claim.yaml`
-
-When a directory contains multiple resources of the same kind, prefix the kind
-with the workload or purpose so each file is unambiguous:
-
-- `grafana-external-secret.yaml`
-- `prometheus-external-secret.yaml`
-- `vault-service-monitor.yaml`
-- `traefik-pod-monitor.yaml`
-
-Keep the standard tool filenames `kustomization.yaml` and `values.yaml`.
-Application configuration files such as Homepage's `services.yaml` retain the
-names expected by that application. Do not introduce camelCase, snake_case, or
-concatenated multiword Kubernetes kinds in new filenames.
-
-## Apps
-
-`gitops/apps/` is for services that are the actual destination.
-
-These are the things a user opens, signs into, and actively uses. They are built on top of the shared capabilities provided by `gitops/infrastructure/`.
-
-Examples:
-
-- Homepage
-- Linkding
-- Postiz
-
-!!! tip "Ask yourself"
-    Is this something I or another person would actively use?
-    If it disappeared, would a human notice before the platform noticed?
-    Is this the destination rather than the plumbing?
-
-If the answer is mostly yes, it belongs in `gitops/apps/`.
-
-## Infrastructure
-
-`gitops/infrastructure/` is for services that support the cluster or support other services.
-
-This is the base layer that applications depend on. These services usually do not exist for their own sake. They exist so applications can receive traffic, use certificates, store secrets, reach databases, or be exposed externally when needed.
-
-Examples:
-
-- Traefik
-- MetalLB
-- Cloudflared
-- Vault
-- External Secrets Operator
-- CloudNativePG
-
-In this repository, infrastructure means shared capabilities such as:
-
-- ingress and routing
-- load balancing
-- certificate management
-- secret storage and secret delivery
-- database services
-- controlled external exposure
-
-If multiple applications would rely on it as a common platform feature, it belongs in `gitops/infrastructure/`.
-
-## Monitoring
-
-`gitops/monitoring/` is for observability.
-
-Monitoring is separate because it observes both `gitops/infrastructure/` and `gitops/apps/`. Its job is to tell us what is happening across the system, not to serve end users directly and not to provide platform capabilities.
-
-Examples:
-
-- Prometheus
-- Grafana
-- Alertmanager
-- kube-state-metrics
-- node exporters
-
-If its primary job is to measure, record, alert, or explain what is happening in the system, it belongs in `gitops/monitoring/`.
-
-Keep `gitops/monitoring/` as a separate top-level folder. It has a different responsibility from infrastructure: infrastructure enables workloads, while monitoring observes infrastructure and applications together.
-
-Monitoring is split again by lifecycle:
-
-- `monitoring/controllers/{base,lab}` installs the Prometheus Operator and
-  bundled monitoring workloads, including resources required during startup.
-- `monitoring/configs/{base,lab}` applies `PodMonitor`, `ServiceMonitor`, and
-  supporting resources only after the controller CRDs are healthy.
-
-## What `gitops/clusters/` does
-
-`gitops/clusters/` is the activation layer.
-
-This folder does not define the services themselves. It tells Flux which parts of the repository should be applied to a given cluster.
-
-That means a manifest is active only when it is reachable from a reconciled
-cluster entrypoint.
-
-!!! warning "Important distinction"
-    A service can be present in the repo but absent from the cluster.
-    The folder tells us what the service is for.
-    The cluster wiring tells us whether it is currently active.
-
-For simple layers, a cluster entrypoint can target the whole overlay, such as
-`./gitops/apps/lab`. Monitoring uses separate
-`./gitops/monitoring/controllers/lab` and
-`./gitops/monitoring/configs/lab` entrypoints so monitor custom resources are
-not applied before their CRDs exist.
-
-For infrastructure services that need stricter ordering, the cluster entrypoint can point directly at the environment overlays. In this repository, `gitops/clusters/lab/infrastructure-controllers.yaml` points to `gitops/infrastructure/controllers/lab`, and `gitops/clusters/lab/infrastructure-configs.yaml` points to `gitops/infrastructure/configs/lab`. The controller stage waits for the controller Helm releases to become healthy, and the config stage applies shared resources such as Vault, MetalLB config, External Secrets store config, and Cloudflared.
-
-## Applying this to services in the repository
-
-- `gitops/apps/`: `Homepage`, `Linkding`, `Postiz`
-- `gitops/infrastructure/`: `Traefik`, `MetalLB`, `Vault`, `External Secrets
-  Operator`, `Cloudflared`, `Local Path Provisioner`, `NVIDIA GPU Operator`,
-  `CloudNativePG`
-- `gitops/monitoring/`: `Prometheus`, `Grafana`
-
-CloudNativePG is installed as an operator and manages the PostgreSQL cluster
-defined with the Postiz application. The monitoring layer is active and
-applies its monitor resources only after the Prometheus Operator CRDs are
-healthy.
-
-## Classification rule
-
-Before adding a new service, answer one question first: what role does this service play in the homelab?
-
-If it is a shared capability, it belongs in `gitops/infrastructure/`.
-If it is something people use directly, it belongs in `gitops/apps/`.
-If it watches the whole system, it belongs in `gitops/monitoring/`.
+Names and storage ownership matter more than directory names. Moving an existing object between directories within the same Flux group need not recreate it. Moving ownership between Flux groups requires a deliberate inventory/pruning migration. The current cleanup preserves the existing apps group and application identities; new groups had not previously been activated on this K3s cluster.

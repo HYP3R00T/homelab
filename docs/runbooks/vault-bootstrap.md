@@ -17,16 +17,16 @@ inside Vault:
 - Kubernetes API authentication using the `vault-token-reviewer` service account
 - a KV v2 secrets engine mounted at `external-secrets`
 - an `eso` policy with read access to that mount
-- an `eso` role for the `external-secrets` service account
+- an `eso` role for the `external-secrets` service account with audience `vault`, matching the store TokenRequest
 
 The `ClusterSecretStore` in
-`gitops/infrastructure/configs/lab/external-secrets/cluster-secret-store.yaml`
+`gitops/infrastructure/secret-store/cluster-secret-store.yaml`
 uses those names exactly.
 
 ## Prerequisites
 
 - the lab Kubernetes context is selected
-- Flux has reconciled `infrastructure-controllers` and `infrastructure-configs`
+- Flux has reconciled `infrastructure` and `secrets` (the store can remain unready until bootstrap)
 - `vault.homelab.internal` resolves from the workstation
 - mise has installed the tools declared in `mise.toml`
 - `.env` and `iac/vault/terraform.tfvars` remain outside Git
@@ -35,7 +35,7 @@ Check the deployed components:
 
 ```shell
 kubectl config current-context
-flux get kustomizations infrastructure-controllers infrastructure-configs
+flux get kustomizations infrastructure secrets
 kubectl -n vault get pods
 kubectl -n external-secrets get pods
 ```

@@ -7,6 +7,11 @@ icon: lucide/book-open-check
 Runbooks contain repeatable operational procedures. Each one states its
 prerequisites, commands, verification steps, and recovery considerations.
 
+## GitOps and storage
+
+- [Roll out GitOps](gitops-rollout.md): activation order, verification, and rollback
+- [Recover retained storage](storage-recovery.md): volume mappings, backup, and rebuild boundaries
+
 ## Vault
 
 - [Bootstrap Vault](vault-bootstrap.md): initialize, unseal, configure, and

@@ -1,66 +1,14 @@
----
-icon: lucide/key-round
----
-
 # External Secrets
 
-External Secrets Operator reads values from an external secret backend and creates ordinary Kubernetes `Secret` objects for workloads.
+External Secrets Operator is pinned at 0.20.3 in `gitops/infrastructure/external-secrets`. The secrets Flux group installs the Helm release. A separate secret-store group waits for the operators and reconciles `gitops/infrastructure/secret-store`.
 
-In this repository, it is configured to read from Vault through a `ClusterSecretStore`.
+The ClusterSecretStore named vault uses Vault Kubernetes auth at kubernetes, role eso, and the external-secrets KV v2 mount. Its explicit ServiceAccount reference is external-secrets in the external-secrets namespace, matching the Terraform role. The requested token and Terraform role both specify audience vault, required by newer Vault versions. The controller must be able to request a token for that account.
 
-## Current implementation
+Monitoring's ExternalSecrets deliver grafana-admin and prometheus-basic-auth before the Helm release is installed. Cloudflared and Postiz retain their own definitions but remain inactive. ExternalSecret references are not authorization to create, rotate, or expose secret values.
 
-| Property | Value |
-|---|---|
-| Status | Active |
-| Helm chart | `external-secrets` `0.20.3` |
-| Namespace | `external-secrets` |
-| Store | ClusterSecretStore `vault` |
-| Authentication | Vault Kubernetes auth, role `eso` |
-| Current consumers | Cloudflared, Grafana, Prometheus, Postiz |
+```shell
+kubectl get clustersecretstore vault
+kubectl get externalsecrets -n monitoring
+```
 
-## What it depends on
-
-- Vault, through `gitops/clusters/lab/infrastructure-configs.yaml`
-- The Vault-backed store definition in `gitops/infrastructure/configs/lab/external-secrets/cluster-secret-store.yaml`
-
-## What depends on it
-
-- `cloudflared`, through `gitops/infrastructure/configs/lab/cloudflared/external-secret.yaml`
-- Grafana and Prometheus, through `gitops/monitoring/controllers/lab/kube-prometheus-stack/`
-- Postiz, through `gitops/apps/lab/postiz/`
-
-## Where it is activated
-
-- `gitops/clusters/lab/infrastructure-controllers.yaml`
-- `gitops/clusters/lab/infrastructure-configs.yaml`
-- `gitops/infrastructure/controllers/lab/external-secrets/kustomization.yaml`
-- `gitops/infrastructure/controllers/base/external-secrets/`
-
-## Vault integration
-
-The repository already points External Secrets at Vault:
-
-- Vault address: `vault.vault.svc.cluster.local:8200`
-- secret path: `external-secrets`
-- auth role: `eso`
-
-The Terraform workspace under `iac/vault` creates the matching mount, auth
-backend, policy, and role. Cloudflared reads the `credentials` property from
-`cloudflared/tunnel`. Grafana reads its administrator username and password
-from `monitoring/grafana`. Prometheus reads only the bcrypt `users` entry from
-`monitoring/prometheus` for Traefik Basic Auth. Postiz reads its application,
-database, and Redis credentials from `postiz`; optional provider credentials
-can be added there later.
-
-See [Secrets flow](../architecture/secrets-flow.md) for the cross-service data
-path and [Bootstrap Vault](../runbooks/vault-bootstrap.md) for the setup
-procedure.
-
-The operator owns generated Kubernetes Secrets. Application manifests should
-reference those Secrets rather than copying Vault values into Git.
-
-After a Kubernetes reinstall, the `ClusterSecretStore` remains invalid until
-Vault is updated with the new cluster CA and token-reviewer JWT. A secret value
-can exist at the correct Vault path while its consuming pod remains pending if
-this authentication layer is stale.
+See [Vault bootstrap](../runbooks/vault-bootstrap.md) when authentication or required values have not yet been configured.

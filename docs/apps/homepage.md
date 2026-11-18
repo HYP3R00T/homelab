@@ -1,106 +1,17 @@
----
-icon: lucide/panel-top
----
-
 # Homepage
 
-Homepage is the internal dashboard for links to homelab services and external
-tools. It is active and intended for local-network use.
+Homepage is the owner's LAN dashboard, using image ghcr.io/gethomepage/homepage:v2.7.0. Its complete service directory lives in `gitops/apps/homepage`, including configuration under configs. A generated ConfigMap mounts each application configuration file; a content change updates the generated name and triggers a rollout. Logs are temporary.
 
-## Current implementation
+## Resource visibility
 
-| Property | Value |
-|---|---|
-| Image | `ghcr.io/gethomepage/homepage:v1.13.2` |
-| Namespace | `homepage` |
-| Service | `homepage:3000` |
-| Local hostname | `homepage.homelab.internal` |
-| Replicas | 1 |
-| Persistence | Configuration from a generated ConfigMap; logs use `emptyDir` |
+The Kubernetes information widget shows cluster and node CPU/memory through K3s Metrics Server. The generic Resources widget was removed because its container readings can be mistaken for the VM's usage.
 
-The workload uses a dedicated ServiceAccount and read-only RBAC so Homepage can
-discover selected Kubernetes resources. Dashboard configuration, bookmarks,
-widgets, CSS, and JavaScript live under `gitops/apps/lab/homepage/configs`.
+Service cards use explicit namespaces and podSelector values to show application CPU/memory. Linkding selects app=linkding; Homepage selects app.kubernetes.io/name=homepage. Flux Operator, Vault, Grafana, Prometheus, and K3s Traefik have matching selectors. HTTP site checks show endpoint availability separately from pod resource readings. The internal Prometheus check uses /-/ready; its browser ingress remains authenticated.
 
-## Dashboard sections
+Grafana and Prometheus links are declared for the configured monitoring rollout; they can show unavailable until Vault credentials and monitoring are Ready. Postiz and Cloudflared are not advertised as running. The old standalone Traefik API widget was removed; Traefik's card shows pod stats without inventing a dashboard route.
 
-The dashboard is organized by responsibility:
+Static card configuration is used with ingress discovery disabled to avoid duplicate or unexpected cards. Existing external AI links, bookmarks, weather, and clock remain. Grafana supplies history; Homepage supplies a quick current view.
 
-- **Applications** contains user-facing workloads such as Linkding and Postiz.
-- **Infrastructure & Monitoring** contains Flux Operator, Vault, Traefik,
-  Grafana, and Prometheus.
-- **AI Assistants** contains external AI and developer-assistant services.
+## Configuration files
 
-These names remain as configuration keys, but their visual headers are hidden
-to keep the dashboard compact. Service cards also omit descriptions. Icons use
-Homepage's built-in Dashboard Icons integration when the service has a matching
-asset. AI Fiesta retains its own logo because Dashboard Icons does not provide
-one. Internal health endpoints are used for site monitoring where they do not
-require credentials. Prometheus and Traefik service widgets show summary
-metadata on their cards. Equal-height cards keep every service in that row
-aligned with those two widget-enabled cards.
-
-Quick Launch is enabled for keyboard navigation. Start typing anywhere on the
-dashboard to search service and bookmark names. Internet search suggestions are
-excluded so results remain focused on configured dashboard items. A launcher
-button is also available in the bottom-right corner on mobile layouts.
-
-Information widgets show host resources, aggregate Kubernetes cluster usage,
-current weather for Jagatsinghpur, Odisha, and the local time. Per-node usage is
-hidden while the cluster has only one node. The weather data comes from
-Open-Meteo in metric units and does not require an API key.
-
-Homepage uses Kubernetes `cluster` mode with its dedicated ServiceAccount and
-read-only RBAC. Ingress discovery is enabled. The Kubernetes information widget
-uses Metrics Server to display cluster and node CPU and memory usage.
-
-## Local preview
-
-Preview the exact GitOps configuration in WSL before deploying it to the
-cluster. The preview uses the same pinned Homepage image, mounts
-the tracked files from `gitops/apps/lab/homepage/configs` individually as
-read-only files and does not mount the Docker socket. The canonical Kubernetes
-configuration remains in `cluster` mode, so its expected API error can appear
-in the Docker preview because no in-cluster ServiceAccount exists there. The
-intentionally empty `proxmox.yaml` is tracked and mounted in both environments
-so Homepage does not need to generate it during startup.
-
-Docker Desktop must be running with this WSL distribution enabled under
-**Settings > Resources > WSL Integration**. Then start the preview from the
-repository root:
-
-```shell
-mise run homepage-preview
-```
-
-Open `http://localhost:3000`. Edit files under
-`gitops/apps/lab/homepage/configs`, then use Homepage's refresh control or
-refresh the browser to inspect the result. Stop a foreground preview with
-`Ctrl+C`, then remove its container and network with:
-
-```shell
-mise run homepage-preview-stop
-```
-
-Links remain usable when the WSL workstation can resolve the homelab domains.
-Server-side site monitors and service widgets that use `*.svc.cluster.local`
-addresses will show unavailable in Docker because those names exist only
-inside Kubernetes; that is expected and does not affect layout testing.
-
-## Repository locations
-
-- Reusable workload: `gitops/apps/base/homepage`
-- Lab overlay and ingress: `gitops/apps/lab/homepage`
-- Activation: `gitops/apps/lab/kustomization.yaml`
-- Flux entrypoint: `gitops/clusters/lab/apps.yaml`
-
-## Dependencies
-
-- Flux applies the application overlay.
-- Traefik serves the local hostname.
-- CoreDNS and local DNS resolve cluster and homelab names.
-
-Only deployed local web interfaces are listed. Platform components without a
-web interface, such as MetalLB, External Secrets Operator, CloudNativePG,
-Cloudflared, NVIDIA GPU Operator, and Local Path Provisioner, are represented
-through Grafana and Prometheus rather than misleading dashboard links.
+Kubernetes resources such as deployment.yaml, service.yaml, and ingress.yaml live directly under gitops/apps/homepage. Application settings, service cards, widgets, bookmarks, CSS, and JavaScript live under configs/. The Kustomization generates the ConfigMap from those files and mounts them into Homepage. There is no separate Docker Compose deployment or preview task.

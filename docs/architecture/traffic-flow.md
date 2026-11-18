@@ -1,45 +1,18 @@
----
-icon: lucide/route
----
+# Traffic flow
 
-# Traffic Flow
-
-The platform has separate paths for local ingress and public access. Both end
-at ordinary Kubernetes Services; applications do not need to know which path a
-request used.
-
-## Local network
+Access is private over the LAN. The workstation maps service hostnames to `192.168.0.61` in `/etc/hosts`. The mapping is local to that workstation; it does not configure DNS on other devices.
 
 ```mermaid
 flowchart TB
-    Client[LAN client] --> DNS[homelab.internal DNS]
-    DNS --> VIP[MetalLB 192.168.0.60]
-    VIP --> Traefik[Traefik]
-    Traefik --> Homepage[Homepage service]
-    Traefik --> Linkding[Linkding service]
-    Traefik --> Postiz[Postiz service]
-    Traefik --> Vault[Vault service]
+    Browser[Workstation browser] --> Hosts[homelab.internal host mapping]
+    Hosts --> Node[192.168.0.61 ports 80 and 443]
+    Node --> LB[K3s ServiceLB]
+    LB --> Traefik[K3s Traefik]
+    Traefik --> Apps[Homepage and Linkding]
+    Traefik --> Flux[Flux Operator web UI]
+    Traefik --> Services[Vault Grafana Prometheus]
 ```
 
-MetalLB advertises a single address, `192.168.0.60`. Traefik receives traffic
-on that address and selects a backend from the request hostname.
+Ingress resources route by hostname. The Flux UI ingress targets the existing `flux-operator` service on port 9080, with no additional UI deployment. Grafana uses its login, and the Prometheus ingress keeps its Vault-backed Basic Auth middleware. Alertmanager remains cluster-internal.
 
-## Public application access
-
-```mermaid
-flowchart TB
-    Browser[Internet browser] --> Edge[Cloudflare edge]
-    Edge --> Tunnel[homelab tunnel]
-    Tunnel --> Connector[Cloudflared pod]
-    Connector --> LinkdingService[linkding-service:9090]
-    Connector --> PostizService[postiz:5000]
-    LinkdingService --> Linkding[Linkding]
-    PostizService --> Postiz[Postiz]
-```
-
-The tunnel routes `linkding.hyperoot.dev` and `postiz.hyperoot.dev` to their
-cluster Services. The tunnel is outbound-only, so the home router does not
-expose an inbound application port.
-
-See [MetalLB](../services/metallb.md), [Traefik](../services/traefik.md), and
-[Cloudflared](../services/cloudflared.md) for ownership details.
+There is no active public tunnel or Tailscale configuration. The retained [Cloudflared](../services/cloudflared.md) bundle is optional and must be activated separately if public access is deliberately chosen later. Private intent also depends on the router/firewall not forwarding these LAN ports publicly.
