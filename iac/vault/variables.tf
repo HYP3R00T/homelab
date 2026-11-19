@@ -115,3 +115,59 @@ variable "cloudflared_credentials" {
     error_message = "Provide the AccountTag, TunnelID, and TunnelSecret from cloudflared's credential JSON, or null."
   }
 }
+
+variable "homepage_proxmox" {
+  description = "Optional Proxmox API endpoint and read-only token for Homepage, supplied through private tfvars."
+  type = object({
+    url          = string
+    token_id     = string
+    token_secret = string
+  })
+  sensitive = true
+  default   = null
+
+  validation {
+    condition = var.homepage_proxmox == null ? true : alltrue([
+      can(regex("^https://[^/]+$", var.homepage_proxmox.url)),
+      can(regex("^[^@]+@[^!]+![^!]+$", var.homepage_proxmox.token_id)),
+      length(trimspace(var.homepage_proxmox.token_secret)) > 0,
+    ])
+    error_message = "Supply an HTTPS API origin without a trailing slash, the full user@realm!token ID, and its secret; or null."
+  }
+}
+
+variable "homepage_tailscale" {
+  description = "Optional Tailscale device ID and API access token for Homepage."
+  type = object({
+    device_id = string
+    api_token = string
+  })
+  sensitive = true
+  default   = null
+  validation {
+    condition = var.homepage_tailscale == null ? true : alltrue([
+      can(regex("^[A-Za-z0-9]+$", var.homepage_tailscale.device_id)),
+      length(trimspace(var.homepage_tailscale.api_token)) > 0,
+    ])
+    error_message = "Supply the target device ID and a nonempty Tailscale API access token, or null."
+  }
+}
+
+variable "homepage_cloudflared" {
+  description = "Optional Cloudflare account/tunnel IDs and a Tunnel Read API token for Homepage."
+  type = object({
+    account_id = string
+    tunnel_id  = string
+    api_token  = string
+  })
+  sensitive = true
+  default   = null
+  validation {
+    condition = var.homepage_cloudflared == null ? true : alltrue([
+      can(regex("^[0-9a-fA-F]{32}$", var.homepage_cloudflared.account_id)),
+      can(regex("^[0-9a-fA-F-]{36}$", var.homepage_cloudflared.tunnel_id)),
+      length(trimspace(var.homepage_cloudflared.api_token)) > 0,
+    ])
+    error_message = "Supply the Cloudflare account ID, tunnel UUID, and a Tunnel Read API token, or null."
+  }
+}

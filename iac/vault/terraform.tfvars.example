@@ -67,3 +67,39 @@ cloudflared_credentials = null
 #   tunnel_id     = ""
 #   tunnel_secret = ""
 # }
+
+# Optional Homepage Proxmox widget. Copy this object into private terraform.tfvars.
+# Datacenter > Permissions > API Tokens: select/create the Homepage token.
+# Use its complete Token ID (user@realm!token) and the secret shown at creation.
+# The secret cannot be recovered later; create a replacement token if it was lost.
+# Grant PVEAuditor on / with propagation to both the user and the separated token.
+# Use an API address reachable from the Homepage pod, without a trailing slash.
+# Example LAN origin: https://192.168.0.50:8006 (replace with your server address).
+# Never put the actual token secret in this tracked example file.
+homepage_proxmox = null
+# homepage_proxmox = {
+#   url          = "https://proxmox.example.internal:8006"
+#   token_id     = "api@pam!homepage"
+#   token_secret = ""
+# }
+
+# Homepage Tailscale device status: API access token, not a device-enrolment auth key.
+# Generate at https://login.tailscale.com/admin/settings/keys and rotate before expiry.
+# Admin console > Machines > target machine > Machine Details > ID (ends CNTRL).
+homepage_tailscale = null
+# homepage_tailscale = {
+#   device_id = "your-device-id"
+#   api_token = ""
+# }
+
+# Cloudflare Tunnels widget requires a separate API token with
+# Account > Cloudflare Tunnel > Read, restricted to your account.
+# https://dash.cloudflare.com/profile/api-tokens
+# Account ID: Zero Trust dashboard URL. Tunnel UUID: Networks > Tunnels.
+# The TunnelSecret in cloudflared_credentials cannot authenticate this widget.
+homepage_cloudflared = null
+# homepage_cloudflared = {
+#   account_id = "your-32-character-account-id"
+#   tunnel_id  = "your-tunnel-uuid"
+#   api_token  = ""
+# }

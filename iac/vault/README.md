@@ -2,7 +2,7 @@
 
 This directory is the infrastructure-as-code workspace for Vault configuration in the homelab.
 
-It manages the shared Vault bootstrap needed by External Secrets and the credential records consumed by Shoutrrr, monitoring, and Cloudflared.
+It manages the shared Vault bootstrap needed by External Secrets and the credential records consumed by Shoutrrr, Homepage, monitoring, and Cloudflared.
 
 Managed resources:
 
@@ -12,6 +12,8 @@ Managed resources:
 - the `eso` policy and Kubernetes auth role with audience `vault`
 - Shoutrrr, Grafana, and Prometheus KV v2 records from sensitive tfvars inputs
 - the tunnel credential record when `cloudflared_credentials` is supplied
+- the Homepage Proxmox record when `homepage_proxmox` is supplied
+- the Homepage Tailscale and Cloudflare Tunnel API records when their optional inputs are supplied
 
 Not managed by this workspace:
 
@@ -50,6 +52,10 @@ Shoutrrr has a separate persistent APP_KEY and optional LinkedIn and Meta creden
 
 The optional `cloudflared_credentials` object maps the connector JSON into `cloudflared/tunnel`. Its TunnelID must match the tracked tunnel configuration. See [tunnel credential management](../../docs/runbooks/cloudflared-vault-credentials.md). Cloudflare DNS and tunnel creation remain CLI/provider operations outside this workspace.
 
+The optional `homepage_proxmox` object stores the Proxmox API origin, full token ID, and read-only token secret at `homepage/proxmox`. ESO supplies it to Homepage, and the local Docker helper reads the same record from Vault. See [Homepage Proxmox setup](../../docs/apps/homepage.md#proxmox-widget-and-private-credentials). No Proxmox permissions are changed by this workspace.
+
+The optional `homepage_tailscale` and `homepage_cloudflared` objects manage the provider API credentials for Homepage status widgets at `homepage/tailscale` and `homepage/cloudflared`. The Cloudflare widget token is separate from the tunnel connector credential. See [network widget setup](../../docs/apps/homepage.md#tailscale-and-cloudflare-tunnel-widgets). No tailnet or Cloudflare configuration is changed by these credential records.
+
 ## State Recovery
 
 If the local state file goes missing while the managed Vault resources still
@@ -71,6 +77,11 @@ terraform -chdir=iac/vault import vault_kv_secret_v2.prometheus external-secrets
 terraform -chdir=iac/vault import vault_kv_secret_v2.shoutrrr external-secrets/data/shoutrrr
 # Only when cloudflared_credentials is populated and this record already exists:
 terraform -chdir=iac/vault import 'vault_kv_secret_v2.cloudflared[0]' external-secrets/data/cloudflared/tunnel
+# Only when homepage_proxmox is populated and this record already exists:
+terraform -chdir=iac/vault import 'vault_kv_secret_v2.homepage_proxmox[0]' external-secrets/data/homepage/proxmox
+# Only when the corresponding input is populated and the record already exists:
+terraform -chdir=iac/vault import 'vault_kv_secret_v2.homepage_tailscale[0]' external-secrets/data/homepage/tailscale
+terraform -chdir=iac/vault import 'vault_kv_secret_v2.homepage_cloudflared[0]' external-secrets/data/homepage/cloudflared
 terraform -chdir=iac/vault plan
 ```
 
