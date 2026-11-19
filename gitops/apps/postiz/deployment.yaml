@@ -22,11 +22,11 @@ spec:
         image: ghcr.io/gitroomhq/postiz-app:v2.21.7
         env:
         - name: MAIN_URL
-          value: https://postiz.hyperoot.dev
+          value: http://postiz.homelab.internal
         - name: FRONTEND_URL
-          value: https://postiz.hyperoot.dev
+          value: http://postiz.homelab.internal
         - name: NEXT_PUBLIC_BACKEND_URL
-          value: https://postiz.hyperoot.dev/api
+          value: http://postiz.homelab.internal/api
         - name: BACKEND_INTERNAL_URL
           value: http://127.0.0.1:3000
         - name: TEMPORAL_ADDRESS
@@ -41,8 +41,9 @@ spec:
           value: 'true'
         - name: DISABLE_REGISTRATION
           value: 'true'
+        # Required by Postiz for this private HTTP endpoint; use TLS before public access.
         - name: NOT_SECURED
-          value: 'false'
+          value: 'true'
         - name: RUN_CRON
           value: 'true'
         - name: NX_ADD_PLUGINS

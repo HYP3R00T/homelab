@@ -8,7 +8,7 @@ theme: dark
 color: zinc
 headerStyle: clean
 title: Homelab
-description: Applications, platform services, and operational tools
+description: Applications, infrastructure, and external tools
 statusStyle: dot
 useEqualHeights: true
 quicklaunch:
@@ -22,12 +22,12 @@ layout:
   Applications:
     style: row
     columns: 6
-    header: false
-  Infrastructure & Monitoring:
+    header: true
+  Infrastructure:
     style: row
     columns: 6
-    header: false
+    header: true
   AI Assistants:
     style: row
     columns: 6
-    header: false
+    header: true

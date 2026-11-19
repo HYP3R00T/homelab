@@ -15,7 +15,7 @@ Infrastructure supports and administers the applications. This category includes
 | [Vault](vault.md) | Stores credential values outside Git | Flux secrets group | Initialize, unseal, configure authentication, populate values |
 | [External Secrets](external-secrets.md) | Synchronizes Vault values to Kubernetes Secrets | Flux secrets/store groups | Working Vault authentication and secret values |
 | [Monitoring](kube-prometheus-stack.md) | Stores metrics, renders dashboards, evaluates alerts | Flux monitoring groups | Vault-backed credentials; no notification destination configured |
-| [CloudNativePG](cloudnative-pg.md) | Manages PostgreSQL clusters | Inactive | Separate operator and workload activation plan |
+| [CloudNativePG](cloudnative-pg.md) | Manages PostgreSQL clusters | Flux cnpg group | Application credentials and database bootstrap |
 | [Cloudflared](cloudflared.md) | Optional public tunnel client | Inactive | Explicit public-access decision and tunnel credentials |
 
 The absence of a pod can mean an intentionally inactive component or a dependency waiting for configuration. Use [reconciliation](../gitops/reconciliation.md) and the [rollout runbook](../runbooks/gitops-rollout.md) to tell the difference. These pages describe declared ownership, not a permanent snapshot of live status.

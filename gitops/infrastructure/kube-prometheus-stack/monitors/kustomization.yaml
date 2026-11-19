@@ -7,3 +7,4 @@ resources:
 - traefik-pod-monitor.yaml
 - vault-metrics-service.yaml
 - vault-service-monitor.yaml
+- cnpg-pod-monitor.yaml

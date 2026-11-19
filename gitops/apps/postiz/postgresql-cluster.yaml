@@ -21,7 +21,7 @@ spec:
       passwordSecret:
         name: postiz-temporal-database
   storage:
-    storageClass: local-path
+    storageClass: local-path-retain
     size: 10Gi
   resources:
     requests:

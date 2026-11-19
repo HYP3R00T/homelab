@@ -10,7 +10,7 @@ The homelab separates **Applications**, which people use directly, from **Infras
 
 [Open the architecture diagram at full size](../assets/diagrams/architecture.svg).
 
-Solid connectors show configuration or request flow. The secret flow and storage relationships are called out separately; a dependency does not mean that one component owns another's data. Inactive components are outside the enabled node configuration.
+The overview shows Applications and Infrastructure within K3s, with K3s inside the Ubuntu VM. Persistent files live on the host. Packaged components, Kubernetes storage objects, storage policies, and bootstrap sequences are explained in the focused pages below rather than crowded into this diagram. Cloudflared is disabled and omitted from the included system.
 
 ## Read the system by boundary
 

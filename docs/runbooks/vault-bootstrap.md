@@ -189,7 +189,7 @@ kubectl -n monitoring get helmrelease,pods,pvc
 
 Expect the store and both ExternalSecrets to report ready, followed by the `monitoring` and `monitoring-monitors` Kustomizations. If a secret reports an error, inspect its events with `kubectl -n monitoring describe externalsecret grafana-admin` or `kubectl -n monitoring describe externalsecret prometheus-basic-auth`.
 
-Add `grafana.homelab.internal` and `prometheus.homelab.internal` to the workstation's hosts entry for the node's current LAN IP address to open their interfaces. Completing this bootstrap does not enable the inactive Postiz, CNPG, or Cloudflared bundles.
+Add `grafana.homelab.internal` and `prometheus.homelab.internal` to the workstation's hosts entry for the node's current LAN IP address to open their interfaces. CNPG and Postiz have separate included Flux groups. Postiz also needs its own Vault record and application bootstrap; this procedure does not populate those values or enable the disabled Cloudflared tunnel.
 
 ## Next steps
 

@@ -28,6 +28,6 @@ A directory expresses component ownership. A Flux reconciliation group expresses
 
 Current readings are useful for finding expensive applications, but they do not establish historical peaks. Keep resource requests and limits alongside the manifests and use monitoring to assess actual cost before adding workloads. There is no reserved capacity for an agent server.
 
-New Vault and monitoring volumes use `local-path-retain`. Existing Linkding storage keeps its original claim. Local storage remains tied to this node, and Retain is not a backup or protection from K3s uninstall. See [storage recovery](../runbooks/storage-recovery.md).
+New Vault, monitoring, and Postiz volumes use `local-path-retain`. Existing Linkding storage keeps its original claim. Local storage remains tied to this node, and Retain is not a backup or protection from K3s uninstall. See [storage recovery](../runbooks/storage-recovery.md).
 
-CloudNativePG, Cloudflared, and Postiz remain inactive. Removed Talos, NVIDIA, and MetalLB configuration is available through Git history rather than maintained as a second deployment design.
+CloudNativePG and Postiz are included through dedicated Flux groups, with Postiz waiting for operator and Vault readiness. Cloudflared remains disabled. Removed Talos, NVIDIA, and MetalLB configuration is available through Git history rather than maintained as a second deployment design.

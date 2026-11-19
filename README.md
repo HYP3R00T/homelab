@@ -19,7 +19,7 @@ A private, single-node Ubuntu K3s homelab, managed through Flux, Kustomize, and 
 
 [Open the architecture diagram at full size](docs/assets/diagrams/architecture.svg).
 
-The diagram describes the **declared configuration**, not live availability. Homepage and Linkding reconcile independently. Monitoring waits for Vault authentication and credential delivery. Postiz, CloudNativePG, and Cloudflared are retained but inactive.
+The diagram describes the **declared configuration**, not live availability. Homepage and Linkding reconcile independently. Monitoring waits for Vault authentication and credential delivery. Postiz and CloudNativePG are included through their own dependency-ordered groups; Postiz still requires Vault-backed credentials. Cloudflared remains intentionally disabled for private LAN access.
 
 ## What this project demonstrates
 
@@ -32,13 +32,21 @@ The diagram describes the **declared configuration**, not live availability. Hom
 | Persistence | Retained volumes for new Vault/monitoring data, with explicit limits and recovery responsibilities | [Storage recovery](docs/runbooks/storage-recovery.md) |
 | Access | Private LAN ingress and workstation hostname mappings, without a public tunnel or LAN DNS server | [Local access](docs/setup/local-access.md) |
 
-## Inside the cluster
+## Applications
 
-**Applications** are the tools people use: [Homepage](docs/apps/homepage.md) and [Linkding](docs/apps/linkding.md). **Infrastructure** supports and administers them: Flux, Vault, External Secrets, and monitoring, alongside K3s-packaged components. A web interface does not change that boundary.
+Tools used directly for everyday work:
 
-![Homepage service cards showing applications and administrative interfaces](docs/assets/images/homepage.jpg)
+| Application | Purpose | Configuration |
+| --- | --- | --- |
+| [Homepage](docs/apps/homepage.md) | Personal start page and resource overview | Included |
+| [Linkding](docs/apps/linkding.md) | Private bookmark collection | Included |
+| [Postiz](docs/apps/postiz/index.md) | Social publishing and scheduling | Included; Vault bootstrap required |
 
-*Homepage at capture time: application and Flux checks respond; Vault and monitoring checks show unfinished bootstrap. These indicators describe that moment, not a permanent service status.*
+## Infrastructure
+
+Administrative and shared capabilities support those applications. Flux reconciles Git, Vault and External Secrets deliver credentials, and Prometheus, Grafana, and Alertmanager provide monitoring. K3s supplies ingress, DNS, service load balancing, local storage provisioning, and current resource metrics.
+
+A browser interface does not make an administrative tool an end-user application. The [infrastructure inventory](docs/infrastructure/index.md) explains ownership and setup, including CloudNativePG database management and the optional, disabled Cloudflared tunnel. Homepage exposes selected shortcuts; it is not a list of every controller or collector.
 
 ![Flux Status interface showing the source and controller overview](docs/assets/images/flux-status.jpg)
 
@@ -62,11 +70,12 @@ Flux watches `main`; pushing a feature branch does not deploy it. The manifests 
 
 Each Kubernetes object has its own named YAML file. Removed deployment experiments live in Git history rather than an archive tree. New components belong to Applications or Infrastructure and gain a separate Flux group only when they need an independent lifecycle or readiness boundary.
 
-Architecture assets have editable JSON sources and a dependency-free Python renderer:
+Architecture assets use editable [D2](https://d2lang.com/) sources and the pinned D2 CLI. The helper bundles local service icons into self-contained SVGs:
 
 ```shell
-python3 .agents/skills/update-architecture-diagram/scripts/render-diagrams.py
-python3 .agents/skills/update-architecture-diagram/scripts/render-diagrams.py --check
+mise install d2
+mise exec -- python3 .agents/skills/update-architecture-diagram/scripts/render-diagrams.py
+mise exec -- python3 .agents/skills/update-architecture-diagram/scripts/render-diagrams.py --check
 ```
 
 The repository's `update-architecture-diagram` skill can inspect structural changes and update those sources and assets when explicitly invoked. It does not deploy resources. See the [architecture guide](docs/architecture/index.md) and [component workflow](docs/gitops/adding-a-service.md).
