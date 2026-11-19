@@ -4,27 +4,20 @@ icon: lucide/shield-check
 
 # Recover Vault
 
-Use this runbook when Terraform state is lost or when the Vault installation
-must be rebuilt. Determine which failure occurred before running commands.
+Use this runbook when Terraform state is lost or when the Vault installation must be rebuilt. Determine which failure occurred before running commands.
 
 ## Refresh authentication after a cluster reinstall
 
-A Kubernetes reinstall changes the cluster CA and service-account tokens even
-when the API remains at `https://192.168.0.61:6443`. Vault Kubernetes auth must
-be updated with values from the new cluster.
+A Kubernetes reinstall changes the cluster CA and service-account tokens even when the API remains at the same Kubernetes API address. Vault Kubernetes auth must be updated with values from the new cluster.
 
-Regenerate `kubernetes_ca_cert` and `token_reviewer_jwt` in the ignored
-`iac/vault/terraform.tfvars` file using the commands documented in
-`terraform.tfvars.example`, then apply the workspace:
+Regenerate `kubernetes_ca_cert` and `token_reviewer_jwt` in the ignored `iac/vault/terraform.tfvars` file using the commands documented in `terraform.tfvars.example`, then apply the workspace:
 
 ```shell
 terraform -chdir=iac/vault plan -out=tfplan
 terraform -chdir=iac/vault apply tfplan
 ```
 
-Do not accept a clean plan as proof that the credentials belong to the current
-cluster. Terraform can correctly report no changes when both Vault and
-`terraform.tfvars` contain the same stale values.
+Do not accept a clean plan as proof that the credentials belong to the current cluster. Terraform can correctly report no changes when both Vault and `terraform.tfvars` contain the same stale values.
 
 Verify the complete authentication and synchronization path:
 
@@ -35,14 +28,11 @@ kubectl -n monitoring annotate externalsecret grafana-admin \
 kubectl -n monitoring get externalsecret,secret,pod
 ```
 
-The store should report `Valid`, the ExternalSecret should report
-`SecretSynced`, and the monitoring credential gate should become ready. A Vault secret existing at
-the correct path does not bypass this authentication requirement.
+The store should report `Valid`, the ExternalSecret should report `SecretSynced`, and the monitoring credential gate should become ready. A Vault secret existing at the correct path does not bypass this authentication requirement.
 
 ## Recover lost Terraform state
 
-Use this path when Vault still contains the managed resources but
-`iac/vault/terraform.tfstate` is missing.
+Use this path when Vault still contains the managed resources but `iac/vault/terraform.tfstate` is missing.
 
 ```shell
 terraform -chdir=iac/vault init
@@ -54,21 +44,17 @@ terraform -chdir=iac/vault import module.eso.vault_kubernetes_auth_backend_role.
 terraform -chdir=iac/vault plan
 ```
 
-Import only objects that already exist. The final plan should be reviewed for
-unexpected changes before applying it.
+Import only objects that already exist. The final plan should be reviewed for unexpected changes before applying it.
 
 ## Back up Vault data
 
-Terraform can recreate configuration, but it cannot recreate stored secret
-values. Create an encrypted, access-controlled Raft snapshot and keep it
-outside the repository:
+Terraform can recreate configuration, but it cannot recreate stored secret values. Create an encrypted, access-controlled Raft snapshot and keep it outside the repository:
 
 ```shell
 vault operator raft snapshot save vault-raft.snap
 ```
 
-Treat the snapshot like a collection of production secrets. Never commit
-snapshots, recovery keys, tokens, `.env`, `terraform.tfvars`, plans, or state.
+Treat the snapshot like a collection of production secrets. Never commit snapshots, recovery keys, tokens, `.env`, `terraform.tfvars`, plans, or state.
 
 ## Rebuild a lost installation
 

@@ -3,62 +3,68 @@ site_name = "Homelab"
 site_description = "A private single-node Ubuntu K3s homelab managed with Flux CD."
 repo_name = "HYP3R00T/homelab"
 repo_url = "https://github.com/HYP3R00T/homelab"
+edit_uri = "edit/main/docs/"
 site_author = "Rajesh Das"
 copyright = "Copyright &copy; 2026 Rajesh Das"
+
+extra_css = ["stylesheets/extra.css"]
 
 nav = [
   { Home = "index.md" },
   { Architecture = [
     { Overview = "architecture/index.md" },
     { Platform = "architecture/platform.md" },
-    { "Traffic Flow" = "architecture/traffic-flow.md" },
-    { "Secrets Flow" = "architecture/secrets-flow.md" },
+    { "Traffic flow" = "architecture/traffic-flow.md" },
+    { "Secrets flow" = "architecture/secrets-flow.md" },
   ] },
-  { "Platform Setup" = [
-    { Overview = "platform/index.md" },
-    { K3s = "platform/k3s.md" },
+  { Setup = [
+    { Overview = "setup/index.md" },
+    { Prerequisites = "setup/prerequisites.md" },
+    { K3s = "setup/k3s.md" },
+    { Flux = "setup/flux.md" },
+    { "Local access" = "setup/local-access.md" },
   ] },
   { GitOps = [
     { Overview = "gitops/index.md" },
-    { "Repository Structure" = "gitops/repository-structure.md" },
+    { "Repository structure" = "gitops/repository-structure.md" },
     { Reconciliation = "gitops/reconciliation.md" },
-    { "Adding a Service" = "gitops/adding-a-service.md" },
+    { "Add a component" = "gitops/adding-a-service.md" },
   ] },
   { Applications = [
     { Overview = "apps/index.md" },
     { Homepage = "apps/homepage.md" },
     { Linkding = "apps/linkding.md" },
     { Postiz = [
-      { Overview = "apps/postiz.md" },
-      { Architecture = "apps/postiz-architecture.md" },
+      { Overview = "apps/postiz/index.md" },
+      { Architecture = "apps/postiz/architecture.md" },
     ] },
   ] },
-  { Services = [
-    { Overview = "services/index.md" },
-    { "Flux CD" = "services/flux.md" },
-    { Traefik = "services/traefik.md" },
-    { Vault = "services/vault.md" },
-    { "External Secrets" = "services/external-secrets.md" },
-    { Cloudflared = "services/cloudflared.md" },
-    { "Local Path Provisioner" = "services/local-path-provisioner.md" },
-    { CloudNativePG = "services/cloudnative-pg.md" },
-    { Monitoring = "services/kube-prometheus-stack.md" },
-    { "Metrics Server" = "services/metrics-server.md" },
+  { Infrastructure = [
+    { Overview = "infrastructure/index.md" },
+    { Flux = "infrastructure/flux.md" },
+    { Traefik = "infrastructure/traefik.md" },
+    { Vault = "infrastructure/vault.md" },
+    { "External Secrets" = "infrastructure/external-secrets.md" },
+    { "Local Path Provisioner" = "infrastructure/local-path-provisioner.md" },
+    { "Metrics Server" = "infrastructure/metrics-server.md" },
+    { Monitoring = "infrastructure/kube-prometheus-stack.md" },
+    { CloudNativePG = "infrastructure/cloudnative-pg.md" },
+    { Cloudflared = "infrastructure/cloudflared.md" },
   ] },
   { Runbooks = [
     { Overview = "runbooks/index.md" },
-    { "GitOps Rollout" = "runbooks/gitops-rollout.md" },
-    { "Storage Recovery" = "runbooks/storage-recovery.md" },
+    { "GitOps rollout" = "runbooks/gitops-rollout.md" },
+    { "Storage recovery" = "runbooks/storage-recovery.md" },
     { "Bootstrap Vault" = "runbooks/vault-bootstrap.md" },
     { "Recover Vault" = "runbooks/vault-recovery.md" },
-    { "Create Cloudflared Tunnel" = "runbooks/cloudflared-tunnel.md" },
-    { "Store Cloudflared Credentials" = "runbooks/cloudflared-vault-credentials.md" },
+    { "Create Cloudflared tunnel" = "runbooks/cloudflared-tunnel.md" },
+    { "Store Cloudflared credentials" = "runbooks/cloudflared-vault-credentials.md" },
   ] },
 ]
 
 [project.theme]
 language = "en"
-favicon = "assets/favicon.svg"
+favicon = "assets/branding/favicon.svg"
 features = [
   "announce.dismiss",
   "content.action.edit",
@@ -82,18 +88,18 @@ features = [
 ]
 
 [[project.theme.palette]]
-scheme = "default"
-palette.accent = "teal"
-palette.primary = "teal"
+scheme = "slate"
+primary = "custom"
+accent = "custom"
 toggle.icon = "lucide/sun"
-toggle.name = "Switch to dark mode"
+toggle.name = "Switch to light mode"
 
 [[project.theme.palette]]
-scheme = "slate"
-palette.accent = "teal"
-palette.primary = "teal"
+scheme = "default"
+primary = "teal"
+accent = "custom"
 toggle.icon = "lucide/moon"
-toggle.name = "Switch to light mode"
+toggle.name = "Switch to dark mode"
 
 [project.theme.icon]
 logo = "lucide/laptop-minimal"
@@ -113,3 +119,7 @@ custom_fences = [
 alternate_style = true
 
 [project.markdown_extensions.pymdownx.keys]
+
+[project.markdown_extensions.pymdownx.emoji]
+emoji_generator = "zensical.extensions.emoji.to_svg"
+emoji_index = "zensical.extensions.emoji.twemoji"

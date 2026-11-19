@@ -4,8 +4,7 @@ icon: lucide/cloud-cog
 
 # Create a Cloudflared Tunnel
 
-This runbook creates the locally managed `homelab` tunnel from the Cloudflared
-CLI and records its ID for later commands.
+This runbook creates the locally managed `homelab` tunnel from the Cloudflared CLI and records its ID for later commands.
 
 ## Prerequisites
 
@@ -20,9 +19,7 @@ CLI and records its ID for later commands.
 cloudflared tunnel login
 ```
 
-Open the one-time URL, sign in, and select the domain to authorize. Cloudflared
-writes the account-level management certificate to
-`~/.cloudflared/cert.pem`. Do not deploy or commit this certificate.
+Open the one-time URL, sign in, and select the domain to authorize. Cloudflared writes the account-level management certificate to `~/.cloudflared/cert.pem`. Do not deploy or commit this certificate.
 
 ## Create the tunnel
 
@@ -38,8 +35,7 @@ Create it only when it does not already exist:
 cloudflared tunnel create homelab
 ```
 
-Cloudflared writes `~/.cloudflared/<tunnel-id>.json`. This file contains the
-per-tunnel credential and must remain secret.
+Cloudflared writes `~/.cloudflared/<tunnel-id>.json`. This file contains the per-tunnel credential and must remain secret.
 
 ## Record the ID
 
@@ -59,8 +55,7 @@ Verify the tunnel:
 cloudflared tunnel info "$CLOUDFLARE_TUNNEL_ID"
 ```
 
-The message `does not have any active connection` is expected until a local or
-Kubernetes Cloudflared process starts using the credential.
+The message `does not have any active connection` is expected until a local or Kubernetes Cloudflared process starts using the credential.
 
 Create the application DNS routes:
 
@@ -69,10 +64,8 @@ cloudflared tunnel route dns "$CLOUDFLARE_TUNNEL_ID" linkding.hyperoot.dev
 cloudflared tunnel route dns "$CLOUDFLARE_TUNNEL_ID" postiz.hyperoot.dev
 ```
 
-Continue with
-[Store Cloudflared credentials in Vault](cloudflared-vault-credentials.md).
+Continue with [Store Cloudflared credentials in Vault](cloudflared-vault-credentials.md).
 
 ## Reference
 
-Cloudflare maintains a list of
-[useful locally managed tunnel commands](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/do-more-with-tunnels/local-management/tunnel-useful-commands/).
+Cloudflare maintains a list of [useful locally managed tunnel commands](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/do-more-with-tunnels/local-management/tunnel-useful-commands/).

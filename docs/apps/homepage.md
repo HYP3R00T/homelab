@@ -1,17 +1,48 @@
+---
+icon: lucide/layout-dashboard
+---
+
 # Homepage
 
-Homepage is the owner's LAN dashboard, using image ghcr.io/gethomepage/homepage:v2.7.0. Its complete service directory lives in `gitops/apps/homepage`, including configuration under configs. A generated ConfigMap mounts each application configuration file; a content change updates the generated name and triggers a rollout. Logs are temporary.
+Homepage is the personal entry point to the homelab: shortcuts to applications and administrative tools, endpoint checks, and current CPU/memory readings. It runs as a single deployment using `ghcr.io/gethomepage/homepage:v2.7.0` in the `homepage` namespace.
+
+| Property | Configuration |
+| --- | --- |
+| Owner | Flux apps group |
+| Activation | Included, independent of Vault |
+| Browser access | `http://homepage.homelab.internal` |
+| Manifests | `gitops/apps/homepage` |
+| Application configuration | `gitops/apps/homepage/configs` |
+| Persistent application data | None; configuration comes from Git and logs are temporary |
+
+## Configuration
+
+Configure [local hostname access](../setup/local-access.md), wait for the deployment, and open the dashboard. No application account-creation step is declared. Review the static cards, external links, weather location, and bookmarks in `configs/` for your own use rather than treating this personal layout as a universal default.
+
+The Kustomization generates a ConfigMap from the individual settings, service, widget, bookmark, CSS, and JavaScript files. A content change updates the generated name and triggers a deployment rollout. There is no Docker Compose preview or second deployment mechanism.
 
 ## Resource visibility
 
-The Kubernetes information widget shows cluster and node CPU/memory through K3s Metrics Server. The generic Resources widget was removed because its container readings can be mistaken for the VM's usage.
+The Kubernetes information widget reads cluster and node CPU/memory through [Metrics Server](../infrastructure/metrics-server.md). Cards use explicit namespaces and pod selectors for application readings. Linkding selects `app=linkding`; Homepage selects `app.kubernetes.io/name=homepage`. HTTP site checks indicate endpoint availability separately from pod resource readings.
 
-Service cards use explicit namespaces and podSelector values to show application CPU/memory. Linkding selects app=linkding; Homepage selects app.kubernetes.io/name=homepage. Flux Operator, Vault, Grafana, Prometheus, and K3s Traefik have matching selectors. HTTP site checks show endpoint availability separately from pod resource readings. The internal Prometheus check uses /-/ready; its browser ingress remains authenticated.
+The resource view is live, not historical. [Grafana and Prometheus](../infrastructure/kube-prometheus-stack.md) supply history once monitoring is ready. Their configured Homepage links may show unavailable while Vault or monitoring bootstrap is unfinished. Postiz and Cloudflared are not advertised as running.
 
-Grafana and Prometheus links are declared for the configured monitoring rollout; they can show unavailable until Vault credentials and monitoring are Ready. Postiz and Cloudflared are not advertised as running. The old standalone Traefik API widget was removed; Traefik's card shows pod stats without inventing a dashboard route.
+Ingress discovery is disabled to avoid duplicate cards. Traefik's card shows pod readings rather than calling a separately exposed dashboard API.
 
-Static card configuration is used with ingress discovery disabled to avoid duplicate or unexpected cards. Existing external AI links, bookmarks, weather, and clock remain. Grafana supplies history; Homepage supplies a quick current view.
+## Dashboard example
 
-## Configuration files
+![Homepage service cards with point-in-time status indicators](../assets/images/homepage.jpg)
 
-Kubernetes resources such as deployment.yaml, service.yaml, and ingress.yaml live directly under gitops/apps/homepage. Application settings, service cards, widgets, bookmarks, CSS, and JavaScript live under configs/. The Kustomization generates the ConfigMap from those files and mounts them into Homepage. There is no separate Docker Compose deployment or preview task.
+*Point-in-time capture: Linkding, Homepage, and Flux respond, while Vault and monitoring checks show unfinished bootstrap. Endpoint checks and per-pod resource readings answer different questions; a configured card is not proof its service is ready.*
+
+## Verify
+
+```shell
+kubectl -n homepage rollout status deployment/homepage
+kubectl -n homepage get pods,service,ingress
+kubectl top pods -n homepage
+```
+
+Expect the deployment Ready, a matching Ingress, and resource readings once Metrics Server has collected them. If the page loads but a card fails, check that card's target component before treating it as a Homepage deployment failure.
+
+See the [official Homepage documentation](https://gethomepage.dev/) for supported widgets and configuration options.

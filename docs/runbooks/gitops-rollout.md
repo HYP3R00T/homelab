@@ -1,3 +1,7 @@
+---
+icon: lucide/rocket
+---
+
 # Roll out the K3s GitOps configuration
 
 This runbook describes deployment through the watched Git branch. Editing the feature branch does not apply these changes. Do not merge the whole change without checking the intended activation and existing storage. No secret values are generated or written by these manifests.
@@ -29,7 +33,7 @@ kubectl get storageclass local-path-retain
 kubectl get pvc -n linkding
 ```
 
-Map homepage, linkding, flux, vault, grafana, and prometheus hostnames under homelab.internal to 192.168.0.61 in the workstation hosts file. Open Homepage, verify Linkding's existing bookmarks, and open Flux Status. Retained application URLs can remain unavailable until their bootstrap stage completes.
+Follow [local access](../setup/local-access.md) to map the internal service hostnames to your node's current LAN address in the workstation hosts file. Open Homepage, verify Linkding's existing bookmarks, and open Flux Status. Retained application URLs can remain unavailable until their bootstrap stage completes.
 
 ## Vault and ESO
 
@@ -45,7 +49,7 @@ The secret-store group waits for the store to become Ready. This can take longer
 
 ## Monitoring credentials and chart
 
-The operator supplies or approves the Grafana and Prometheus credentials using the existing [monitoring credential procedure](../services/kube-prometheus-stack.md#credentials). Neither Terraform nor GitOps creates those values automatically.
+The operator supplies or approves the Grafana and Prometheus credentials using the existing [monitoring credential procedure](../infrastructure/kube-prometheus-stack.md#credentials). Neither Terraform nor GitOps creates those values automatically.
 
 ```shell
 kubectl get externalsecrets -n monitoring

@@ -1,18 +1,26 @@
+---
+icon: lucide/route
+---
+
 # Traffic flow
 
-Access is private over the LAN. The workstation maps service hostnames to `192.168.0.61` in `/etc/hosts`. The mapping is local to that workstation; it does not configure DNS on other devices.
+Browser access is private over the LAN. Without a LAN DNS server, each workstation maps the internal hostnames to the K3s node's current LAN address in its own `/etc/hosts` file. That mapping is local to the workstation; it does not change DNS for other devices.
 
-```mermaid
-flowchart TB
-    Browser[Workstation browser] --> Hosts[homelab.internal host mapping]
-    Hosts --> Node[192.168.0.61 ports 80 and 443]
-    Node --> LB[K3s ServiceLB]
-    LB --> Traefik[K3s Traefik]
-    Traefik --> Apps[Homepage and Linkding]
-    Traefik --> Flux[Flux Operator web UI]
-    Traefik --> Services[Vault Grafana Prometheus]
-```
+![Private LAN request path through host resolution, K3s ServiceLB, and Traefik](../assets/diagrams/traffic-flow.svg)
 
-Ingress resources route by hostname. The Flux UI ingress targets the existing `flux-operator` service on port 9080, with no additional UI deployment. Grafana uses its login, and the Prometheus ingress keeps its Vault-backed Basic Auth middleware. Alertmanager remains cluster-internal.
+The connection reaches the node on the requested port. K3s ServiceLB makes the Traefik LoadBalancer service available, and Traefik matches the HTTP hostname to an Ingress. The current application interfaces use HTTP; port 443 being available on Traefik does not mean certificates or HTTPS have been configured for every route.
 
-There is no active public tunnel or Tailscale configuration. The retained [Cloudflared](../services/cloudflared.md) bundle is optional and must be activated separately if public access is deliberately chosen later. Private intent also depends on the router/firewall not forwarding these LAN ports publicly.
+## Where requests go
+
+| Hostname | Destination | Access condition |
+| --- | --- | --- |
+| `homepage.homelab.internal` | Homepage | Included application |
+| `linkding.homelab.internal` | Linkding | Owner account required |
+| `flux.homelab.internal` | Flux Operator's embedded web UI | Included core ingress |
+| `vault.homelab.internal` | Vault | Initialization and unseal required |
+| `grafana.homelab.internal` | Grafana | Monitoring credentials and chart ready |
+| `prometheus.homelab.internal` | Prometheus | Monitoring ready; Traefik Basic Auth |
+
+Alertmanager is cluster-internal. The Flux UI uses the existing operator service rather than another UI deployment. Hostname resolution does not prove that the destination is ready or provide an authentication boundary.
+
+Follow [Local access](../setup/local-access.md) for the general hosts-file format, a labeled example, and troubleshooting. No public tunnel or Tailscale route is activated here. [Cloudflared](../infrastructure/cloudflared.md) is an inactive option, and private access still depends on the router/firewall not forwarding the LAN ports publicly.

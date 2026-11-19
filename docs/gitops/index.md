@@ -4,16 +4,12 @@ icon: lucide/git-branch
 
 # GitOps
 
-This section explains how the repository turns versioned manifests into the
-live homelab cluster.
+GitOps makes the deployment configuration reviewable: changes reach `main`, Flux reads the cluster entrypoint, and each group reconciles its owned resources. Readiness boundaries keep operators, secret delivery, and their consumers in the necessary order.
 
-## Topics
+| Topic | What it explains |
+| --- | --- |
+| [Repository structure](repository-structure.md) | Applications, Infrastructure, cluster entrypoints, and resource files |
+| [Reconciliation](reconciliation.md) | Included groups, dependencies, and how to diagnose a waiting rollout |
+| [Add a component](adding-a-service.md) | Placement, resource naming, activation, and documentation |
 
-- [Repository structure](repository-structure.md): where apps,
-  infrastructure, monitoring, clusters, and IaC belong
-- [Reconciliation](reconciliation.md): how Flux activates layers and enforces
-  dependency order
-- [Adding a service](adding-a-service.md): how to add a service directory and its dependency boundary
-
-Service-specific architecture belongs under [Services](../services/index.md).
-Operational commands belong under [Runbooks](../runbooks/index.md).
+A directory in Git is not activation, and a successful Git push is not proof that a workload is running. [Setup](../setup/index.md) explains first bootstrap; [Runbooks](../runbooks/index.md) cover rollout and recovery. Component behavior belongs to [Applications](../apps/index.md) or [Infrastructure](../infrastructure/index.md).

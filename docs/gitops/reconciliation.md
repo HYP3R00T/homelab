@@ -1,3 +1,7 @@
+---
+icon: lucide/workflow
+---
+
 # Reconciliation
 
 Flux watches main at `gitops/clusters/lab`. Its individual group files contain the Flux Kustomizations; the directory Kustomizations assemble ordinary manifests. These are different uses of the same term.

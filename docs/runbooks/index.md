@@ -4,8 +4,7 @@ icon: lucide/book-open-check
 
 # Runbooks
 
-Runbooks contain repeatable operational procedures. Each one states its
-prerequisites, commands, verification steps, and recovery considerations.
+Runbooks own longer bootstrap, rollout, and recovery procedures. For the first-install sequence, start with [Setup](../setup/index.md); component explanations live under [Applications](../apps/index.md) and [Infrastructure](../infrastructure/index.md).
 
 ## GitOps and storage
 
@@ -19,27 +18,26 @@ prerequisites, commands, verification steps, and recovery considerations.
 - [Recover Vault](vault-recovery.md): restore Terraform tracking or rebuild a
   lost Vault installation
 
-## Cloudflared
+## Optional public tunnel
+
+Cloudflared is inactive. These procedures are not prerequisites for private LAN access.
 
 - [Create a Cloudflared tunnel](cloudflared-tunnel.md): authenticate the CLI,
   create a locally managed tunnel, and record its ID
 - [Store Cloudflared credentials in Vault](cloudflared-vault-credentials.md):
   securely copy the generated tunnel credential into Vault
 
-Read the matching page under [Services](../services/index.md) before changing a
-component's architecture.
+Read the matching component page before changing its architecture.
 
 ## Automation boundary
 
-The repository keeps repeatable Kubernetes state in Git, while a small set of
-bootstrap actions remains operator-driven because it creates or handles
-external credentials:
+The repository keeps repeatable Kubernetes state in Git, while these steps remain operator-driven:
 
+- create the Linkding owner account on a new installation
 - initialize and unseal Vault
 - apply the Vault Terraform workspace
-- authenticate Cloudflared and create the tunnel
-- write tunnel credentials to Vault
-- create the Cloudflare DNS route
+- choose and populate monitoring credentials in Vault
 
-After bootstrap, Kubernetes changes are committed and reconciled by Flux. Do
-not rely on manual cluster edits for persistent configuration.
+Only a separately chosen public tunnel requires Cloudflared authentication, tunnel creation, credential population, and a Cloudflare DNS route. Those actions do not belong to the private LAN setup.
+
+After bootstrap, persistent Kubernetes configuration changes are committed and reconciled by Flux. Do not rely on manual cluster edits for persistent configuration.

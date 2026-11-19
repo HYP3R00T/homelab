@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="850" viewBox="0 0 960 850" role="img" aria-labelledby="title description">
+<title id="title">Private access · request flow</title>
+<desc id="description">A workstation hosts entry maps an internal hostname to the current node LAN IP. HTTP reaches K3s ServiceLB and Traefik, which selects a Kubernetes Service and ready endpoints by Ingress hostname. No public tunnel is active.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#7188a6"/></marker></defs>
+<style>text{font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif}.heading{font-size:29px;font-weight:700;fill:#eff5ff}.sub{font-size:18px;fill:#a8bdd7}.label{font-size:21px;font-weight:650;fill:#eff5ff}.body{font-size:18px;fill:#b8cbe2}.note{font-size:17px;fill:#9fb4d0}.tag{font-size:14px;font-weight:700;letter-spacing:1.3px}</style>
+<rect width="960" height="850" rx="24" fill="#0b1220"/>
+<text class="heading" x="32" y="48">Private access · request flow</text>
+<text class="sub" x="32" y="77">Workstation name resolution is separate from Kubernetes service DNS.</text>
+<path d="M 480 210 V 265" fill="none" stroke="#7188a6" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 480 360 V 415" fill="none" stroke="#7188a6" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 480 510 V 565" fill="none" stroke="#7188a6" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="80" y="115" width="800" height="95" rx="12" fill="#142237" stroke="#eac17a" stroke-opacity=".6"/>
+<rect x="81" y="130" width="3" height="65" rx="1.5" fill="#eac17a"/>
+<text class="label" x="99" y="146">Workstation browser</text>
+<text class="body" x="99" y="174">http://&lt;service&gt;.homelab.internal</text>
+<rect x="80" y="265" width="800" height="95" rx="12" fill="#142237" stroke="#eac17a" stroke-opacity=".6"/>
+<rect x="81" y="280" width="3" height="65" rx="1.5" fill="#eac17a"/>
+<text class="label" x="99" y="296">Local hosts-file mapping</text>
+<text class="body" x="99" y="324">&lt;K3S_NODE_IP&gt;  &lt;service&gt;.homelab.internal</text>
+<rect x="80" y="415" width="800" height="95" rx="12" fill="#142237" stroke="#7cb5ff" stroke-opacity=".6"/>
+<rect x="81" y="430" width="3" height="65" rx="1.5" fill="#7cb5ff"/>
+<text class="label" x="99" y="446">Node → K3s ServiceLB → Traefik</text>
+<text class="body" x="99" y="474">Request reaches port 80; Ingress matches the HTTP hostname</text>
+<rect x="80" y="565" width="800" height="120" rx="12" fill="#142237" stroke="#68dfcd" stroke-opacity=".6"/>
+<rect x="81" y="580" width="3" height="90" rx="1.5" fill="#68dfcd"/>
+<text class="label" x="99" y="596">Kubernetes Service → ready application endpoints</text>
+<text class="body" x="99" y="624">Homepage · Linkding · Flux UI · Vault</text>
+<text class="body" x="99" y="647">Grafana / Prometheus become available after monitoring bootstrap</text>
+<text class="note" x="80" y="740">Each accessing device needs resolution and LAN connectivity. No LAN DNS server is installed.</text>
+<text class="note" x="80" y="772">Cluster-local service names use CoreDNS. Mapping a hostname does not create a working backend.</text>
+<text class="note" x="80" y="804">Traefik also listens on 443; certificates are not configured for these HTTP routes.</text>
+</svg>

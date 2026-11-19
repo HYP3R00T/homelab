@@ -1,3 +1,7 @@
+---
+icon: lucide/folder-tree
+---
+
 # Repository structure
 
 Use two service areas: apps for end-user applications, and infrastructure for administrative or shared platform services. Monitoring belongs to infrastructure even though Grafana and Prometheus have web interfaces. Within an area, each service owns a directory with one YAML file per Kubernetes resource rather than duplicated base and environment overlays.
@@ -37,4 +41,4 @@ The monitoring directory is one service structure, but its three Flux groups rem
 
 Only paths reachable from the cluster entrypoint are reconciled. The optional CloudNativePG monitor is retained separately as `gitops/infrastructure/cnpg/monitor.yaml`; apply it only after both the operator namespace and Prometheus CRDs exist. A monitor must not create a namespace for an otherwise inactive service.
 
-Names and storage ownership matter more than directory names. Moving an existing object between directories within the same Flux group need not recreate it. Moving ownership between Flux groups requires a deliberate inventory/pruning migration. The current cleanup preserves the existing apps group and application identities; new groups had not previously been activated on this K3s cluster.
+Names and storage ownership matter more than directory names. Moving an existing object between directories within the same Flux group need not recreate it. Moving ownership between Flux groups requires a deliberate inventory/pruning migration.

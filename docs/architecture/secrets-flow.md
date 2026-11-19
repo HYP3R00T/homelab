@@ -2,53 +2,33 @@
 icon: lucide/key-round
 ---
 
-# Secrets Flow
+# Secrets flow
 
-Vault stores sensitive values outside Git. External Secrets authenticates to
-Vault with Kubernetes auth, reads approved values, and creates namespaced
-Kubernetes Secrets for workloads.
+Git holds secret references, not their values. Vault stores credential values, External Secrets authenticates using Kubernetes identity, and the resulting namespaced Kubernetes Secrets are consumed by workloads.
 
-```mermaid
-flowchart TB
-    Admin[Operator CLI] --> Vault[Vault KV v2]
-    ESO[External Secrets Operator] -->|Kubernetes auth| Vault
-    Vault -->|approved secret data| ESO
-    ESO --> Secret[Kubernetes Secret]
-    Secret --> Monitoring[Grafana and Prometheus]
-    Secret --> Postiz[Postiz stack]
-```
+![Vault bootstrap, Kubernetes authentication, and secret delivery](../assets/diagrams/secrets-flow.svg)
 
-## Ownership boundaries
+## Installation is only the first step
 
-- Terraform under `iac/vault` owns Vault auth, mounts, policies, and roles.
-- The operator chooses or explicitly approves every application secret value.
-- Operators write approved application secret values to Vault through the
-  Vault CLI.
-- External Secrets owns the generated Kubernetes Secret.
-- Workload manifests consume the Kubernetes Secret without embedding values.
-- Cloudflare owns the external tunnel endpoint and DNS routing.
+| Responsibility | Owner |
+| --- | --- |
+| Install Vault and External Secrets | Flux secrets group |
+| Initialize and unseal Vault | Operator |
+| Configure Kubernetes authentication, the KV mount, policy, and role | Terraform under `iac/vault` |
+| Choose and populate credential values | Operator |
+| Read approved Vault paths and synchronize Kubernetes Secrets | External Secrets |
+| Consume the delivered Secrets | Grafana and the Prometheus ingress middleware |
 
-## Operator approval boundary
+The `vault` ClusterSecretStore authenticates at `auth/kubernetes` using role `eso`, the `external-secrets` service account, and audience `vault`. It reads the `external-secrets` KV v2 mount. The service address `http://vault.vault.svc.cluster.local:8200` uses Kubernetes DNS and does not depend on the workstation hosts file.
 
-Declaring a Vault path in Git does not authorize creating or changing the value
-at that path. Before any credential generation, Vault write, rotation,
-deletion, secret read, or unseal operation, the exact action must be presented
-to the operator and must receive explicit approval. The operator must first be
-asked whether an existing value should be used.
+## The monitoring gate
 
-Automation must not treat access to `.env`, a Vault token, or an unseal key as
-permission to use it. GitOps owns references and delivery; the operator owns
-the secret material and every security-sensitive mutation.
+A running Vault pod can still be sealed or uninitialized. Until authentication and the required values work, the secret store and monitoring credentials remain unready. Flux waits at those boundaries before installing the monitoring chart. Homepage and Linkding are independent of this chain.
 
-## Retained optional applications
+Follow [Vault bootstrap](../runbooks/vault-bootstrap.md), then verify the [monitoring credentials](../infrastructure/kube-prometheus-stack.md#credentials). Terraform creates the Vault configuration; it does not populate application passwords.
 
-Cloudflared and Postiz are inactive. If enabled later, the Cloudflared deployment mounts the locally managed tunnel credential from a
-Kubernetes Secret. Its local configuration routes Linkding and returns a 404
-response for unmatched hostnames. Postiz consumes Vault-backed JWT, database,
-and Redis credentials through namespaced Secrets. Optional provider
-credentials can be added later. OAuth tokens created after authorization
-remain in the Postiz PostgreSQL database.
+## Secret ownership
 
-See [Vault](../services/vault.md),
-[External Secrets](../services/external-secrets.md), and
-[Cloudflared](../services/cloudflared.md) for component details.
+The operator owns credential values and recovery material. A manifest reference or an available token does not grant automation permission to read or mutate secrets. Keep `.env`, Terraform inputs/state/plans, unseal keys, and Raft snapshots outside the public repository. Use the [recovery runbook](../runbooks/vault-recovery.md) when the cluster or Terraform state changes.
+
+Inactive Postiz and Cloudflared bundles retain their own ExternalSecret definitions. They do not participate in the active monitoring delivery path. If enabled later, Postiz also stores OAuth runtime tokens in PostgreSQL; Terraform cannot recreate that application data.
