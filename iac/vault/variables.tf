@@ -103,3 +103,17 @@ variable "prometheus_users" {
     error_message = "Supply the complete username:bcrypt-hash line produced by htpasswd -nB prometheus."
   }
 }
+
+variable "shoutrrr_credentials" {
+  description = "Stable Shoutrrr encryption key and optional LinkedIn developer credentials."
+  type = object({
+    app_key                = string
+    linkedin_client_id     = optional(string, "")
+    linkedin_client_secret = optional(string, "")
+  })
+  sensitive = true
+  validation {
+    condition     = can(regex("^base64:[A-Za-z0-9+/]{43}=$", var.shoutrrr_credentials.app_key))
+    error_message = "Supply base64: followed by a base64-encoded 32-byte encryption key."
+  }
+}

@@ -4,7 +4,7 @@ icon: lucide/calendar-clock
 
 # Postiz
 
-Postiz schedules and publishes social posts. Its dedicated Flux group is included in the cluster entrypoint and waits for CloudNativePG and the Vault secret store. Homepage and Linkding use their independent group, so unfinished Postiz bootstrap does not block them.
+Postiz schedules and publishes social posts. Its dedicated Flux group is retained with its cluster-entrypoint reference commented out while [Shoutrrr](../shoutrrr.md) is evaluated. Existing resources are suspended and preserved; uncommenting the reference alone is not a complete rollback procedure. Homepage and Linkding use their independent group, so unfinished Postiz bootstrap does not block them.
 
 | Property | Configuration |
 | --- | --- |

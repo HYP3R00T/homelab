@@ -19,6 +19,11 @@
       "repository": "https://github.com/cloudnative-pg/artwork",
       "revision": "7b2d93ac735f0acee572ae0848960f13a543d080",
       "license": "Apache-2.0; product trademarks remain with their respective owners."
+    },
+    "shoutrrr": {
+      "repository": "https://github.com/coollabsio/shoutrrr",
+      "revision": "c0071aa2adec2311f88f744793744839ab6cb04e",
+      "license": "Apache-2.0; see bundled upstream license. Product trademarks remain with their respective owners."
     }
   },
   "icons": [
@@ -91,6 +96,11 @@
       "file": "cloudnativepg.svg",
       "source": "https://raw.githubusercontent.com/cloudnative-pg/artwork/7b2d93ac735f0acee572ae0848960f13a543d080/icon/color/cloudnativepg-icon-color.svg",
       "collection": "cloudnative-pg"
+    },
+    {
+      "file": "shoutrrr.svg",
+      "source": "https://raw.githubusercontent.com/coollabsio/shoutrrr/c0071aa2adec2311f88f744793744839ab6cb04e/public/favicon.svg",
+      "collection": "shoutrrr"
     }
   ],
   "local_processing": "SVG root canvases normalized to 64 \u00d7 64 with original viewBox and xMidYMid meet to preserve logo proportions. Missing viewBox inferred from original intrinsic dimensions; logo paths are unchanged."

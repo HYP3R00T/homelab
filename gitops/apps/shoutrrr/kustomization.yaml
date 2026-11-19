@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: shoutrrr
+resources:
+- config-map.yaml
+- deployment.yaml
+- external-secret.yaml
+- ingress.yaml
+- namespace.yaml
+- service.yaml
+- sqlite-persistent-volume-claim.yaml
+- storage-persistent-volume-claim.yaml
+configMapGenerator:
+- name: shoutrrr-runtime
+  files:
+  - supervisord.conf=configs/supervisord.conf

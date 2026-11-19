@@ -15,14 +15,14 @@
       showStats: true
       target: _self
       siteMonitor: http://homepage.homepage.svc.cluster.local:3000
-  - Postiz:
-      icon: postiz.png
-      href: http://postiz.homelab.internal/
-      namespace: postiz
-      podSelector: app.kubernetes.io/name=postiz,app.kubernetes.io/component=application
+  - Shoutrrr:
+      icon: https://raw.githubusercontent.com/coollabsio/shoutrrr/c0071aa2adec2311f88f744793744839ab6cb04e/public/favicon.svg
+      href: http://shoutrrr.homelab.internal/
+      namespace: shoutrrr
+      podSelector: app.kubernetes.io/name=shoutrrr
       showStats: true
       target: _self
-      siteMonitor: http://postiz.postiz.svc.cluster.local:5000/api/
+      siteMonitor: http://shoutrrr.shoutrrr.svc.cluster.local:8080/up
 - Infrastructure:
   - Flux Operator:
       icon: flux-operator.png
