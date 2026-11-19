@@ -64,7 +64,7 @@ Both ExternalSecrets must be Ready before the chart starts. Verify all three mon
 
 The `cnpg` group installs the operator after core infrastructure. Shoutrrr does not use CNPG; it waits for retained storage and the secret store, then runs SQLite inside its application container.
 
-Follow [Shoutrrr bootstrap](../apps/shoutrrr.md) to populate its Vault record, configure LAN access, and register the first owner. The application uses private LAN HTTP. Provider credentials and external OAuth/media requirements are separate from pod startup.
+Follow [Shoutrrr bootstrap](../apps/shoutrrr.md) to populate its Vault record, configure its public HTTPS tunnel, and register the first owner. The application uses `https://shoutrrr.hyperoot.dev` through Cloudflared. Provider credentials and external OAuth/media requirements are separate from pod startup.
 
 ```shell
 flux get kustomizations cnpg shoutrrr
@@ -86,4 +86,4 @@ During a controlled persistence test, record a historical query result, replace 
 
 Restore reviewed manifests through Git. For a running Helm release that must be paused, suspend its reconciliation before changing runtime state; suspending Flux alone does not stop pods. Do not delete a namespace or claim as a rollback shortcut. Reverting a commit that removes a HelmRelease can uninstall its workloads; inspect pruning and Helm ownership first. Retained volumes still require deliberate rebinding on recovery. Keep the core retained class and data even if monitoring is temporarily disabled.
 
-Cloudflared, Tailscale, and agent workloads are not activated by this rollout. CNPG and Shoutrrr are included but require their documented readiness and bootstrap checks.
+Cloudflared is included for Shoutrrr only. Tailscale and agent workloads are not activated by this rollout. CNPG and Shoutrrr are included but require their documented readiness and bootstrap checks.

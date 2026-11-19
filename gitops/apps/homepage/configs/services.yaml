@@ -17,7 +17,7 @@
       siteMonitor: http://homepage.homepage.svc.cluster.local:3000
   - Shoutrrr:
       icon: https://raw.githubusercontent.com/coollabsio/shoutrrr/c0071aa2adec2311f88f744793744839ab6cb04e/public/favicon.svg
-      href: http://shoutrrr.homelab.internal/
+      href: https://shoutrrr.hyperoot.dev/
       namespace: shoutrrr
       podSelector: app.kubernetes.io/name=shoutrrr
       showStats: true

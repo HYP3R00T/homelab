@@ -6,14 +6,15 @@ data:
   APP_NAME: Shoutrrr
   APP_ENV: production
   APP_DEBUG: 'false'
-  APP_URL: http://shoutrrr.homelab.internal
+  APP_URL: https://shoutrrr.hyperoot.dev
   DB_CONNECTION: sqlite
   DB_DATABASE: /var/www/html/database/sqlite/database.sqlite
   CACHE_STORE: database
   QUEUE_CONNECTION: database
   SESSION_DRIVER: database
-  SESSION_SECURE_COOKIE: 'false'
-  OCTANE_HTTPS: 'false'
+  SESSION_SECURE_COOKIE: 'true'
+  OCTANE_HTTPS: 'true'
+  TRUSTED_PROXIES: 10.42.0.0/24
   PHP_MEMORY_LIMIT: 128M
   QUEUE_WORKER_COUNT: '1'
   QUEUE_WORKER_MEMORY_MB: '128'
@@ -27,4 +28,6 @@ data:
   MESSAGES_ENABLED: 'false'
   DIRECT_MESSAGES_ENABLED: 'false'
   MAIL_MAILER: log
-  LINKEDIN_REDIRECT_URI: http://shoutrrr.homelab.internal/accounts/callback/linkedin
+  LINKEDIN_REDIRECT_URI: https://shoutrrr.hyperoot.dev/accounts/callback/linkedin
+  FACEBOOK_REDIRECT_URI: https://shoutrrr.hyperoot.dev/accounts/callback/meta
+  FACEBOOK_GRAPH_VERSION: v25.0

@@ -2,76 +2,58 @@
 icon: lucide/key-square
 ---
 
-# Store Cloudflared Credentials in Vault
+# Manage Cloudflared credentials in Vault
 
-This runbook copies the locally generated tunnel credential JSON into Vault without exposing its contents in Git or command output.
+Terraform owns the locally managed tunnel credential at `external-secrets/cloudflared/tunnel`. ESO reads its `credentials` property into `cloudflared-secret`, mounted as `credentials.json`. No secret values belong in Git.
 
-## Prerequisites
+## Private inputs
 
-- [Bootstrap Vault](vault-bootstrap.md) is complete
-- [Create a Cloudflared tunnel](cloudflared-tunnel.md) is complete
-- `.env` contains `VAULT_ADDR`, `VAULT_TOKEN`, `VAULT_UNSEAL_KEY`, and
-  `CLOUDFLARE_TUNNEL_ID`
+Complete [Vault bootstrap](vault-bootstrap.md) and [tunnel authorization](cloudflared-tunnel.md). Copy the three fields from the connector JSON into the ignored `iac/vault/terraform.tfvars`, using the mapping below. Preserve the existing application and monitoring inputs.
 
-## Authenticate to Vault
+| Connector JSON field | Terraform field |
+| --- | --- |
+| AccountTag | account_tag |
+| TunnelID | tunnel_id |
+| TunnelSecret | tunnel_secret |
 
-Unseal Vault when necessary:
-
-```shell
-vault operator unseal "$VAULT_UNSEAL_KEY"
+```hcl
+cloudflared_credentials = {
+  account_tag   = "your-account-tag"
+  tunnel_id     = "your-tunnel-uuid"
+  tunnel_secret = "your-tunnel-secret"
+}
 ```
 
-Authenticate with the administrative token loaded from `.env`:
+The tracked example includes commands to generate or recover the JSON. These are connector credentials; `cert.pem` grants account-level management access and must stay on the workstation. The tunnel UUID must also match the tracked connector config and DNS route.
+
+## Plan and apply
 
 ```shell
-vault login -no-print "$VAULT_TOKEN"
-vault token lookup
+umask 077
+terraform -chdir=iac/vault validate
+terraform -chdir=iac/vault plan -out=tfplan
+terraform -chdir=iac/vault apply tfplan
 ```
 
-When `VAULT_TOKEN` is set, Vault may warn that the environment value takes precedence over the token saved by `vault login`. This is expected.
+For an existing baseline workspace, enabling the optional input creates one `vault_kv_secret_v2.cloudflared[0]` record with no application credential changes. `null` omits that resource and would plan its removal if it was previously managed; review before applying. The complete workspace creates nine resources with the tunnel enabled, or eight without it.
 
-## Store the credential
+If the record already exists outside Terraform, import it after populating the input rather than overwriting it blindly:
 
 ```shell
-vault kv put -mount=external-secrets cloudflared/tunnel "credentials=@${HOME}/.cloudflared/${CLOUDFLARE_TUNNEL_ID}.json"
+terraform -chdir=iac/vault import 'vault_kv_secret_v2.cloudflared[0]' external-secrets/data/cloudflared/tunnel
 ```
 
-The command should report versioned metadata for `external-secrets/data/cloudflared/tunnel`.
+Terraform state and plans contain secret material and remain local and ignored. Back up them and the matching private inputs securely. Restoring Vault data does not restore a lost Terraform state file.
 
-Verify metadata without printing the credential:
+## Sync and verify
 
-```shell
-vault kv metadata get -mount=external-secrets cloudflared/tunnel
-```
-
-## Reconcile an explicitly enabled tunnel
-
-Cloudflared is inactive in the current entrypoint. Only after a separate public-access decision, add its own Flux group depending on the secret store and explicitly enable it. Then reconcile that group (named cloudflared in this example):
+After the GitOps group reaches the cluster:
 
 ```shell
-flux reconcile kustomization cloudflared --with-source
-kubectl -n cloudflared annotate externalsecret cloudflared-external-secret \
-  force-sync="$(date +%s)" --overwrite
+kubectl -n cloudflared annotate externalsecret cloudflared-external-secret force-sync="$(date +%s)" --overwrite
+kubectl -n cloudflared get externalsecret,pods
 kubectl -n cloudflared rollout status deployment/cloudflared --timeout=180s
+curl --fail https://shoutrrr.hyperoot.dev/up
 ```
 
-## Troubleshoot a 403 response
-
-A `403 permission denied` response means the active Vault token cannot write to the KV path.
-
-```shell
-vault token lookup
-vault token capabilities external-secrets/data/cloudflared/tunnel
-```
-
-The token needs `create` and `update`. The `eso` policy is intentionally read-only, so use the initial root token or another administrative token for this write operation.
-
-## Verify the connector
-
-After Flux applies the Cloudflared manifests, verify the secret, pod, tunnel, and public endpoint:
-
-```shell
-kubectl -n cloudflared get externalsecret,secret,pod
-cloudflared tunnel info "$CLOUDFLARE_TUNNEL_ID"
-curl --fail --head https://linkding.hyperoot.dev
-```
+Wait for a new ExternalSecret refresh and Ready condition before restarting an existing connector after rotation. Do not print the generated Secret or credential JSON. A 403 from Vault means the active Terraform token lacks rights on the path; the ESO read-only policy is deliberately insufficient for writing credentials.

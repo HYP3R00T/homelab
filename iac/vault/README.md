@@ -2,7 +2,7 @@
 
 This directory is the infrastructure-as-code workspace for Vault configuration in the homelab.
 
-It manages the shared Vault bootstrap needed by External Secrets and the credential records consumed by Shoutrrr and monitoring.
+It manages the shared Vault bootstrap needed by External Secrets and the credential records consumed by Shoutrrr, monitoring, and Cloudflared.
 
 Managed resources:
 
@@ -11,6 +11,7 @@ Managed resources:
 - Kubernetes auth configuration
 - the `eso` policy and Kubernetes auth role with audience `vault`
 - Shoutrrr, Grafana, and Prometheus KV v2 records from sensitive tfvars inputs
+- the tunnel credential record when `cloudflared_credentials` is supplied
 
 Not managed by this workspace:
 
@@ -45,7 +46,9 @@ actually route to it directly.
 
 Keep credential inputs stable between applies. LinkedIn setup changes only its two fields in `shoutrrr_credentials`. Terraform owns the complete KV records; manual edits can be reverted by the next apply. No credential values are exported as Terraform outputs.
 
-Shoutrrr has a separate persistent APP_KEY and optional LinkedIn credentials in `shoutrrr_credentials`. See [Shoutrrr setup](../../docs/apps/shoutrrr.md).
+Shoutrrr has a separate persistent APP_KEY and optional LinkedIn and Meta credentials in `shoutrrr_credentials`. See [Shoutrrr setup](../../docs/apps/shoutrrr.md).
+
+The optional `cloudflared_credentials` object maps the connector JSON into `cloudflared/tunnel`. Its TunnelID must match the tracked tunnel configuration. See [tunnel credential management](../../docs/runbooks/cloudflared-vault-credentials.md). Cloudflare DNS and tunnel creation remain CLI/provider operations outside this workspace.
 
 ## State Recovery
 
@@ -66,6 +69,8 @@ terraform -chdir=iac/vault import module.eso.vault_kubernetes_auth_backend_role.
 terraform -chdir=iac/vault import vault_kv_secret_v2.grafana external-secrets/data/monitoring/grafana
 terraform -chdir=iac/vault import vault_kv_secret_v2.prometheus external-secrets/data/monitoring/prometheus
 terraform -chdir=iac/vault import vault_kv_secret_v2.shoutrrr external-secrets/data/shoutrrr
+# Only when cloudflared_credentials is populated and this record already exists:
+terraform -chdir=iac/vault import 'vault_kv_secret_v2.cloudflared[0]' external-secrets/data/cloudflared/tunnel
 terraform -chdir=iac/vault plan
 ```
 

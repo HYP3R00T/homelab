@@ -38,9 +38,32 @@ shoutrrr_credentials = {
   app_key = ""
   # Obtain from your LinkedIn developer application; no shell command can create these.
   # https://www.linkedin.com/developers/apps
-  # Register this exact callback if the provider accepts the LAN HTTP address:
-  # http://shoutrrr.homelab.internal/accounts/callback/linkedin
-  # Keep both empty until connecting LinkedIn; validate provider HTTPS rules first.
+  # Register this exact HTTPS callback:
+  # https://shoutrrr.hyperoot.dev/accounts/callback/linkedin
+  # Keep both empty until connecting LinkedIn.
   linkedin_client_id     = ""
   linkedin_client_secret = ""
+  # Facebook + Instagram share a Meta app; no command generates its credentials.
+  # Obtain App ID and App Secret from https://developers.facebook.com/apps/
+  # Add Facebook Login and register the exact callback used by this deployment:
+  # https://shoutrrr.hyperoot.dev/accounts/callback/meta
+  # Link a professional Instagram account to a Facebook Page you manage.
+  # Keep these empty until your Meta app is ready; see docs/apps/shoutrrr.md.
+  facebook_client_id     = ""
+  facebook_client_secret = ""
 }
+
+# One-time workstation authorization: cloudflared tunnel login
+# List tunnels: cloudflared tunnel list
+# Create only if absent: cloudflared tunnel create homelab
+# Recover a credential file without printing it:
+# cloudflared tunnel token --cred-file /private/path/tunnel.json <TUNNEL_ID>
+# Copy AccountTag, TunnelID, and TunnelSecret into this object in private tfvars.
+# The tunnel_id must also match gitops/infrastructure/cloudflared/config.yaml.
+# This JSON is a connector credential, not the account-level cert.pem.
+cloudflared_credentials = null
+# cloudflared_credentials = {
+#   account_tag   = ""
+#   tunnel_id     = ""
+#   tunnel_secret = ""
+# }

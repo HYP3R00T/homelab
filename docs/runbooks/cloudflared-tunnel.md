@@ -2,69 +2,55 @@
 icon: lucide/cloud-cog
 ---
 
-# Create a Cloudflared Tunnel
+# Create a Cloudflared tunnel
 
-This runbook creates the locally managed `homelab` tunnel from the Cloudflared CLI and records its ID for later commands.
+This homelab uses the locally managed `homelab` tunnel to publish Shoutrrr only at `https://shoutrrr.hyperoot.dev`. The Cloudflare zone must be under your control. The other homelab interfaces stay private.
 
-## Prerequisites
-
-- a Cloudflare account and a domain managed by Cloudflare
-- Cloudflared installed through `mise.toml`
-- permission to authorize Cloudflared for the domain
-- `.env` ignored by Git
-
-## Authenticate the CLI
+## Authorize the workstation
 
 ```shell
 cloudflared tunnel login
-```
-
-Open the one-time URL, sign in, and select the domain to authorize. Cloudflared writes the account-level management certificate to `~/.cloudflared/cert.pem`. Do not deploy or commit this certificate.
-
-## Create the tunnel
-
-Check for an existing tunnel first:
-
-```shell
 cloudflared tunnel list
 ```
 
-Create it only when it does not already exist:
+In the browser, authorize the `hyperoot.dev` zone. Cloudflared writes `~/.cloudflared/cert.pem`; this account-level management credential stays on the workstation. Never commit it or deploy it in Kubernetes.
+
+## Reuse or create the tunnel
+
+Prefer the existing `homelab` tunnel. Create it only if the list confirms it is absent:
 
 ```shell
 cloudflared tunnel create homelab
 ```
 
-Cloudflared writes `~/.cloudflared/<tunnel-id>.json`. This file contains the per-tunnel credential and must remain secret.
-
-## Record the ID
+Use the resulting UUID in `gitops/infrastructure/cloudflared/config.yaml` and the private Terraform input. If its connector JSON is missing, recover it into private storage without printing the token:
 
 ```shell
-cloudflared tunnel list -n homelab -o json | jq -r '.[0].id'
+umask 077
+mkdir -p .cache/cloudflared
+cloudflared tunnel token --cred-file .cache/cloudflared/tunnel.json <TUNNEL_ID>
 ```
 
-Add the result to `.env`:
+Continue with [Vault credential management](cloudflared-vault-credentials.md) before starting the connector. On a fresh Shoutrrr database, create its initial owner locally before public exposure.
 
-```dotenv
-CLOUDFLARE_TUNNEL_ID=<tunnel-id>
-```
-
-Verify the tunnel:
+## Route the public hostname
 
 ```shell
-cloudflared tunnel info "$CLOUDFLARE_TUNNEL_ID"
+cloudflared tunnel route dns <TUNNEL_ID> shoutrrr.hyperoot.dev
 ```
 
-The message `does not have any active connection` is expected until a local or Kubernetes Cloudflared process starts using the credential.
+This creates the Cloudflare DNS CNAME to the tunnel. If the hostname already points elsewhere, inspect that record before replacing it. The Kubernetes tunnel configuration forwards only this hostname to the Shoutrrr Service and returns 404 for everything else. Do not add the old Linkding route.
 
-Create the application DNS routes:
+Cloudflare supplies public HTTPS. Shoutrrr's APP_URL, secure cookies, trusted-proxy range, and provider callbacks use the public origin; the origin container remains HTTP inside the cluster. No local CA or router port forwarding is needed.
+
+## Verify
 
 ```shell
-cloudflared tunnel route dns "$CLOUDFLARE_TUNNEL_ID" linkding.hyperoot.dev
+cloudflared tunnel info homelab
+kubectl -n cloudflared get externalsecret,pods
+curl --fail https://shoutrrr.hyperoot.dev/up
 ```
 
-Continue with [Store Cloudflared credentials in Vault](cloudflared-vault-credentials.md).
+Open the public address and sign in. Register `https://shoutrrr.hyperoot.dev/accounts/callback/meta` in Meta and `https://shoutrrr.hyperoot.dev/accounts/callback/linkedin` in LinkedIn before starting fresh account authorizations. Preserve existing provider credentials and APP_KEY.
 
-## Reference
-
-Cloudflare maintains a list of [useful locally managed tunnel commands](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/do-more-with-tunnels/local-management/tunnel-useful-commands/).
+See [Cloudflare's tunnel commands](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/do-more-with-tunnels/local-management/tunnel-useful-commands/).
