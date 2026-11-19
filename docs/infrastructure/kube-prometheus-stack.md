@@ -26,34 +26,35 @@ Grafana and Prometheus are exposed on the internal network through Traefik. Prom
 
 Complete [Vault bootstrap](../runbooks/vault-bootstrap.md) first, including address setup, unseal, login, Terraform configuration, and a Ready ClusterSecretStore. Flux declares the ExternalSecrets but does not choose or populate their values.
 
-Use the authenticated Vault UI at `http://vault.homelab.internal` to create these entries inside the **external-secrets** KV v2 mount. The entry path is relative to that mount; do not include `data/` in the UI or `vault kv` path.
+Terraform manages these entries in the **external-secrets** KV v2 mount using private inputs in `iac/vault/terraform.tfvars`:
 
-| Entry | Required properties | Used by |
+| Entry | Terraform input | Required properties |
 | --- | --- | --- |
-| `monitoring/grafana` | `username`, `password` | Grafana administrator account |
-| `monitoring/prometheus` | `users` | Traefik's Prometheus Basic Auth middleware |
+| `monitoring/grafana` | `grafana_credentials` | `username`, `password` |
+| `monitoring/prometheus` | `prometheus_users` | `users`, containing one htpasswd bcrypt entry |
 
-Choose the Grafana username and password and save both properties at `monitoring/grafana`. The ExternalSecret maps them into `grafana-admin`. There is no need to create a separate Grafana administrator in a running container.
+Choose the Grafana administrator username and password in the private inputs. The ExternalSecret maps the record into `grafana-admin`; there is no need to create an administrator inside a running container.
 
-For Prometheus, `users` must contain an htpasswd-formatted line, **not the plaintext password**. If the `htpasswd` utility is installed on your workstation, generate a bcrypt record at its hidden password prompt:
+Generate the Prometheus entry on the workstation with `htpasswd -nB prometheus`, entering your chosen password at its hidden prompt. Paste the complete resulting `prometheus:<bcrypt-hash>` line into `prometheus_users` and keep the browser password in your password manager. The example includes the command and installation instructions for the workstation utility. The input accepts the hash line, not a plaintext password.
+
+Review and apply the Vault Terraform plan as described in [Vault bootstrap](../runbooks/vault-bootstrap.md). If either record already exists outside Terraform, preserve its values in the private inputs and import it before planning:
 
 ```shell
-htpasswd -nB prometheus
+terraform -chdir=iac/vault import vault_kv_secret_v2.grafana external-secrets/data/monitoring/grafana
+terraform -chdir=iac/vault import vault_kv_secret_v2.prometheus external-secrets/data/monitoring/prometheus
 ```
 
-Save the complete resulting `prometheus:<bcrypt-hash>` line as `users` at `monitoring/prometheus`. Keep the chosen password in your password manager for browser login. A hash is still sensitive credential material; do not commit it. This command is a workstation tool, not another cluster service. See the [Apache htpasswd documentation](https://httpd.apache.org/docs/current/programs/htpasswd.html) if the utility is not installed.
+Import only records that exist. Terraform owns each complete record, so preserve any needed values before adopting it and change the private inputs rather than editing managed records directly. Keep inputs, hashes, plans, state, and backups outside Git.
 
-The manifests synchronize only the properties in the table. Additional username/password properties in an existing Prometheus Vault record are not required by the middleware. Review existing entries before changing them; replacing a KV record can remove properties omitted from the new record.
-
-After saving the values, verify delivery and installation:
+After applying, verify delivery and installation:
 
 ```shell
 kubectl -n monitoring get externalsecrets
-flux get kustomizations -n flux-system
+kubectl -n flux-system get kustomizations
 kubectl -n monitoring get helmrelease,pods,pvc
 ```
 
-Expect both ExternalSecrets Ready, then the chart and monitoring groups Ready. Synchronization may wait for the configured refresh or controller retry. Inspect the failing resource's events rather than removing the dependency gate. Configure [local access](../setup/local-access.md) to open Grafana and Prometheus with the chosen credentials.
+Expect both ExternalSecrets Ready, followed by the monitoring chart and Flux groups. Synchronization can wait for the controller retry or refresh interval. Configure [local access](../setup/local-access.md) to open Grafana and Prometheus with the chosen credentials.
 
 ## Resource budget
 

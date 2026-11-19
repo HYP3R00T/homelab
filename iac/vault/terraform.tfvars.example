@@ -1,14 +1,47 @@
-vault_addr      = "http://vault.homelab.internal"
-vault_token     = ""
+vault_addr  = "http://vault.homelab.internal"
+# Fill this privately; never commit a populated terraform.tfvars file.
+vault_token = ""
 
-# Example:
-# kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}'
-kubernetes_host = ""
+# Vault runs inside this Kubernetes cluster, so its internal API address is usable.
+# Alternatively, use a cluster API URL reachable from the Vault pod.
+kubernetes_host = "https://kubernetes.default.svc:443"
 
 # Example:
 # kubectl -n vault get secret vault-token-reviewer-token -o jsonpath='{.data.ca\.crt}' | base64 --decode
-kubernetes_ca_cert = ""
+# Paste the complete PEM certificate between the markers, including BEGIN/END lines.
+# Multiline certificates require a heredoc; do not wrap the PEM in double quotes.
+kubernetes_ca_cert = <<-EOT
+EOT
 
 # Example:
 # kubectl -n vault get secret vault-token-reviewer-token -o jsonpath='{.data.token}' | base64 --decode
+# Keep the decoded token on one line. Do not use a short-lived `kubectl create token` here.
 token_reviewer_jwt = ""
+
+# Generate each of the four required values separately with: openssl rand -hex 32
+# Generate once, paste the outputs below, and preserve them on later applies.
+# Shell commands written inside tfvars are not executed by Terraform.
+postiz_credentials = {
+  jwt_secret                 = ""
+  database_password          = ""
+  temporal_database_password = ""
+  redis_password             = ""
+  # Obtain these from your LinkedIn developer application when connecting it:
+  # https://docs.postiz.com/providers/linkedin
+  # Keep both empty for initial application bootstrap.
+  linkedin_client_id     = ""
+  linkedin_client_secret = ""
+}
+
+grafana_credentials = {
+  username = "admin"
+  # Generate once with: openssl rand -hex 32
+  password = ""
+}
+
+# Install the workstation utility if missing: sudo apt install apache2-utils
+# Run: htpasswd -nB prometheus
+# Enter your chosen password at the hidden prompt; keep it in your password manager.
+# Paste the complete resulting prometheus:<bcrypt-hash> line between the quotes.
+# Dollar signs in the bcrypt output are literal in HCL; no escaping is needed.
+prometheus_users = ""
