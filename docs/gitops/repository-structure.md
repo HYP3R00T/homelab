@@ -11,7 +11,8 @@ gitops/
   apps/
     homepage/
     linkding/
-    postiz/                 # separate Flux group, waits for CNPG and Vault
+    postiz/                 # retained trial; excluded from entrypoint
+    shoutrrr/               # SQLite trial, waits for retained storage and Vault
   infrastructure/
     core/                   # retained storage class and Flux ingress
     secrets/                # assembles Vault and ESO
@@ -33,7 +34,8 @@ gitops/
     monitoring.yaml
     monitoring-monitors.yaml
     cnpg.yaml
-    postiz.yaml
+    postiz.yaml             # retained, commented in entrypoint
+    shoutrrr.yaml
     kustomization.yaml
 ```
 

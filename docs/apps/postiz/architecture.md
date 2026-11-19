@@ -4,7 +4,7 @@ icon: lucide/blocks
 
 # Postiz architecture
 
-Postiz is included through its own Flux group. Its individual resource files live in `gitops/apps/postiz` and are assembled by its Kustomization. The apps root keeps Homepage and Linkding independent; `gitops/clusters/lab/postiz.yaml` includes this bundle after the `cnpg` and `secret-store` groups become ready.
+Postiz is retained as a separate Flux group, commented out of the cluster entrypoint during the Shoutrrr trial. Its individual resource files live in `gitops/apps/postiz` and are assembled by its Kustomization. The apps root keeps Homepage and Linkding independent; `gitops/clusters/lab/postiz.yaml` can restore this bundle after the `cnpg` and `secret-store` groups become ready.
 
 | Resource | Purpose |
 | --- | --- |

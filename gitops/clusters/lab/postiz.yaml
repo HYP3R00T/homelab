@@ -1,6 +1,8 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
   name: postiz
   namespace: flux-system
 spec:
@@ -12,6 +14,7 @@ spec:
     name: flux-system
   path: ./gitops/apps/postiz
   prune: true
+  deletionPolicy: Orphan
   dependsOn:
   - name: cnpg
   - name: secret-store

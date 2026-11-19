@@ -10,7 +10,7 @@ Managed resources:
 - Kubernetes authentication at `kubernetes`
 - Kubernetes auth configuration
 - the `eso` policy and Kubernetes auth role with audience `vault`
-- Postiz, Grafana, and Prometheus KV v2 records from sensitive tfvars inputs
+- Postiz, Shoutrrr, Grafana, and Prometheus KV v2 records from sensitive tfvars inputs
 
 Not managed by this workspace:
 
@@ -45,6 +45,8 @@ actually route to it directly.
 
 Keep credential inputs stable between applies. LinkedIn setup changes only its two fields in `postiz_credentials`. Terraform owns the complete KV records; manual edits can be reverted by the next apply. No credential values are exported as Terraform outputs.
 
+Shoutrrr has a separate persistent APP_KEY and optional LinkedIn credentials in `shoutrrr_credentials`. See [Shoutrrr setup](../../docs/apps/shoutrrr.md). Its values do not replace the retained Postiz record.
+
 ## State Recovery
 
 If the local state file goes missing while the managed Vault resources still
@@ -64,6 +66,7 @@ terraform -chdir=iac/vault import module.eso.vault_kubernetes_auth_backend_role.
 terraform -chdir=iac/vault import vault_kv_secret_v2.postiz external-secrets/data/postiz
 terraform -chdir=iac/vault import vault_kv_secret_v2.grafana external-secrets/data/monitoring/grafana
 terraform -chdir=iac/vault import vault_kv_secret_v2.prometheus external-secrets/data/monitoring/prometheus
+terraform -chdir=iac/vault import vault_kv_secret_v2.shoutrrr external-secrets/data/shoutrrr
 terraform -chdir=iac/vault plan
 ```
 

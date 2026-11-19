@@ -31,7 +31,7 @@ One Ubuntu VM. A K3s cluster. Applications and infrastructure kept in Git, with 
 
 [Open the architecture diagram at full size](assets/diagrams/architecture.svg).
 
-This is the **declared architecture**, not a live status board. Homepage and Linkding are included independently of Vault. Monitoring is included but waits for Vault bootstrap and credentials. Postiz and CloudNativePG are included through dedicated groups; Postiz waits for its operator and Vault-backed credentials. Cloudflared remains disabled.
+This is the **declared architecture**, not a live status board. Homepage and Linkding are included independently of Vault. Monitoring is included but waits for Vault bootstrap and credentials. Shoutrrr and CloudNativePG are included through dedicated groups; Shoutrrr waits for retained storage and Vault-backed credentials. Postiz remains retained outside the entrypoint. Cloudflared remains disabled.
 
 ## Engineering choices
 
@@ -71,7 +71,7 @@ Applications are the tools used directly for everyday work. They have their own 
 
 </div>
 
-[Postiz](apps/postiz/index.md) is included as a social publishing application with its own database and secret prerequisites. Inclusion does not imply a completed bootstrap. See the [application inventory](apps/index.md) for activation and setup details.
+[Shoutrrr](apps/shoutrrr.md) is the social publishing trial, using one container, SQLite, and Vault-backed credentials. Postiz manifests and data are retained for rollback. Inclusion does not imply a completed bootstrap. See the [application inventory](apps/index.md) for activation and setup details.
 
 ## Infrastructure
 

@@ -45,3 +45,17 @@ grafana_credentials = {
 # Paste the complete resulting prometheus:<bcrypt-hash> line between the quotes.
 # Dollar signs in the bcrypt output are literal in HCL; no escaping is needed.
 prometheus_users = ""
+
+# Generate once: openssl rand -base64 32
+# Prefix that output with base64: and paste it below. Preserve it across upgrades.
+# Losing/changing APP_KEY prevents decryption of stored provider tokens.
+shoutrrr_credentials = {
+  app_key = ""
+  # Obtain from your LinkedIn developer application; no shell command can create these.
+  # https://www.linkedin.com/developers/apps
+  # Register this exact callback if the provider accepts the LAN HTTP address:
+  # http://shoutrrr.homelab.internal/accounts/callback/linkedin
+  # Keep both empty until connecting LinkedIn; validate provider HTTPS rules first.
+  linkedin_client_id     = ""
+  linkedin_client_secret = ""
+}

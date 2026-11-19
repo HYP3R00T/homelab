@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shoutrrr-config
+data:
+  APP_NAME: Shoutrrr
+  APP_ENV: production
+  APP_DEBUG: 'false'
+  APP_URL: http://shoutrrr.homelab.internal
+  DB_CONNECTION: sqlite
+  DB_DATABASE: /var/www/html/database/sqlite/database.sqlite
+  CACHE_STORE: database
+  QUEUE_CONNECTION: database
+  SESSION_DRIVER: database
+  SESSION_SECURE_COOKIE: 'false'
+  OCTANE_HTTPS: 'false'
+  PHP_MEMORY_LIMIT: 128M
+  QUEUE_WORKER_COUNT: '1'
+  QUEUE_WORKER_MEMORY_MB: '128'
+  QUEUE_WORKER_ENABLED: 'true'
+  SCHEDULER_ENABLED: 'true'
+  INERTIA_SSR_ENABLED: 'false'
+  INSTANCE_REGISTRATIONS_ENABLED: 'false'
+  INSTANCE_USAGE_TRACKING_ENABLED: 'false'
+  METRICS_ENABLED: 'false'
+  ENGAGEMENT_ENABLED: 'false'
+  MESSAGES_ENABLED: 'false'
+  DIRECT_MESSAGES_ENABLED: 'false'
+  MAIL_MAILER: log
+  LINKEDIN_REDIRECT_URI: http://shoutrrr.homelab.internal/accounts/callback/linkedin

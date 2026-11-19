@@ -60,19 +60,19 @@ kubectl get pods,pvc -n monitoring
 
 Both ExternalSecrets must be Ready before the chart starts. Verify all three monitoring PVs have Retain and all StatefulSet claim-retention policies keep claims on deletion and scale-down. Read [storage recovery](storage-recovery.md) before testing recovery. Do not test by deleting a production claim.
 
-## CloudNativePG and Postiz
+## CloudNativePG and Shoutrrr
 
-The `cnpg` group installs the operator after core infrastructure. The separate `postiz` group waits for CNPG and the secret store, then applies its credentials, database, Redis, Temporal, uploads, and application resources. It does not block Homepage or Linkding.
+The `cnpg` group installs the operator after core infrastructure. Postiz's retained group is excluded from the entrypoint and stays suspended, with its database hibernated and its volumes preserved. Shoutrrr does not use CNPG; it waits for retained storage and the secret store, then runs SQLite inside its application container.
 
-Follow [Postiz bootstrap](../apps/postiz/index.md) to populate its Vault record, configure LAN access, and create the owner account. The application is configured for private HTTP, not the former public hostname. Provider credentials and external OAuth requirements are separate from pod startup.
+Follow [Shoutrrr bootstrap](../apps/shoutrrr.md) to populate its Vault record, configure LAN access, and register the first owner. The application uses private LAN HTTP. Provider credentials and external OAuth/media requirements are separate from pod startup.
 
 ```shell
-flux get kustomizations cnpg postiz
+flux get kustomizations cnpg shoutrrr
 kubectl -n cnpg get helmrelease,pods
-kubectl -n postiz get externalsecrets,cluster,database,pods,pvc
+kubectl -n shoutrrr get externalsecrets,pods,pvc
 ```
 
-New Postiz volumes use the retained class. Keep the trial resource limits and measure actual usage: the application stack has 1088 MiB of requests, excluding the 128 MiB operator request, alongside the existing monitoring budget. Resource requests do not prove that simultaneous runtime peaks fit on this VM.
+Shoutrrr requests 256 MiB RAM and has a 768 MiB limit, with one web worker and one queue worker. Measure startup, uploads, publishing, and node pressure alongside monitoring. Resource requests do not prove that simultaneous runtime peaks fit on this VM.
 
 ## Acceptance
 
@@ -86,4 +86,4 @@ During a controlled persistence test, record a historical query result, replace 
 
 Restore reviewed manifests through Git. For a running Helm release that must be paused, suspend its reconciliation before changing runtime state; suspending Flux alone does not stop pods. Do not delete a namespace or claim as a rollback shortcut. Reverting a commit that removes a HelmRelease can uninstall its workloads; inspect pruning and Helm ownership first. Retained volumes still require deliberate rebinding on recovery. Keep the core retained class and data even if monitoring is temporarily disabled.
 
-Cloudflared, Tailscale, and agent workloads are not activated by this rollout. CNPG and Postiz are included but still require their documented readiness and bootstrap checks.
+Cloudflared, Tailscale, and agent workloads are not activated by this rollout. CNPG and Shoutrrr are included but require their documented readiness and bootstrap checks. Postiz is retained outside the entrypoint.

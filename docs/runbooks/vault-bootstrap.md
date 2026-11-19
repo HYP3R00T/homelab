@@ -15,7 +15,7 @@ Flux deploys Vault, its persistent volume, the External Secrets Operator, and th
 - a KV v2 secrets engine mounted at `external-secrets`
 - an `eso` policy with read access to that mount
 - an `eso` role for the `external-secrets` service account with audience `vault`, matching the store TokenRequest
-- the Postiz, Grafana, and Prometheus credential records, populated from sensitive private inputs
+- the retained Postiz, Shoutrrr, Grafana, and Prometheus credential records, populated from sensitive private inputs
 
 The `ClusterSecretStore` in `gitops/infrastructure/secret-store/cluster-secret-store.yaml` uses those names exactly.
 
@@ -195,6 +195,7 @@ Populate it with:
 - `kubernetes_ca_cert`: the cluster CA certificate
 - `token_reviewer_jwt`: the token for `vault-token-reviewer`
 - `postiz_credentials`: four stable random secrets and optional LinkedIn client credentials
+- `shoutrrr_credentials`: a persistent APP_KEY and optional LinkedIn inputs (see the example generation commands)
 - `grafana_credentials`: administrator username and password
 - `prometheus_users`: a complete htpasswd bcrypt entry
 
@@ -229,7 +230,7 @@ terraform -chdir=iac/vault plan -out=tfplan
 terraform -chdir=iac/vault apply tfplan
 ```
 
-Review the plan before running `apply`: a completely new setup creates eight resources, with no updates or deletions. These are the Kubernetes auth mount, its reviewer configuration, the KV mount, the ESO policy, the ESO role, and three credential records. If the original five bootstrap resources are already tracked in state, adding credential management should create only the three records. If these already exist from manual setup but the local state is missing, recover the state or import the existing resources first; do not delete them to make the plan succeed. A clean follow-up plan should report no changes:
+Review the plan before running `apply`: a completely new setup creates nine resources, with no updates or deletions. These are the Kubernetes auth mount, its reviewer configuration, the KV mount, the ESO policy, the ESO role, and four credential records. If the original five bootstrap resources are already tracked in state, adding the original credential management creates three records; adding Shoutrrr afterward creates only its separate credential record. If these already exist from manual setup but the local state is missing, recover the state or import the existing resources first; do not delete them to make the plan succeed. A clean follow-up plan should report no changes:
 
 ```shell
 terraform -chdir=iac/vault plan
@@ -255,7 +256,7 @@ kubectl -n external-secrets logs deployment/external-secrets --tail=100
 
 ## 9. Verify the application credentials and rollout
 
-The Terraform apply writes `postiz`, `monitoring/grafana`, and `monitoring/prometheus` in the `external-secrets` mount. External Secrets then synchronizes those records into the Kubernetes Secrets consumed by the applications. You do not need to enter the same values manually in Vault. See [Monitoring credentials](../infrastructure/kube-prometheus-stack.md#credentials) and [Postiz bootstrap](../apps/postiz/index.md#bootstrap-prerequisites) for ownership and import guidance.
+The Terraform apply writes `postiz`, `shoutrrr`, `monitoring/grafana`, and `monitoring/prometheus` in the `external-secrets` mount. External Secrets then synchronizes those records into the Kubernetes Secrets consumed by the applications. You do not need to enter the same values manually in Vault. See [Monitoring credentials](../infrastructure/kube-prometheus-stack.md#credentials) and [Postiz bootstrap](../apps/postiz/index.md#bootstrap-prerequisites) for ownership and import guidance.
 
 Flux waits in order for the secret store, monitoring secrets, the monitoring Helm release, and finally the additional monitors. Once the dependencies become ready, reconciliation proceeds automatically; do not manually install the chart.
 
@@ -268,7 +269,7 @@ kubectl -n monitoring get helmrelease,pods,pvc
 
 Expect the store and both ExternalSecrets to report ready, followed by the `monitoring` and `monitoring-monitors` Kustomizations. If a secret reports an error, inspect its events with `kubectl -n monitoring describe externalsecret grafana-admin` or `kubectl -n monitoring describe externalsecret prometheus-basic-auth`.
 
-Add `grafana.homelab.internal` and `prometheus.homelab.internal` to the workstation's hosts entry for the node's current LAN IP address to open their interfaces. CNPG and Postiz have separate included Flux groups. The Postiz record is managed by this workspace, but initial owner registration and social-provider configuration remain separate application steps. This procedure does not enable the disabled Cloudflared tunnel.
+Add `grafana.homelab.internal` and `prometheus.homelab.internal` to the workstation's hosts entry for the node's current LAN IP address to open their interfaces. CNPG and Shoutrrr have separate included Flux groups; Postiz remains retained outside the entrypoint. The retained Postiz record and the Shoutrrr record are managed by this workspace. Shoutrrr allows first-owner registration and disables subsequent public registration by default; social-provider setup remains a separate step. See [Shoutrrr](../apps/shoutrrr.md) before activating the new trial. This procedure does not enable the disabled Cloudflared tunnel.
 
 ## Next steps
 

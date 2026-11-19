@@ -24,7 +24,7 @@ For the included browser interfaces, use your actual IP with these aliases. The 
 
 ```text
 # Example: replace 192.168.0.61 with your K3s node's current LAN IP
-192.168.0.61 homepage.homelab.internal linkding.homelab.internal postiz.homelab.internal flux.homelab.internal
+192.168.0.61 homepage.homelab.internal linkding.homelab.internal shoutrrr.homelab.internal flux.homelab.internal
 192.168.0.61 vault.homelab.internal grafana.homelab.internal prometheus.homelab.internal
 ```
 
@@ -36,7 +36,8 @@ Preserve other hosts-file entries. If an alias already exists, update its mappin
 | --- | --- | --- |
 | `homepage.homelab.internal` | Personal dashboard | Homepage deployment Ready |
 | `linkding.homelab.internal` | Bookmarks | Deployment Ready and [owner account created](../apps/linkding.md#initial-setup) |
-| `postiz.homelab.internal` | Social publishing | [Postiz bootstrap](../apps/postiz/index.md), database and credentials Ready |
+| `shoutrrr.homelab.internal` | Social publishing trial | [Shoutrrr bootstrap](../apps/shoutrrr.md), credentials and application Ready |
+| `postiz.homelab.internal` | Retained trial | Not active while Shoutrrr is evaluated |
 | `flux.homelab.internal` | GitOps status | Flux Operator and core ingress ready |
 | `vault.homelab.internal` | Secret administration | Vault deployment, initialization, and unseal |
 | `grafana.homelab.internal` | Metrics dashboards | [Vault and monitoring setup](../runbooks/vault-bootstrap.md) complete |
