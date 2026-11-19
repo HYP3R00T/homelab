@@ -1,0 +1,30 @@
+name: homelab-homepage-preview
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:v2.8.0
+    ports:
+    - 127.0.0.1:3030:3000
+    environment:
+      HOMEPAGE_VAR_PROXMOX_URL: ${HOMEPAGE_VAR_PROXMOX_URL:-}
+      HOMEPAGE_VAR_PROXMOX_TOKEN_ID: ${HOMEPAGE_VAR_PROXMOX_TOKEN_ID:-}
+      HOMEPAGE_VAR_PROXMOX_TOKEN_SECRET: ${HOMEPAGE_VAR_PROXMOX_TOKEN_SECRET:-}
+      HOMEPAGE_VAR_TAILSCALE_DEVICE_ID: ${HOMEPAGE_VAR_TAILSCALE_DEVICE_ID:-}
+      HOMEPAGE_VAR_TAILSCALE_API_TOKEN: ${HOMEPAGE_VAR_TAILSCALE_API_TOKEN:-}
+      HOMEPAGE_VAR_CLOUDFLARED_ACCOUNT_ID: ${HOMEPAGE_VAR_CLOUDFLARED_ACCOUNT_ID:-}
+      HOMEPAGE_VAR_CLOUDFLARED_TUNNEL_ID: ${HOMEPAGE_VAR_CLOUDFLARED_TUNNEL_ID:-}
+      HOMEPAGE_VAR_CLOUDFLARED_API_TOKEN: ${HOMEPAGE_VAR_CLOUDFLARED_API_TOKEN:-}
+      HOMEPAGE_ALLOWED_HOSTS: localhost:3030,127.0.0.1:3030
+    volumes:
+    - ../../gitops/apps/homepage/configs/bookmarks.yaml:/app/config/bookmarks.yaml:ro
+    - ../../gitops/apps/homepage/configs/custom.css:/app/config/custom.css:ro
+    - ../../gitops/apps/homepage/configs/custom.js:/app/config/custom.js:ro
+    - ../../gitops/apps/homepage/configs/docker.yaml:/app/config/docker.yaml:ro
+    - ../../gitops/apps/homepage/configs/proxmox.yaml:/app/config/proxmox.yaml:ro
+    - ../../gitops/apps/homepage/configs/services.yaml:/app/config/services.yaml:ro
+    - ../../gitops/apps/homepage/configs/settings.yaml:/app/config/settings.yaml:ro
+    - ../../gitops/apps/homepage/configs/widgets.yaml:/app/config/widgets.yaml:ro
+    - ../../gitops/apps/homepage/configs/kubernetes.yaml:/app/config/kubernetes.yaml:ro
+    tmpfs:
+    - /app/config/logs
+    mem_limit: 512m
+    cpus: 0.5
