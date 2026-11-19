@@ -89,6 +89,35 @@ The v1.5.8 [Instagram connector](https://github.com/coollabsio/shoutrrr/blob/v1.
 
 Cloudflared exposes this application only; no object-storage service is added. Shoutrrr uses its own account login, with public registration disabled. Its signed media-serving routes must remain reachable to Meta. Verify a media URL and an intentionally scheduled post before relying on unattended publishing. Instagram requires media; text-only posts are not supported.
 
+## MCP access from Codex
+
+Shoutrrr exposes its built-in MCP endpoint at `https://shoutrrr.hyperoot.dev/mcp`; no separate MCP deployment is needed. Follow the [upstream MCP guide](https://shoutrrr.com/docs/mcp) for supported tools and authentication. OAuth consent binds access to the workspace you select.
+
+For Codex desktop and CLI, add the endpoint:
+
+```shell
+codex mcp add shoutrrr --url https://shoutrrr.hyperoot.dev/mcp
+```
+
+Shoutrrr v1.5.8's Content Security Policy permits the HTTP loopback callback `http://localhost:8787`. Codex defaults to `127.0.0.1` with a random port, which the browser blocks after consent. Add the following to your private `~/.codex/config.toml` before login; the callback URL and listener port must agree. Keep Shoutrrr's CSP enabled.
+
+```toml
+[mcp_servers.shoutrrr.oauth]
+callback_url = "http://localhost:8787/callback"
+callback_port = 8787
+```
+
+```shell
+codex mcp login shoutrrr --oauth-client-registration dcr
+codex mcp list
+```
+
+Select your workspace and approve once. A second submission of an already-consumed approval can produce `Check the response_type parameter`; start a fresh login instead. The fixed callback completed OAuth successfully on 2026-11-19.
+
+Codex desktop and CLI share the user configuration. If this chat was already open, start a new chat after connecting so it can discover the tools. See [Codex MCP configuration](https://developers.openai.com/codex/mcp). Set `default_tools_approval_mode = "prompt"` under `[mcp_servers.shoutrrr]` to request tool approvals. Connecting grants workspace access; publishing, scheduling, and deleting posts still require a deliberate user request.
+
+The startup command generates Passport signing keys only when both key files are absent and checks that both are nonempty before starting the server. They persist under the storage claim as `oauth-private.key` and `oauth-public.key`; include them in private storage backups alongside APP_KEY and SQLite. Never publish or routinely regenerate them. A partial key pair requires investigation instead of automatic replacement.
+
 ## Verify rollout
 
 Flux watches main, so a local manifest change alone does not deploy the application. For an explicit trial before merge, apply the Vault record first, then run `kubectl apply -k gitops/apps/shoutrrr`. That installs only this application's bundle; it does not add the Flux group yet. After merge, the root creates the Shoutrrr group and Flux adopts those same named resources. Do not leave the working-tree configuration unmerged as the long-term source of truth.
