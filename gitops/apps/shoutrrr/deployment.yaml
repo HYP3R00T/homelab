@@ -32,6 +32,11 @@ spec:
           mkdir -p /tmp/shoutrrr-bin
           cp /usr/local/bin/frankenphp /tmp/shoutrrr-bin/frankenphp
           export PATH="/tmp/shoutrrr-bin:$PATH"
+          # MCP OAuth needs signing keys before the first API key is issued.
+          if [ ! -e storage/oauth-private.key ] && [ ! -e storage/oauth-public.key ]; then
+            php artisan passport:keys --no-interaction
+          fi
+          test -s storage/oauth-private.key && test -s storage/oauth-public.key
           exec supervisord -c /etc/supervisor/laravel.conf
         ports:
         - name: http
