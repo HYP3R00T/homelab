@@ -4,8 +4,7 @@ icon: lucide/key-square
 
 # Store Cloudflared Credentials in Vault
 
-This runbook copies the locally generated tunnel credential JSON into Vault
-without exposing its contents in Git or command output.
+This runbook copies the locally generated tunnel credential JSON into Vault without exposing its contents in Git or command output.
 
 ## Prerequisites
 
@@ -29,8 +28,7 @@ vault login -no-print "$VAULT_TOKEN"
 vault token lookup
 ```
 
-When `VAULT_TOKEN` is set, Vault may warn that the environment value takes
-precedence over the token saved by `vault login`. This is expected.
+When `VAULT_TOKEN` is set, Vault may warn that the environment value takes precedence over the token saved by `vault login`. This is expected.
 
 ## Store the credential
 
@@ -38,8 +36,7 @@ precedence over the token saved by `vault login`. This is expected.
 vault kv put -mount=external-secrets cloudflared/tunnel "credentials=@${HOME}/.cloudflared/${CLOUDFLARE_TUNNEL_ID}.json"
 ```
 
-The command should report versioned metadata for
-`external-secrets/data/cloudflared/tunnel`.
+The command should report versioned metadata for `external-secrets/data/cloudflared/tunnel`.
 
 Verify metadata without printing the credential:
 
@@ -60,22 +57,18 @@ kubectl -n cloudflared rollout status deployment/cloudflared --timeout=180s
 
 ## Troubleshoot a 403 response
 
-A `403 permission denied` response means the active Vault token cannot write to
-the KV path.
+A `403 permission denied` response means the active Vault token cannot write to the KV path.
 
 ```shell
 vault token lookup
 vault token capabilities external-secrets/data/cloudflared/tunnel
 ```
 
-The token needs `create` and `update`. The `eso` policy is intentionally
-read-only, so use the initial root token or another administrative token for
-this write operation.
+The token needs `create` and `update`. The `eso` policy is intentionally read-only, so use the initial root token or another administrative token for this write operation.
 
 ## Verify the connector
 
-After Flux applies the Cloudflared manifests, verify the secret, pod, tunnel,
-and public endpoint:
+After Flux applies the Cloudflared manifests, verify the secret, pod, tunnel, and public endpoint:
 
 ```shell
 kubectl -n cloudflared get externalsecret,secret,pod

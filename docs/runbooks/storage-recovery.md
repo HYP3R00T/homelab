@@ -1,3 +1,7 @@
+---
+icon: lucide/archive-restore
+---
+
 # Recover retained storage
 
 New Vault and monitoring volumes use the non-default local-path-retain StorageClass. K3s's existing local provisioner creates the PV directories. Retain preserves data after claim deletion; manual recovery and cleanup are deliberate operator steps.
@@ -30,7 +34,7 @@ The K3s uninstall script deletes Local Storage Persistent Volume data. Retain is
 
 Use application-consistent exports or a coordinated offline VM backup. For an offline backup, shut down the VM cleanly, back up its disk through the hypervisor to separate storage, and verify restoration on an isolated VM before relying on the copy. A snapshot on the same failing disk is not an independent backup. Keep configuration, PV/PVC metadata, filesystem ownership, Vault recovery material, and required decryption keys with the recovery plan. Vault Raft snapshots require the matching unseal/recovery material; see [Vault recovery](vault-recovery.md).
 
-Backup tooling and schedules are not automated by this cleanup. Perform and verify the chosen backup before any reinstall. After a fresh cluster, restore the directories or application snapshots and explicitly reconstruct PVs, claims, and node affinity. Kubernetes does not scan old directories and automatically recreate their volume objects.
+Backup tooling and schedules are not automated by this repository. Perform and verify the chosen backup before any reinstall. After a fresh cluster, restore the directories or application snapshots and explicitly reconstruct PVs, claims, and node affinity. Kubernetes does not scan old directories and automatically recreate their volume objects.
 
 ## Retention versus backup
 

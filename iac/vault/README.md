@@ -13,8 +13,12 @@ Managed resources:
 
 Not managed by this workspace:
 
+- Vault installation (managed by Flux and Helm)
+- Vault initialization and unsealing (operator steps before Terraform can connect)
 - bulk secret values
 - unrelated cloud/provider infrastructure
+
+Follow [Vault bootstrap](../../docs/runbooks/vault-bootstrap.md) before the Terraform commands below. It covers hostname resolution, `VAULT_ADDR`, initialization, unsealing, authentication, and private Terraform inputs in order. After applying the configuration, populate the monitoring credentials and verify the External Secrets store and Flux readiness. Having these Terraform files in Git does not mean they have been applied to a Vault installation.
 
 ## Usage
 
@@ -73,9 +77,7 @@ For safety, keep a backup of:
 - your `terraform.tfvars`
 - the local Terraform state file until you move to a remote backend
 
-For initialization and configuration, see
-`docs/runbooks/vault-bootstrap.md`. For state and data recovery, see
-`docs/runbooks/vault-recovery.md`.
+For initialization and configuration, see [Vault bootstrap](../../docs/runbooks/vault-bootstrap.md). For state and data recovery, see [Vault recovery](../../docs/runbooks/vault-recovery.md).
 
 ## Managed scope
 

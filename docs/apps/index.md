@@ -1,9 +1,17 @@
+---
+icon: lucide/panels-top-left
+---
+
 # Applications
 
-| Application | Activation | Access | Data |
-| --- | --- | --- | --- |
-| [Homepage](homepage.md) | Included | homepage.homelab.internal | Git-backed ConfigMap; temporary logs |
-| [Linkding](linkding.md) | Included | linkding.homelab.internal | Existing 10 GiB local-path claim, unchanged |
-| [Postiz](postiz.md) | Not included | No active route | Retained deployment design only |
+Applications are the tools used by people. They live under `gitops/apps`, while administrative capabilities belong to [Infrastructure](../infrastructure/index.md). A web UI alone does not make a component an application: Grafana and the Flux UI support administration.
 
-`gitops/apps/kustomization.yaml` includes only Homepage and Linkding. The apps Flux group has no dependency on Vault or monitoring. Future applications needing operators or secrets should get their own dependency boundary rather than blocking these two applications.
+| Application | What it does | Declared activation | Initial configuration |
+| --- | --- | --- | --- |
+| [Homepage](homepage.md) | Dashboard, shortcuts, and current Kubernetes resource readings | Included | Review service cards and workstation hostname access |
+| [Linkding](linkding.md) | Personal bookmark collection | Included | Create an owner account on a new installation |
+| [Postiz](postiz/index.md) | Social post scheduling | Inactive | Requires CNPG, credentials, provider setup, and a separate activation plan |
+
+`gitops/apps/kustomization.yaml` includes only Homepage and Linkding. Their Flux group has no dependency on Vault or monitoring. Future applications needing operators or secrets should get their own readiness boundary rather than blocking these independent applications.
+
+Follow [Setup](../setup/index.md) for the initial journey. Each application page explains its own configuration and data. Declared activation describes the manifests, not a live availability guarantee.

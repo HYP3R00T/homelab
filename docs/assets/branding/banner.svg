@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="300" viewBox="0 0 1120 300" role="img" aria-labelledby="title desc">
+  <title id="title">Homelab: private by design, versioned in Git</title>
+  <desc id="desc">A transparent banner with connected node outlines and the project's three layers: Applications, Infrastructure, and GitOps. Subtle decorative motion has a reduced-motion fallback.</desc>
+  <style>
+    .title{font:700 52px ui-sans-serif,system-ui,sans-serif;fill:#dceaff}
+    .sub{font:20px ui-sans-serif,system-ui,sans-serif;fill:#9eb9da}
+    .tag{font:600 14px ui-sans-serif,system-ui,sans-serif;fill:#91dacd;letter-spacing:2px}
+    .signal{animation:signal 7s ease-in-out infinite}
+    @keyframes signal{0%,100%{opacity:.45}50%{opacity:1}}
+    @media(prefers-reduced-motion:reduce){.signal{animation:none}}
+    @media(prefers-color-scheme:light){.title{fill:#18324d}.sub{fill:#42617d}.tag{fill:#176e62}}
+  </style>
+  <g fill="none" stroke-width="1.5">
+    <path d="M760 112H950V206H850V112M850 112V54H1024V112H950" stroke="#597aab" opacity=".55"/>
+    <rect x="704" y="64" width="112" height="96" rx="18" fill="#102139" stroke="#6ba9f8"/>
+    <rect x="900" y="64" width="112" height="96" rx="18" fill="#102139" stroke="#9d88ec"/>
+    <rect x="802" y="184" width="112" height="76" rx="18" fill="#102139" stroke="#54bda9"/>
+    <path d="M740 98H780M740 112H780M740 126H765M936 98H976M936 112H976M936 126H961M834 210H882M834 226H866" stroke="#b7d4f4" stroke-linecap="round"/>
+  </g>
+  <circle class="signal" cx="850" cy="112" r="5" fill="#81dfcc"/>
+  <text x="32" y="75" class="tag">APPLICATIONS / INFRASTRUCTURE / GITOPS</text>
+  <text x="32" y="145" class="title">Homelab</text>
+  <text x="32" y="187" class="sub">Private by design. Versioned in Git.</text>
+  <text x="32" y="218" class="sub">One node, with every component accounted for.</text>
+</svg>

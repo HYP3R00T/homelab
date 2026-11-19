@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="1230" viewBox="0 0 1120 1230" role="img" aria-labelledby="title description">
+<title id="title">Homelab · system architecture</title>
+<desc id="description">Git main feeds Flux. A workstation resolves internal hostnames to the node and reaches K3s Traefik. Applications are Homepage and Linkding. Infrastructure includes Vault, External Secrets, and monitoring. Local storage serves Vault, monitoring, and Linkding. Postiz, CloudNativePG, and Cloudflared remain inactive.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#7188a6"/></marker></defs>
+<style>text{font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif}.heading{font-size:29px;font-weight:700;fill:#eff5ff}.sub{font-size:18px;fill:#a8bdd7}.label{font-size:21px;font-weight:650;fill:#eff5ff}.body{font-size:18px;fill:#b8cbe2}.note{font-size:17px;fill:#9fb4d0}.tag{font-size:14px;font-weight:700;letter-spacing:1.3px}</style>
+<rect width="1120" height="1230" rx="24" fill="#0b1220"/>
+<text class="heading" x="32" y="48">Homelab · system architecture</text>
+<text class="sub" x="32" y="77">Private LAN access · one Ubuntu VM · configuration reconciled from Git</text>
+<rect x="28" y="275" width="1064" height="725" rx="18" fill="#101c2d" stroke="#2c405b" stroke-width="1.5"/>
+<text class="tag" x="50" y="304" fill="#7cb5ff">UBUNTU VM  /  K3S SINGLE NODE</text>
+<rect x="28" y="1030" width="1064" height="130" rx="18" fill="#101c2d" stroke="#2c405b" stroke-width="1.5"/>
+<text class="tag" x="50" y="1059" fill="#9bacc4">RETAINED IN GIT · NOT ACTIVATED</text>
+<path d="M 50 220 H 14 V 538 H 60" fill="none" stroke="#7188a6" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 835 220 V 325" fill="none" stroke="#7188a6" stroke-width="2" marker-end="url(#arrow)"/>
+<text class="note" x="850" y="260">LAN request path</text>
+<path d="M 835 435 V 480" fill="none" stroke="#7188a6" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 530 538 H 590" fill="none" stroke="#7188a6" stroke-width="2" marker-end="url(#arrow)"/>
+<text class="note" x="545" y="522">apply</text>
+<path d="M 295 595 V 655" fill="none" stroke="#7188a6" stroke-width="2" marker-end="url(#arrow)"/>
+<text class="note" x="309" y="631">apply</text>
+<path d="M 530 712 H 590" fill="none" stroke="#7188a6" stroke-width="2" marker-end="url(#arrow)"/>
+<text class="note" x="535" y="697">secrets</text>
+<path d="M 1060 538 H 1077 V 887 H 1060" fill="none" stroke="#7188a6" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#arrow)"/>
+<path d="M 295 770 V 830" fill="none" stroke="#7188a6" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#arrow)"/>
+<path d="M 530 566 H 560 V 620 H 825 V 655" fill="none" stroke="#7188a6" stroke-width="2" marker-end="url(#arrow)"/>
+<text class="note" x="575" y="609">apply</text>
+<path d="M 825 770 V 830" fill="none" stroke="#7188a6" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#arrow)"/>
+<rect x="50" y="110" width="470" height="110" rx="12" fill="#142237" stroke="#7cb5ff" stroke-opacity=".6"/>
+<rect x="51" y="125" width="3" height="80" rx="1.5" fill="#7cb5ff"/>
+<text class="label" x="69" y="141">Git repository</text>
+<text class="body" x="69" y="169">main → gitops/clusters/lab</text>
+<text class="body" x="69" y="192">Kustomize resources + Helm releases</text>
+<rect x="600" y="110" width="470" height="110" rx="12" fill="#142237" stroke="#eac17a" stroke-opacity=".6"/>
+<rect x="601" y="125" width="3" height="80" rx="1.5" fill="#eac17a"/>
+<text class="label" x="619" y="141">Workstation / operator</text>
+<text class="body" x="619" y="169">Browser: local hosts-file mappings</text>
+<text class="body" x="619" y="192">CLI: Vault bootstrap + Terraform configuration</text>
+<rect x="60" y="325" width="1000" height="110" rx="12" fill="#142237" stroke="#7cb5ff" stroke-opacity=".6"/>
+<rect x="61" y="340" width="3" height="80" rx="1.5" fill="#7cb5ff"/>
+<text class="label" x="79" y="356">K3s baseline · packaged ownership</text>
+<text class="body" x="79" y="384">CoreDNS · Traefik + ServiceLB · Local Path Provisioner · Metrics Server</text>
+<text class="body" x="79" y="407">No duplicate ingress, load balancer, storage provisioner, or live metrics server</text>
+<rect x="60" y="480" width="470" height="115" rx="12" fill="#142237" stroke="#7cb5ff" stroke-opacity=".6"/>
+<rect x="61" y="495" width="3" height="85" rx="1.5" fill="#7cb5ff"/>
+<text class="label" x="79" y="511">Flux + embedded status UI</text>
+<text class="body" x="79" y="539">Reconcile Applications and Infrastructure</text>
+<text class="body" x="79" y="562">Readiness gates for secrets and monitoring</text>
+<rect x="590" y="480" width="470" height="115" rx="12" fill="#142237" stroke="#68dfcd" stroke-opacity=".6"/>
+<rect x="591" y="495" width="3" height="85" rx="1.5" fill="#68dfcd"/>
+<text class="label" x="609" y="511">Applications</text>
+<text class="body" x="609" y="539">Homepage: dashboard + current resource readings</text>
+<text class="body" x="609" y="562">Linkding: personal bookmarks + owner account</text>
+<rect x="60" y="655" width="470" height="115" rx="12" fill="#142237" stroke="#b7a1ff" stroke-opacity=".6"/>
+<rect x="61" y="670" width="3" height="85" rx="1.5" fill="#b7a1ff"/>
+<text class="label" x="79" y="686">Secret infrastructure</text>
+<text class="body" x="79" y="714">Vault → External Secrets → Kubernetes Secrets</text>
+<text class="body" x="79" y="737">Manual initialization, unseal, auth, and values</text>
+<rect x="590" y="655" width="470" height="115" rx="12" fill="#142237" stroke="#b7a1ff" stroke-opacity=".6"/>
+<rect x="591" y="670" width="3" height="85" rx="1.5" fill="#b7a1ff"/>
+<text class="label" x="609" y="686">Monitoring infrastructure</text>
+<text class="body" x="609" y="714">Prometheus · Grafana · Alertmanager + collectors</text>
+<text class="body" x="609" y="737">Included; waits for secret-store and credentials</text>
+<rect x="60" y="830" width="1000" height="115" rx="12" fill="#142237" stroke="#eac17a" stroke-opacity=".6"/>
+<rect x="61" y="845" width="3" height="85" rx="1.5" fill="#eac17a"/>
+<text class="label" x="79" y="861">Node-local persistent storage</text>
+<text class="body" x="79" y="889">Vault + monitoring: local-path-retain · Existing Linkding claim: original local-path</text>
+<text class="body" x="79" y="912">Retain preserves released PV data; independent backups are still required</text>
+<rect x="60" y="1078" width="1000" height="58" rx="12" fill="#142237" stroke="#9bacc4" stroke-opacity=".6"/>
+<rect x="61" y="1093" width="3" height="28" rx="1.5" fill="#9bacc4"/>
+<text class="label" x="79" y="1109">Postiz + Redis + Temporal + PostgreSQL (CNPG)  ·  Cloudflared</text>
+<text class="note" x="60" y="978">Solid: configuration / request flow    Dashed: persistent data    Detailed readiness: GitOps → Reconciliation</text>
+<text class="note" x="32" y="1200">Declared architecture, not live availability. Private access assumes no public forwarding or enabled tunnel.</text>
+</svg>

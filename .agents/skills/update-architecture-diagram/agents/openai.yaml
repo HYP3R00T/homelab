@@ -1,0 +1,6 @@
+interface:
+  display_name: "Update architecture diagram"
+  short_description: "Refresh homelab diagrams from GitOps configuration"
+  default_prompt: "Use $update-architecture-diagram to update the shared homelab overview and affected flow diagrams from the current manifests, preserving their layout and checking the rendered SVGs."
+policy:
+  allow_implicit_invocation: false
