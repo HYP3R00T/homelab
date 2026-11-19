@@ -58,6 +58,8 @@
       siteMonitor: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090/-/ready
   - K3s Traefik:
       icon: traefik.png
+      href: http://traefik.homelab.internal/dashboard/
+      target: _self
       namespace: kube-system
       podSelector: app.kubernetes.io/name=traefik
       showStats: true

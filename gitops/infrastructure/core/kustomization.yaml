@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
 - storage-class.yaml
 - flux-web-ingress.yaml
+- traefik-dashboard-ingress-route.yaml

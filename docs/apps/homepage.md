@@ -27,7 +27,7 @@ The Kubernetes information widget reads cluster and node CPU/memory through [Met
 
 The resource view is live, not historical. [Grafana and Prometheus](../infrastructure/kube-prometheus-stack.md) supply history once monitoring is ready. Their configured Homepage links may show unavailable while Vault or monitoring bootstrap is unfinished. Postiz has an entry point but requires its separate bootstrap; Cloudflared has no active tunnel.
 
-Ingress discovery is disabled to avoid duplicate cards. Traefik's card shows pod readings rather than calling a separately exposed dashboard API.
+Ingress discovery is disabled to avoid duplicate cards. Traefik's card links to its LAN dashboard at `http://traefik.homelab.internal/dashboard/` and continues to show Kubernetes pod readings rather than using a Traefik API widget.
 
 ## Dashboard groups
 

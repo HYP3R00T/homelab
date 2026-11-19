@@ -13,7 +13,7 @@ gitops/
     linkding/
     postiz/                 # separate Flux group, waits for CNPG and Vault
   infrastructure/
-    core/                   # retained storage class and Flux ingress
+    core/                   # retained class; Flux and Traefik UI routes
     secrets/                # assembles Vault and ESO
     vault/
     external-secrets/

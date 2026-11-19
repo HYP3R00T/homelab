@@ -24,7 +24,7 @@ Record the current Git revision for rollback. The cleanup can be reviewed in sta
 
 ## Core infrastructure and applications
 
-Once the configuration reaches main, check infrastructure and apps independently. Core creates only the retained class and Flux ingress. It does not replace K3s's ingress, storage controller, or metrics server.
+Once the configuration reaches main, check infrastructure and apps independently. Core creates the retained class and the Flux/Traefik administration routes. It does not replace K3s's ingress, storage controller, or metrics server.
 
 ```shell
 flux get kustomizations apps infrastructure

@@ -25,7 +25,7 @@ For the included browser interfaces, use your actual IP with these aliases. The 
 ```text
 # Example: replace 192.168.0.61 with your K3s node's current LAN IP
 192.168.0.61 homepage.homelab.internal linkding.homelab.internal postiz.homelab.internal flux.homelab.internal
-192.168.0.61 vault.homelab.internal grafana.homelab.internal prometheus.homelab.internal
+192.168.0.61 vault.homelab.internal grafana.homelab.internal prometheus.homelab.internal traefik.homelab.internal
 ```
 
 Preserve other hosts-file entries. If an alias already exists, update its mapping rather than leaving conflicting entries. Each device needs its own resolution mechanism and LAN connectivity. If the node's address changes, update these mappings. This does not route all workstation DNS through the cluster.
@@ -38,6 +38,7 @@ Preserve other hosts-file entries. If an alias already exists, update its mappin
 | `linkding.homelab.internal` | Bookmarks | Deployment Ready and [owner account created](../apps/linkding.md#initial-setup) |
 | `postiz.homelab.internal` | Social publishing | [Postiz bootstrap](../apps/postiz/index.md), database and credentials Ready |
 | `flux.homelab.internal` | GitOps status | Flux Operator and core ingress ready |
+| `traefik.homelab.internal` | Ingress administration at `/dashboard/` | Core IngressRoute reconciled; existing Traefik dashboard enabled |
 | `vault.homelab.internal` | Secret administration | Vault deployment, initialization, and unseal |
 | `grafana.homelab.internal` | Metrics dashboards | [Vault and monitoring setup](../runbooks/vault-bootstrap.md) complete |
 | `prometheus.homelab.internal` | Metric queries | Monitoring Ready; Basic Auth credentials available |
@@ -49,10 +50,11 @@ Open these interfaces with `http://`. This configuration does not provide certif
 ```shell
 getent hosts homepage.homelab.internal
 kubectl get ingress -A
+kubectl get ingressroutes.traefik.io -A
 curl -I http://homepage.homelab.internal
 ```
 
-The first command should return your node address. The Ingress list should show the hostname and `traefik` class. An HTTP response confirms a request reached an endpoint, but use the component's health checks to establish that it is working.
+The first command should return your node address. The Ingress list should show the application hostname and `traefik` class. The Traefik dashboard uses an IngressRoute instead and appears in the second list. An HTTP response confirms a request reached an endpoint, but use the component's health checks to establish that it is working.
 
 | Symptom | What to check |
 | --- | --- |

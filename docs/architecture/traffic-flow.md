@@ -17,6 +17,7 @@ The connection reaches the node on the requested port. K3s ServiceLB makes the T
 | `homepage.homelab.internal` | Homepage | Included application |
 | `linkding.homelab.internal` | Linkding | Owner account required |
 | `flux.homelab.internal` | Flux Operator's embedded web UI | Included core ingress |
+| `traefik.homelab.internal` | Existing Traefik dashboard and internal API | Core IngressRoute; open `/dashboard/` |
 | `vault.homelab.internal` | Vault | Initialization and unseal required |
 | `grafana.homelab.internal` | Grafana | Monitoring credentials and chart ready |
 | `prometheus.homelab.internal` | Prometheus | Monitoring ready; Traefik Basic Auth |
