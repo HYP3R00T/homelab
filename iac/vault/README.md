@@ -2,7 +2,7 @@
 
 This directory is the infrastructure-as-code workspace for Vault configuration in the homelab.
 
-It manages the shared Vault bootstrap needed by External Secrets.
+It manages the shared Vault bootstrap needed by External Secrets and the credential records consumed by Postiz and monitoring.
 
 Managed resources:
 
@@ -10,25 +10,31 @@ Managed resources:
 - Kubernetes authentication at `kubernetes`
 - Kubernetes auth configuration
 - the `eso` policy and Kubernetes auth role with audience `vault`
+- Postiz, Grafana, and Prometheus KV v2 records from sensitive tfvars inputs
 
 Not managed by this workspace:
 
 - Vault installation (managed by Flux and Helm)
 - Vault initialization and unsealing (operator steps before Terraform can connect)
-- bulk secret values
+- application-generated data such as social access and refresh tokens
 - unrelated cloud/provider infrastructure
 
-Follow [Vault bootstrap](../../docs/runbooks/vault-bootstrap.md) before the Terraform commands below. It covers hostname resolution, `VAULT_ADDR`, initialization, unsealing, authentication, and private Terraform inputs in order. After applying the configuration, populate the monitoring credentials and verify the External Secrets store and Flux readiness. Having these Terraform files in Git does not mean they have been applied to a Vault installation.
+Follow [Vault bootstrap](../../docs/runbooks/vault-bootstrap.md) before the Terraform commands below. It covers hostname resolution, `VAULT_ADDR`, initialization, unsealing, authentication, and private Terraform inputs in order. Populate all private credential inputs before planning, then verify the External Secrets store and Flux readiness after applying. Having these Terraform files in Git does not mean they have been applied to a Vault installation.
 
 ## Usage
 
 Typical workflow from the repository root:
 
 ```shell
+umask 077
 terraform -chdir=iac/vault init
+terraform -chdir=iac/vault fmt -check
+terraform -chdir=iac/vault validate
 terraform -chdir=iac/vault plan -out=tfplan
 terraform -chdir=iac/vault apply tfplan
 ```
+
+Prepare the ignored `terraform.tfvars` using the bootstrap runbook first, and review the plan before applying it. The example uses a heredoc for the multiline cluster CA certificate. Keep populated inputs, saved plans, and local state private; `sensitive` hides terminal values but does not encrypt these files.
 
 For local CLI usage, point Terraform at the same ingress URL you use in the browser:
 
@@ -36,6 +42,8 @@ For local CLI usage, point Terraform at the same ingress URL you use in the brow
 
 Do not use the pod listener port in this workspace unless your workstation can
 actually route to it directly.
+
+Keep credential inputs stable between applies. LinkedIn setup changes only its two fields in `postiz_credentials`. Terraform owns the complete KV records; manual edits can be reverted by the next apply. No credential values are exported as Terraform outputs.
 
 ## State Recovery
 
@@ -52,6 +60,10 @@ terraform -chdir=iac/vault import vault_kubernetes_auth_backend_config.this kube
 terraform -chdir=iac/vault import vault_mount.external_secrets external-secrets
 terraform -chdir=iac/vault import module.eso.vault_policy.this eso
 terraform -chdir=iac/vault import module.eso.vault_kubernetes_auth_backend_role.this auth/kubernetes/role/eso
+# Import these only if the credential records already exist:
+terraform -chdir=iac/vault import vault_kv_secret_v2.postiz external-secrets/data/postiz
+terraform -chdir=iac/vault import vault_kv_secret_v2.grafana external-secrets/data/monitoring/grafana
+terraform -chdir=iac/vault import vault_kv_secret_v2.prometheus external-secrets/data/monitoring/prometheus
 terraform -chdir=iac/vault plan
 ```
 

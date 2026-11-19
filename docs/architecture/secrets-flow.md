@@ -15,9 +15,10 @@ Git holds secret references, not their values. Vault stores credential values, E
 | Install Vault and External Secrets | Flux secrets group |
 | Initialize and unseal Vault | Operator |
 | Configure Kubernetes authentication, the KV mount, policy, and role | Terraform under `iac/vault` |
-| Choose and populate credential values | Operator |
+| Choose and preserve credential values in private tfvars | Operator |
+| Populate Postiz and monitoring credential records | Terraform under `iac/vault` |
 | Read approved Vault paths and synchronize Kubernetes Secrets | External Secrets |
-| Consume the delivered Secrets | Grafana and the Prometheus ingress middleware |
+| Consume the delivered Secrets | Postiz, its dependencies, Grafana, and the Prometheus ingress middleware |
 
 The `vault` ClusterSecretStore authenticates at `auth/kubernetes` using role `eso`, the `external-secrets` service account, and audience `vault`. It reads the `external-secrets` KV v2 mount. The service address `http://vault.vault.svc.cluster.local:8200` uses Kubernetes DNS and does not depend on the workstation hosts file.
 
@@ -25,7 +26,7 @@ The `vault` ClusterSecretStore authenticates at `auth/kubernetes` using role `es
 
 A running Vault pod can still be sealed or uninitialized. Until authentication and the required values work, the secret store and monitoring credentials remain unready. Flux waits at those boundaries before installing the monitoring chart. Homepage and Linkding are independent of this chain.
 
-Follow [Vault bootstrap](../runbooks/vault-bootstrap.md), then verify the [monitoring credentials](../infrastructure/kube-prometheus-stack.md#credentials). Terraform creates the Vault configuration; it does not populate application passwords.
+Follow [Vault bootstrap](../runbooks/vault-bootstrap.md), then verify the [monitoring credentials](../infrastructure/kube-prometheus-stack.md#credentials). Terraform creates the Vault configuration and writes the three credential records from sensitive private inputs. It does not manage application-generated OAuth tokens.
 
 ## Secret ownership
 

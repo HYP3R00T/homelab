@@ -36,7 +36,7 @@ The repository keeps repeatable Kubernetes state in Git, while these steps remai
 - create the Linkding owner account on a new installation
 - initialize and unseal Vault
 - apply the Vault Terraform workspace
-- choose and populate monitoring credentials in Vault
+- choose and preserve application credentials in private Terraform inputs
 
 Only a separately chosen public tunnel requires Cloudflared authentication, tunnel creation, credential population, and a Cloudflare DNS route. Those actions do not belong to the private LAN setup.
 
