@@ -2,7 +2,7 @@
 
 This directory is the infrastructure-as-code workspace for Vault configuration in the homelab.
 
-It manages the shared Vault bootstrap needed by External Secrets and the credential records consumed by Postiz and monitoring.
+It manages the shared Vault bootstrap needed by External Secrets and the credential records consumed by Shoutrrr and monitoring.
 
 Managed resources:
 
@@ -10,7 +10,7 @@ Managed resources:
 - Kubernetes authentication at `kubernetes`
 - Kubernetes auth configuration
 - the `eso` policy and Kubernetes auth role with audience `vault`
-- Postiz, Shoutrrr, Grafana, and Prometheus KV v2 records from sensitive tfvars inputs
+- Shoutrrr, Grafana, and Prometheus KV v2 records from sensitive tfvars inputs
 
 Not managed by this workspace:
 
@@ -43,9 +43,9 @@ For local CLI usage, point Terraform at the same ingress URL you use in the brow
 Do not use the pod listener port in this workspace unless your workstation can
 actually route to it directly.
 
-Keep credential inputs stable between applies. LinkedIn setup changes only its two fields in `postiz_credentials`. Terraform owns the complete KV records; manual edits can be reverted by the next apply. No credential values are exported as Terraform outputs.
+Keep credential inputs stable between applies. LinkedIn setup changes only its two fields in `shoutrrr_credentials`. Terraform owns the complete KV records; manual edits can be reverted by the next apply. No credential values are exported as Terraform outputs.
 
-Shoutrrr has a separate persistent APP_KEY and optional LinkedIn credentials in `shoutrrr_credentials`. See [Shoutrrr setup](../../docs/apps/shoutrrr.md). Its values do not replace the retained Postiz record.
+Shoutrrr has a separate persistent APP_KEY and optional LinkedIn credentials in `shoutrrr_credentials`. See [Shoutrrr setup](../../docs/apps/shoutrrr.md).
 
 ## State Recovery
 
@@ -63,7 +63,6 @@ terraform -chdir=iac/vault import vault_mount.external_secrets external-secrets
 terraform -chdir=iac/vault import module.eso.vault_policy.this eso
 terraform -chdir=iac/vault import module.eso.vault_kubernetes_auth_backend_role.this auth/kubernetes/role/eso
 # Import these only if the credential records already exist:
-terraform -chdir=iac/vault import vault_kv_secret_v2.postiz external-secrets/data/postiz
 terraform -chdir=iac/vault import vault_kv_secret_v2.grafana external-secrets/data/monitoring/grafana
 terraform -chdir=iac/vault import vault_kv_secret_v2.prometheus external-secrets/data/monitoring/prometheus
 terraform -chdir=iac/vault import vault_kv_secret_v2.shoutrrr external-secrets/data/shoutrrr

@@ -18,21 +18,6 @@ EOT
 # Keep the decoded token on one line. Do not use a short-lived `kubectl create token` here.
 token_reviewer_jwt = ""
 
-# Generate each of the four required values separately with: openssl rand -hex 32
-# Generate once, paste the outputs below, and preserve them on later applies.
-# Shell commands written inside tfvars are not executed by Terraform.
-postiz_credentials = {
-  jwt_secret                 = ""
-  database_password          = ""
-  temporal_database_password = ""
-  redis_password             = ""
-  # Obtain these from your LinkedIn developer application when connecting it:
-  # https://docs.postiz.com/providers/linkedin
-  # Keep both empty for initial application bootstrap.
-  linkedin_client_id     = ""
-  linkedin_client_secret = ""
-}
-
 grafana_credentials = {
   username = "admin"
   # Generate once with: openssl rand -hex 32

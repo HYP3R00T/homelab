@@ -42,7 +42,6 @@ terraform -chdir=iac/vault import vault_mount.external_secrets external-secrets
 terraform -chdir=iac/vault import module.eso.vault_policy.this eso
 terraform -chdir=iac/vault import module.eso.vault_kubernetes_auth_backend_role.this auth/kubernetes/role/eso
 # Import each credential record only if it exists:
-terraform -chdir=iac/vault import vault_kv_secret_v2.postiz external-secrets/data/postiz
 terraform -chdir=iac/vault import vault_kv_secret_v2.grafana external-secrets/data/monitoring/grafana
 terraform -chdir=iac/vault import vault_kv_secret_v2.prometheus external-secrets/data/monitoring/prometheus
 terraform -chdir=iac/vault import vault_kv_secret_v2.shoutrrr external-secrets/data/shoutrrr
@@ -67,8 +66,8 @@ For a completely empty Vault:
 
 1. Reconcile the Vault and External Secrets manifests with Flux.
 2. Follow [Bootstrap Vault](vault-bootstrap.md) without running imports.
-3. Restore the original private credential inputs from secure backup before applying Terraform, preserving database passwords, the Postiz JWT secret, and Shoutrrr APP_KEY. Restore other application secrets from their secure backup or source system.
-4. Verify the Terraform-managed Shoutrrr, retained Postiz, and monitoring records. Cloudflared credentials are separate and optional while its bundle is inactive.
+3. Restore the original private credential inputs from secure backup before applying Terraform, preserving Shoutrrr APP_KEY and monitoring credentials. Restore other application secrets from their secure backup or source system.
+4. Verify the Terraform-managed Shoutrrr and monitoring records. Cloudflared credentials are separate and optional while its bundle is inactive.
 5. Verify the `ClusterSecretStore`, `ExternalSecret`, and generated Secret.
 
 Do not run `vault operator init` against an existing initialized Vault.

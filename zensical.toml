@@ -35,10 +35,6 @@ nav = [
     { Homepage = "apps/homepage.md" },
     { Linkding = "apps/linkding.md" },
     { Shoutrrr = "apps/shoutrrr.md" },
-    { Postiz = [
-      { Overview = "apps/postiz/index.md" },
-      { Architecture = "apps/postiz/architecture.md" },
-    ] },
   ] },
   { Infrastructure = [
     { Overview = "infrastructure/index.md" },

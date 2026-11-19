@@ -28,7 +28,7 @@ A private, single-node Ubuntu K3s homelab, managed through Flux, Kustomize, and 
 
 [Open the architecture diagram at full size](docs/assets/diagrams/architecture.svg).
 
-The diagram describes the **declared configuration**, not live availability. Homepage and Linkding reconcile independently. Monitoring waits for Vault authentication and credential delivery. Shoutrrr and CloudNativePG are included through dependency-ordered groups; Shoutrrr uses SQLite and requires Vault credentials and first-owner registration. Postiz is retained but excluded from the cluster entrypoint. Cloudflared remains intentionally disabled for private LAN access.
+The diagram describes the **declared configuration**, not live availability. Homepage and Linkding reconcile independently. Monitoring waits for Vault authentication and credential delivery. Shoutrrr and CloudNativePG are included through dependency-ordered groups; Shoutrrr uses SQLite and requires Vault credentials and first-owner registration. Cloudflared remains intentionally disabled for private LAN access.
 
 ## What this project demonstrates
 
@@ -50,7 +50,6 @@ Tools used directly for everyday work:
 | [Homepage](docs/apps/homepage.md) | Personal start page and resource overview | Included |
 | [Linkding](docs/apps/linkding.md) | Private bookmark collection | Included |
 | [Shoutrrr](docs/apps/shoutrrr.md) | Social publishing and scheduling trial | Vault credentials and first-owner registration required |
-| [Postiz](docs/apps/postiz/index.md) | Previous social scheduling trial | Retained; entrypoint commented |
 
 ## Infrastructure
 

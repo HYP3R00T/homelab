@@ -37,7 +37,6 @@ Preserve other hosts-file entries. If an alias already exists, update its mappin
 | `homepage.homelab.internal` | Personal dashboard | Homepage deployment Ready |
 | `linkding.homelab.internal` | Bookmarks | Deployment Ready and [owner account created](../apps/linkding.md#initial-setup) |
 | `shoutrrr.homelab.internal` | Social publishing trial | [Shoutrrr bootstrap](../apps/shoutrrr.md), credentials and application Ready |
-| `postiz.homelab.internal` | Retained trial | Not active while Shoutrrr is evaluated |
 | `flux.homelab.internal` | GitOps status | Flux Operator and core ingress ready |
 | `vault.homelab.internal` | Secret administration | Vault deployment, initialization, and unseal |
 | `grafana.homelab.internal` | Metrics dashboards | [Vault and monitoring setup](../runbooks/vault-bootstrap.md) complete |

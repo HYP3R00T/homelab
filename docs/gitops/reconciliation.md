@@ -29,6 +29,6 @@ kubectl get clustersecretstore vault
 kubectl get externalsecrets -n monitoring
 ```
 
-The apps group keeps Homepage and Linkding independent of secret failures. Shoutrrr is included through its own group, depending on retained storage and the secret store rather than the independent apps root. Its ExternalSecrets need the Shoutrrr Vault record. Postiz is retained with its entrypoint reference commented out; use the retirement procedure in [Shoutrrr setup](../apps/shoutrrr.md#preserve-and-stop-postiz) to preserve and quiesce existing resources. Cloudflared remains intentionally disabled for private LAN access.
+The apps group keeps Homepage and Linkding independent of secret failures. Shoutrrr is included through its own group, depending on retained storage and the secret store rather than the independent apps root. Its ExternalSecrets need the Shoutrrr Vault record. Cloudflared remains intentionally disabled for private LAN access.
 
 New groups start reconciling when this configuration reaches the watched branch. Use [the rollout runbook](../runbooks/gitops-rollout.md) and inspect readiness after each boundary. Removing a managed resource can prune it. Never remove a namespace or PVC as a substitute for rolling back configuration. Core retained storage and directly managed Vault storage have pruning protection; verify rendered ownership before any migration.
