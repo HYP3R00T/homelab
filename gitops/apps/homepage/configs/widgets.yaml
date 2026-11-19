@@ -6,9 +6,8 @@
       showLabel: true
       label: Homelab
     nodes:
-      show: true
+      show: false
 - openmeteo:
-    label: Jagatsinghpur
     latitude: 20.2557
     longitude: 86.17112
     timezone: Asia/Kolkata
