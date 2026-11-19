@@ -36,3 +36,6 @@
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
+
+.md-typeset .tech-badges p { display: flex; flex-wrap: wrap; justify-content: center; gap: .35rem; margin: .6rem 0 1rem; }
+.md-typeset .tech-badges img { display: block; height: 20px; width: auto; }
