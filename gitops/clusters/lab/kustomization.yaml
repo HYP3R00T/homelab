@@ -9,3 +9,5 @@ resources:
 - monitoring-secrets.yaml
 - monitoring.yaml
 - monitoring-monitors.yaml
+- cnpg.yaml
+- postiz.yaml

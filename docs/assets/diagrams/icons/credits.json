@@ -1,0 +1,97 @@
+{
+  "collections": {
+    "dashboard-icons": {
+      "repository": "https://github.com/homarr-labs/dashboard-icons",
+      "revision": "d4b500dc40a8e1043b1581cabb7208892cf35472",
+      "license": "Apache-2.0; see bundled license. Product trademarks remain with their respective owners."
+    },
+    "gethomepage": {
+      "repository": "https://github.com/gethomepage/homepage",
+      "revision": "08a0c1df566464bfdb327f3fd8f1f5a058d56640",
+      "license": "See bundled upstream license; product trademarks remain with their respective owners."
+    },
+    "external-secrets": {
+      "repository": "https://github.com/external-secrets/external-secrets",
+      "revision": "f156b25a9585dfbf8daedd4888354c997d420f6f",
+      "license": "See bundled upstream license; product trademarks remain with their respective owners."
+    },
+    "cloudnative-pg": {
+      "repository": "https://github.com/cloudnative-pg/artwork",
+      "revision": "7b2d93ac735f0acee572ae0848960f13a543d080",
+      "license": "Apache-2.0; product trademarks remain with their respective owners."
+    }
+  },
+  "icons": [
+    {
+      "file": "git.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d4b500dc40a8e1043b1581cabb7208892cf35472/svg/git.svg",
+      "collection": "dashboard-icons"
+    },
+    {
+      "file": "linkding.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d4b500dc40a8e1043b1581cabb7208892cf35472/svg/linkding.svg",
+      "collection": "dashboard-icons"
+    },
+    {
+      "file": "flux.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d4b500dc40a8e1043b1581cabb7208892cf35472/svg/flux-cd.svg",
+      "collection": "dashboard-icons"
+    },
+    {
+      "file": "vault.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d4b500dc40a8e1043b1581cabb7208892cf35472/svg/hashicorp-vault.svg",
+      "collection": "dashboard-icons"
+    },
+    {
+      "file": "prometheus.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d4b500dc40a8e1043b1581cabb7208892cf35472/svg/prometheus.svg",
+      "collection": "dashboard-icons"
+    },
+    {
+      "file": "grafana.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d4b500dc40a8e1043b1581cabb7208892cf35472/svg/grafana.svg",
+      "collection": "dashboard-icons"
+    },
+    {
+      "file": "traefik.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d4b500dc40a8e1043b1581cabb7208892cf35472/svg/traefik.svg",
+      "collection": "dashboard-icons"
+    },
+    {
+      "file": "k3s.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d4b500dc40a8e1043b1581cabb7208892cf35472/svg/k3s.svg",
+      "collection": "dashboard-icons"
+    },
+    {
+      "file": "ubuntu.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d4b500dc40a8e1043b1581cabb7208892cf35472/svg/ubuntu-linux.svg",
+      "collection": "dashboard-icons"
+    },
+    {
+      "file": "postiz.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d4b500dc40a8e1043b1581cabb7208892cf35472/svg/postiz.svg",
+      "collection": "dashboard-icons"
+    },
+    {
+      "file": "cloudflared.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d4b500dc40a8e1043b1581cabb7208892cf35472/svg/cloudflared.svg",
+      "collection": "dashboard-icons"
+    },
+    {
+      "file": "homepage.png",
+      "source": "https://raw.githubusercontent.com/gethomepage/homepage/08a0c1df566464bfdb327f3fd8f1f5a058d56640/public/android-chrome-192x192.png",
+      "collection": "gethomepage"
+    },
+    {
+      "file": "external-secrets.svg",
+      "source": "https://raw.githubusercontent.com/external-secrets/external-secrets/f156b25a9585dfbf8daedd4888354c997d420f6f/assets/eso-round-logo.svg",
+      "collection": "external-secrets"
+    },
+    {
+      "file": "cloudnativepg.svg",
+      "source": "https://raw.githubusercontent.com/cloudnative-pg/artwork/7b2d93ac735f0acee572ae0848960f13a543d080/icon/color/cloudnativepg-icon-color.svg",
+      "collection": "cloudnative-pg"
+    }
+  ],
+  "local_processing": "SVG root canvases normalized to 64 \u00d7 64 with original viewBox and xMidYMid meet to preserve logo proportions. Missing viewBox inferred from original intrinsic dimensions; logo paths are unchanged."
+}

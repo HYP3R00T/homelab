@@ -1,4 +1,5 @@
 [tools]
+d2 = "0.9.0"
 cloudflared = "latest"
 flux2 = "latest"
 helm = "latest"

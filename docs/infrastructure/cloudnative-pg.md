@@ -4,18 +4,22 @@ icon: lucide/database
 
 # CloudNativePG
 
-CloudNativePG (CNPG) manages PostgreSQL clusters through Kubernetes custom resources. It is retained for the proposed Postiz stack but is **not activated** by the current Flux entrypoint.
+CloudNativePG manages PostgreSQL instances and their lifecycle. The `cnpg` Flux group installs chart `0.29.0` in namespace `cnpg`, independently of Vault bootstrap. The `postiz` group waits for the operator and the secret store before applying the application database resources.
 
-The operator chart is pinned at `0.29.0` in `gitops/infrastructure/cnpg`. Its optional `monitor.yaml` PodMonitor is excluded from the Kustomization, so installing the operator does not itself require Prometheus CRDs.
+The operator is infrastructure; Postiz's Cluster and Database resources belong to the application. This setup uses one PostgreSQL instance with three logical databases, not one server for each database. The operator requests 100m CPU and 128 MiB memory, with limits of 500m CPU and 256 MiB memory.
 
-## Relationship to Postiz
+## Configuration and monitoring
 
-The inactive [Postiz architecture](../apps/postiz/architecture.md) declares one CNPG Cluster, `postiz-postgres`, and Database resources for Temporal persistence and visibility. These are logical databases in one PostgreSQL instance, not separate PostgreSQL servers.
+Operator resources are under `gitops/infrastructure/cnpg`; its activation is `gitops/clusters/lab/cnpg.yaml`. The application resources are under `gitops/apps/postiz`. The operator PodMonitor is assembled by the monitoring-monitors group, which waits for both CNPG and the monitoring chart.
 
-Keeping the current Postiz design therefore requires the operator. Installing CNPG alone would not create that database; the Cluster and Database resources belong to the application bundle.
+The Postiz database uses the retained local StorageClass. Review [storage recovery](../runbooks/storage-recovery.md) before changing database storage. No automatic database backup is configured by this installation.
 
-## Before activation
+## Verify
 
-Prepare a separate Flux readiness boundary for the operator, wait for its CRDs and health, prepare the secret store and application credentials, and review database storage and backups. Activate Postiz through its own dependency-ordered group so it does not block the independent Homepage/Linkding group. No database activation is part of the current setup journey.
+```shell
+flux get kustomizations cnpg postiz
+kubectl -n cnpg get helmrelease,pods
+kubectl -n postiz get cluster,database,pods,pvc
+```
 
-After a deliberate activation, check the operator and application separately with `kubectl get helmreleases -A` and `kubectl -n postiz get cluster,database,pods,pvc`. Use the [CloudNativePG documentation](https://cloudnative-pg.io/docs/) for database operations and backup planning; no automatic database backup is configured here.
+A ready operator does not prove that its application database is ready. Database creation also requires the Vault-backed credentials. Follow [Postiz bootstrap](../apps/postiz/index.md#bootstrap-prerequisites) and [CloudNativePG documentation](https://cloudnative-pg.io/docs/) for database operations and backup planning.

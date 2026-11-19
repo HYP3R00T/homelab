@@ -14,3 +14,4 @@ spec:
   prune: true
   dependsOn:
   - name: monitoring
+  - name: cnpg

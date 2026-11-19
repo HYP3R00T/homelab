@@ -17,7 +17,8 @@ This is the first-install route for a similar private, single-node cluster. Read
 | 5 | [Initialize Linkding](../apps/linkding.md#initial-setup) and review [Homepage](../apps/homepage.md#configuration) | Owner can sign in; dashboard cards match the intended services |
 | 6 | [Bootstrap Vault](../runbooks/vault-bootstrap.md) | Vault initialized/unsealed; authentication configured; secret store Ready |
 | 7 | [Populate monitoring credentials](../infrastructure/kube-prometheus-stack.md#credentials) | Both monitoring ExternalSecrets Ready; chart installed |
-| 8 | [Verify the rollout](../runbooks/gitops-rollout.md#acceptance) | Intended groups and workloads Ready; data volumes bound |
+| 8 | [Bootstrap Postiz](../apps/postiz/index.md) | CNPG operator and databases ready; credentials synchronized; owner can sign in |
+| 9 | [Verify the rollout](../runbooks/gitops-rollout.md#acceptance) | Intended groups and workloads Ready; data volumes bound |
 
 The stages are not a single chain of application dependencies. Homepage and Linkding can work while Vault or monitoring is unfinished. Local hostname mappings are a workstation prerequisite for browser access, not a Kubernetes installation mechanism.
 
@@ -25,4 +26,4 @@ The stages are not a single chain of application dependencies. Homepage and Link
 
 Vault requires unsealing after its pod restarts unless an auto-unseal system is introduced separately. Retained local volumes require backups outside the VM. Check [Runbooks](../runbooks/index.md) for recovery and maintenance.
 
-Postiz, CloudNativePG, and Cloudflared are deliberately inactive. Their retained configurations are documented for review; they are not extra steps required to complete this setup. This guide does not install a LAN DNS server or expose the cluster publicly.
+CloudNativePG is included independently; Postiz waits for the operator and secret store. Complete [Postiz bootstrap](../apps/postiz/index.md) to supply its credentials and create the owner account. Cloudflared remains disabled; no public tunnel is needed for LAN access. This guide does not install a LAN DNS server or expose the cluster publicly.

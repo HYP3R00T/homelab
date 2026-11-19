@@ -31,4 +31,4 @@ Follow [Vault bootstrap](../runbooks/vault-bootstrap.md), then verify the [monit
 
 The operator owns credential values and recovery material. A manifest reference or an available token does not grant automation permission to read or mutate secrets. Keep `.env`, Terraform inputs/state/plans, unseal keys, and Raft snapshots outside the public repository. Use the [recovery runbook](../runbooks/vault-recovery.md) when the cluster or Terraform state changes.
 
-Inactive Postiz and Cloudflared bundles retain their own ExternalSecret definitions. They do not participate in the active monitoring delivery path. If enabled later, Postiz also stores OAuth runtime tokens in PostgreSQL; Terraform cannot recreate that application data.
+Postiz has its own ExternalSecrets and waits for the same secret store independently of the monitoring group. It stores OAuth runtime tokens in PostgreSQL; Terraform cannot recreate that application data. The disabled Cloudflared bundle retains its separate credential reference.

@@ -4,43 +4,26 @@ icon: lucide/calendar-clock
 
 # Postiz
 
-Postiz is retained but inactive; no active Flux group includes this bundle. It schedules and publishes social media posts when deliberately deployed. This installation is sized for one user and runs the application with dedicated Redis and Temporal processes in the `postiz` namespace.
+Postiz schedules and publishes social posts. Its dedicated Flux group is included in the cluster entrypoint and waits for CloudNativePG and the Vault secret store. Homepage and Linkding use their independent group, so unfinished Postiz bootstrap does not block them.
 
-For the complete reconciliation chain and a file-by-file explanation, see [Postiz architecture](architecture.md).
-
-## Retained configuration
-
-| Property | Value |
-|---|---|
+| Property | Configuration |
+| --- | --- |
 | Image | `ghcr.io/gitroomhq/postiz-app:v2.21.7` |
 | Namespace | `postiz` |
-| Service | `postiz:5000` |
-| Local hostname | `postiz.homelab.internal` |
-| Public hostname | `postiz.hyperoot.dev` through Cloudflared |
+| Browser access | `http://postiz.homelab.internal` |
+| Internal service | `postiz:5000` |
 | Replicas | 1 |
-| Upload storage | 20 GiB local claim (inactive) |
-| Redis storage | 1 GiB local claim (inactive) |
-| PostgreSQL storage | 10 GiB local claim (inactive) |
+| Upload storage | 20 GiB retained local claim |
+| Redis storage | 1 GiB retained local claim |
+| PostgreSQL storage | 10 GiB retained local volume |
 
-The Postiz container uses local upload storage. Redis persists its append-only log locally. CloudNativePG runs one PostgreSQL instance containing the `postiz`, `temporal`, and `temporal_visibility` databases. Temporal uses PostgreSQL visibility instead of a separate Elasticsearch deployment.
+The bundle contains Postiz, Redis, Temporal, and one CNPG-managed PostgreSQL instance. PostgreSQL hosts the `postiz`, `temporal`, and `temporal_visibility` databases; Temporal does not require a second database server or Elasticsearch here. See [Postiz architecture](architecture.md) for the resource layout.
 
-## Trial resource envelope
+## Bootstrap prerequisites
 
-The inactive bundle has the following memory configuration. These are trial limits, not measured requirements or a claim that the full stack fits alongside every other workload.
+Complete [Vault bootstrap](../../runbooks/vault-bootstrap.md) first. The store must authenticate and read the `external-secrets` KV v2 mount. The four Postiz ExternalSecrets then create the application, Redis, and two database Secrets. A declared Flux group does not prove that these prerequisites have completed.
 
-| Component | Memory request | Memory limit |
-| --- | --- | --- |
-| Postiz | 512 MiB | 2 GiB |
-| Temporal | 256 MiB | 512 MiB |
-| PostgreSQL | 256 MiB | 512 MiB |
-| Redis | 64 MiB | 256 MiB |
-| **Total, excluding CNPG operator** | **1088 MiB** | **3.25 GiB** |
-
-A limit is a ceiling, not a reservation or a way to reduce actual memory use automatically. Validate scheduled publishing, peaks, and restarts after any future activation and increase a component's limit if measurements justify it. The retained public URL and callback configuration must be reviewed for the intended access model before activation; they are not required by the current private setup.
-
-## Store the bootstrap secrets
-
-The four ExternalSecret resources read properties from the `postiz` object in the `external-secrets` Vault KV v2 mount. Store the values before applying the Postiz overlay:
+For a new installation, create the following Vault record once. If it already exists, preserve its passwords and properties rather than replacing them or rotating the JWT key unintentionally:
 
 ```shell
 export POSTIZ_JWT_SECRET="$(openssl rand -hex 32)"
@@ -52,57 +35,67 @@ vault kv put -mount=external-secrets postiz \
   jwt-secret="$POSTIZ_JWT_SECRET" \
   postiz-database-password="$POSTIZ_DATABASE_PASSWORD" \
   temporal-database-password="$POSTIZ_TEMPORAL_DATABASE_PASSWORD" \
-  redis-password="$POSTIZ_REDIS_PASSWORD"
+  redis-password="$POSTIZ_REDIS_PASSWORD" \
+  linkedin-client-id= \
+  linkedin-client-secret=
 
 unset POSTIZ_JWT_SECRET POSTIZ_DATABASE_PASSWORD
 unset POSTIZ_TEMPORAL_DATABASE_PASSWORD POSTIZ_REDIS_PASSWORD
 ```
 
-External Secrets creates the application, Redis, and two `kubernetes.io/basic-auth` database Secrets. The manifests contain only Vault references and non-sensitive connection metadata.
+The LinkedIn properties must exist because the current ExternalSecret explicitly requests them. Empty values allow application bootstrap before provider configuration; they do not connect a LinkedIn account. Set the real provider credentials later with `vault kv patch`, preserving the existing passwords. Access and refresh tokens created after connection are application data stored in PostgreSQL.
 
-Social provider credentials are optional and can be added later. Access and refresh tokens created after OAuth authorization are stored by Postiz in PostgreSQL as runtime application data rather than bootstrap values managed by Vault.
+## Access and first account
 
-## Registration
+Add `postiz.homelab.internal` to the workstation's hosts mappings using [Local access](../../setup/local-access.md). This deployment uses a private HTTP endpoint and sets `MAIN_URL`, `FRONTEND_URL`, and `NEXT_PUBLIC_BACKEND_URL` consistently to that hostname. It does not require a public Cloudflared tunnel.
 
-The retained configuration has `DISABLE_REGISTRATION` enabled; this does not establish that an owner account exists on a future installation. Review account bootstrap before activation. Use `https://postiz.hyperoot.dev` for sign-in and OAuth provider callbacks. The local hostname remains available for diagnostics, but the public HTTPS hostname is the canonical application URL.
+`NOT_SECURED=true` selects Postiz's HTTP-compatible session behavior for this LAN setup. Use a reviewed TLS configuration before public access; this setting is not an HTTPS deployment recommendation. Do not use the old public hostname as the login or callback URL for this configuration.
 
-## Configure providers later
+After the application is ready, open the UI and create the initial owner account. The pinned version's `DISABLE_REGISTRATION=true` permits registration while no organization exists and blocks subsequent registration. It does not create an account automatically. See the [pinned authentication implementation](https://github.com/gitroomhq/postiz-app/blob/v2.21.7/apps/backend/src/services/auth/auth.service.ts) and [session implementation](https://github.com/gitroomhq/postiz-app/blob/v2.21.7/apps/backend/src/api/routes/auth.controller.ts).
 
-Each provider must be configured through environment variables before its channel can be connected in the dashboard. LinkedIn uses the `linkedin-client-id` and `linkedin-client-secret` properties from the Postiz Vault object. External Secrets maps them to `LINKEDIN_CLIENT_ID` and `LINKEDIN_CLIENT_SECRET` in the application container.
+## Connect providers
 
-Configure the LinkedIn application with this production OAuth redirect URI:
+Register the required developer application with each social platform and configure its credentials before connecting the channel. LinkedIn uses `linkedin-client-id` and `linkedin-client-secret` in the existing Vault record. Other providers need their own variables and secret references; those are not configured by enabling the Postiz deployment.
 
-```text
-https://postiz.hyperoot.dev/integrations/social/linkedin
-```
+Use [the official LinkedIn guide](https://docs.postiz.com/providers/linkedin) and the callback URL required for your chosen access model. A private `.internal` hostname is not evidence that a provider accepts its redirect URI or can fetch uploaded media from it. Resolve provider-specific HTTPS, callback, and media-reachability requirements before relying on scheduled publishing. Do not enable a public tunnel merely to make the pod Ready.
 
-For a LinkedIn Page integration, use `/integrations/social/linkedin-page` instead. Other provider variable names are listed in the Postiz configuration reference.
+## Resource envelope
 
-## Verify the deployment
+These are trial limits, not measured requirements or a guarantee that all workloads fit simultaneously.
+
+| Component | Memory request | Memory limit |
+| --- | --- | --- |
+| Postiz | 512 MiB | 2 GiB |
+| Temporal | 256 MiB | 512 MiB |
+| PostgreSQL | 256 MiB | 512 MiB |
+| Redis | 64 MiB | 256 MiB |
+| **Application stack** | **1088 MiB** | **3.25 GiB** |
+| CNPG operator | 128 MiB | 256 MiB |
+
+A memory limit is a ceiling, not a reservation or an automatic reduction of actual consumption. Measure idle use, publishing peaks, restarts, and the whole node alongside monitoring. Increase a component limit or revisit placement if measurements show it is needed.
+
+## Verify
 
 ```shell
-kubectl get externalsecret,secret --namespace postiz
-kubectl get cluster,database --namespace postiz
-kubectl get pod,pvc,service,ingress --namespace postiz
-kubectl rollout status deployment/postiz-redis --namespace postiz
-kubectl rollout status deployment/postiz-temporal --namespace postiz
-kubectl rollout status deployment/postiz --namespace postiz
+flux get kustomizations cnpg postiz
+kubectl -n cnpg get helmrelease,pods
+kubectl -n postiz get externalsecrets
+kubectl -n postiz get cluster,database,pods,pvc,service,ingress
+kubectl -n postiz rollout status deployment/postiz-redis
+kubectl -n postiz rollout status deployment/postiz-temporal
+kubectl -n postiz rollout status deployment/postiz
 ```
 
-If Postiz starts before its dependencies are ready, Kubernetes restarts or rechecks the affected containers while External Secrets, CloudNativePG, and Temporal converge.
+Expect the operator ready, four ExternalSecrets synchronized, databases ready, claims bound, and application deployments available. Containers can retry while the database and Temporal initialize. If the group waits for `secret-store`, finish Vault setup rather than bypassing that dependency. Verify sign-in, upload a test asset, and perform an authorized test publication after configuring a provider.
 
-## Data lifecycle
+## Persistence
 
-Postiz uploads, Redis data, and PostgreSQL data use the `local-path` StorageClass. They survive pod restarts and normal node reboots, but do not provide a backup or protection from VM disk loss or K3s uninstall. PostgreSQL contains OAuth tokens and should be treated as sensitive data.
+New uploads, Redis data, and PostgreSQL data use `local-path-retain`. The namespace and directly managed upload/Redis claims have Flux pruning protection. Retain preserves released PV data, but does not provide a backup or protect against VM disk loss or K3s uninstall. Back up the database, uploads, and recovery material separately. PostgreSQL contains sensitive OAuth data.
 
 ## Repository locations
 
-- Reusable workloads: `gitops/apps/postiz`
-- Lab storage, databases, secrets, and ingress: `gitops/apps/postiz`
-- Activation: `gitops/apps/kustomization.yaml`
+- Workloads, databases, secrets, storage, and ingress: `gitops/apps/postiz`.
+- Operator: `gitops/infrastructure/cnpg`.
+- Activation and dependencies: `gitops/clusters/lab/cnpg.yaml` and `gitops/clusters/lab/postiz.yaml`.
 
-## References
-
-- [Postiz documentation](https://docs.postiz.com/)
-- [Postiz Docker Compose reference](https://github.com/gitroomhq/postiz-docker-compose)
-- [Postiz LinkedIn provider](https://docs.postiz.com/providers/linkedin)
+See [Postiz documentation](https://docs.postiz.com/) for product behavior and [storage recovery](../../runbooks/storage-recovery.md) before changing persistent data.

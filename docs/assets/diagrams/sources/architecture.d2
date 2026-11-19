@@ -1,0 +1,62 @@
+# Declared configuration, not live readiness. Focused diagrams explain requests and credentials.
+vars: {d2-config: {layout-engine: elk; theme-id: 200; pad: 24}}
+direction: down
+style: {fill: "#0b1220"; stroke: transparent}
+classes: {
+  service: {shape: image; width: 56; height: 56; style.font-size: 21}
+  group: {style: {fill: "#122033"; stroke: "#466385"; border-radius: 16; font-size: 24}}
+}
+
+git: "Git · main" {icon: ../icons/git.svg; style: {fill: "#122033"; stroke: "#83b7ff"; font-size: 22; border-radius: 12}}
+workstation: "Workstation\nLAN / hosts file" {style: {fill: "#173133"; stroke: "#78d7c6"; font-size: 22; border-radius: 12}}
+
+vm: "Ubuntu VM" {
+  class: group
+  icon: ../icons/ubuntu.svg
+  icon.near: top-left
+  grid-columns: 1
+  grid-gap: 28
+  style: {fill: "#0f1928"; stroke: "#698eb6"; font-size: 26}
+
+  cluster: "K3s cluster" {
+    class: group
+    icon: ../icons/k3s.svg
+    icon.near: top-left
+    grid-columns: 1
+    grid-gap: 24
+    style: {fill: "#101e30"; stroke: "#83b7ff"; font-size: 26}
+
+    apps: Applications {
+      class: group
+      grid-rows: 1
+      grid-columns: 3
+      grid-gap: 30
+      style.stroke: "#78d7c6"
+      homepage: Homepage {class: service; icon: ../icons/homepage.png}
+      linkding: Linkding {class: service; icon: ../icons/linkding.svg}
+      postiz: Postiz {class: service; icon: ../icons/postiz.svg}
+    }
+
+    infrastructure: Infrastructure {
+      class: group
+      grid-rows: 2
+      grid-columns: 3
+      grid-gap: 30
+      style.stroke: "#aa9aeb"
+      flux: "Flux + status UI" {class: service; icon: ../icons/flux.svg}
+      vault: Vault {class: service; icon: ../icons/vault.svg}
+      eso: "External Secrets" {class: service; icon: ../icons/external-secrets.svg}
+      prometheus: Prometheus {class: service; icon: ../icons/prometheus.svg}
+      grafana: Grafana {class: service; icon: ../icons/grafana.svg}
+      cnpg: CloudNativePG {class: service; icon: ../icons/cloudnativepg.svg}
+    }
+  }
+
+  files: "Persistent data on the Ubuntu host" {
+    shape: cylinder
+    style: {font-size: 22; fill: "#342c24"; stroke: "#e4bc78"}
+  }
+}
+
+git -> vm: "Flux → K3s" {style: {stroke: "#83b7ff"; font-size: 18; stroke-width: 2}}
+workstation -> vm: "LAN → Traefik" {style: {stroke: "#78d7c6"; font-size: 18; stroke-width: 2}}

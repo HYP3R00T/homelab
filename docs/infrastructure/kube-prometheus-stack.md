@@ -74,7 +74,7 @@ The stack installs monitors and default dashboards for Kubernetes, kubelet, Core
 - Traefik
 - Vault
 
-Prometheus discovers `ServiceMonitor` and `PodMonitor` resources across all namespaces. The optional CloudNativePG monitor is retained with its inactive operator and is not part of the active monitor set.
+Prometheus discovers `ServiceMonitor` and `PodMonitor` resources across all namespaces. The CloudNativePG operator PodMonitor is included in the monitor set; the monitoring-monitors group waits for CNPG as well as the monitoring chart.
 
 K3s embeds its control-plane processes and uses its default datastore in this setup. Separate scheduler, controller-manager, etcd, and kube-proxy targets and their related rules are disabled to avoid false-down targets. Kubernetes API, kubelet, node, and workload visibility remain enabled.
 

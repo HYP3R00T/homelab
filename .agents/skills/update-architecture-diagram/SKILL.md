@@ -1,43 +1,51 @@
 ---
 name: update-architecture-diagram
-description: Update this homelab's architectural SVG diagrams from its current GitOps configuration, preserving the established visual layout and documentation references.
+description: Update this homelab's D2 architecture and flow diagrams from its GitOps configuration, render self-contained SVGs, and maintain the relevant documentation references.
 ---
 
 # Update architecture diagrams
 
-Maintain the shared full-system overview and focused traffic/secrets diagrams when the homelab's structure changes. This skill changes documentation assets; it does not deploy resources or establish live availability.
+Maintain the shared system overview and focused traffic/secrets flows when the homelab's structure changes. This is documentation work, not deployment or a live availability audit.
 
-## Owning files
+## Sources and renderer
 
-Run from the homelab repository root. The editable sources are `docs/assets/diagrams/sources/*.json`. The bundled helper [scripts/render-diagrams.py](scripts/render-diagrams.py) renders them into the SVG files in the parent directory using Python's standard library. Each source contains a title, description, canvas dimensions, groups, cards, connectors, and notes with explicit positions. The stable layout is intentional: update affected parts rather than redesigning all diagrams on every invocation.
+The editable sources are `docs/assets/diagrams/sources/*.d2`. The matching SVGs in the parent directory are generated assets. README and `docs/architecture/index.md` share `architecture.svg`; traffic and secrets pages use their matching exports. Decorative banner artwork is separate.
 
-README and `docs/architecture/index.md` share `architecture.svg`; traffic and secrets pages use their matching SVGs. Keep one source and one generated asset per diagram. Do not edit generated SVG text as the source of truth. Decorative banner artwork is separate from architecture and normally stays unchanged.
+Use the pinned D2 version in `mise.toml` with its bundled ELK layout engine. The helper [scripts/render-diagrams.py](scripts/render-diagrams.py) renders all sources to temporary files before replacing generated SVGs. It bundles icons into the output, checks export freshness, and uses stable layout flags. Do not hand-edit generated SVGs or restore the old JSON/coordinate renderer.
+
+Service icons are local files under `docs/assets/diagrams/icons`. `credits.json` records their upstream source URLs and revisions, with license copies beside it. Preserve those records and add provenance for new assets. Prefer the product's actual artwork over a similarly named service logo. Rendered SVGs must not depend on a CDN or workstation file path.
 
 ## Inspect the declared relationships
 
 Read the relevant manifests before changing nodes or connectors:
 
-- `gitops/clusters/lab/kustomization.yaml` and the included Flux group files establish activation and readiness ordering.
-- `gitops/apps/kustomization.yaml` establishes the included applications.
-- `gitops/infrastructure/core` contains the retained class and Flux UI ingress. The documentation's Infrastructure category also covers the separate secrets and monitoring groups; do not collapse them into this Flux group.
-- The relevant component Kustomizations, Helm values, Ingresses, ExternalSecrets, and claims establish ownership and relationships. Inspect only what the requested change affects.
-- `iac/vault/*.tf` and `iac/vault/eso/*.tf` explain Vault configuration ownership. Do not read private inputs, state, `.env`, tokens, snapshots, or actual credential values.
+- `gitops/clusters/lab/kustomization.yaml` and included Flux groups establish activation and readiness ordering.
+- `gitops/apps/kustomization.yaml` establishes included applications.
+- `gitops/infrastructure/core` contains the retained class and Flux UI ingress. The Infrastructure category also covers separate secrets and monitoring groups; do not collapse those into this Flux group.
+- Component Kustomizations, Helm values, Ingresses, ExternalSecrets, and claims establish ownership and relationships. Read only what the change affects.
+- `iac/vault/*.tf` and `iac/vault/eso/*.tf` explain Vault configuration ownership. Do not read private inputs, state, `.env`, tokens, snapshots, or credential values.
 
-A directory does not mean a component is activated. K3s-provided components are not separate Flux installations. A declared resource does not prove successful runtime bootstrap. Preserve the distinction between request flow, reconciliation, readiness, secret delivery, and persistent data. Keep Linkding's existing default-class claim distinct from retained Vault/monitoring storage unless the owning manifests and requested scope actually change that relationship.
+A directory is not activation, and a declared resource is not proof of successful bootstrap. K3s-provided components are not extra Flux installations. Keep Linkding's existing default-class claim distinct from retained Vault/monitoring storage unless the requested change actually migrates it.
 
-## Update and render
+The overview is a compact component/ownership map: Ubuntu encloses K3s, and K3s encloses Applications and Infrastructure. Show only a simple host-data block outside K3s if storage context is needed. Keep packaged capabilities, PV/PVC objects, detailed storage policies, and disabled services out of this overview; explain them in focused pages or diagrams. K3s is the cluster boundary, not an infrastructure application.
 
-Change the affected JSON source cards, connectors, and accessible descriptions. Keep variable LAN IPs as placeholders, use stable in-cluster names when relevant, and mark inactive components separately. Keep the overview readable by putting detailed sequences in the focused diagrams or explanatory pages. If the configuration does not resolve a relationship, flag the ambiguity instead of inventing it.
+Use consistent service-icon boxes and preserve each logo's aspect ratio. Vendored SVGs use square canvases with their original viewBox and `preserveAspectRatio="xMidYMid meet"`; never stretch a logo to fill a box. An SVG without a viewBox must be corrected from its intrinsic dimensions before use. Set both grid rows and columns for service grids to avoid D2 expanding individual image cells. Check the rendered visual size as well as nominal width and height. Ubuntu and K3s may have top-left container icons, with centered titles and enough header space to prevent overlap. Use plain component names in the overview; put bootstrap and runtime status in the accompanying documentation. Alertmanager is intentionally omitted from this overview, not disabled in deployment. Avoid long text or additional boxes that turn the overview into a vertical inventory. Inclusion in reconciliation is not proof of runtime readiness.
 
-Render and check the assets:
+## Edit and verify
+
+Update affected D2 groups, labels, and relationships, preserving the established layout and color vocabulary where possible. Keep variable LAN addresses as placeholders and stable in-cluster names literal. If manifests do not resolve a relationship, report the ambiguity rather than inventing one.
+
+From the repository root:
 
 ```shell
-python3 .agents/skills/update-architecture-diagram/scripts/render-diagrams.py
-python3 .agents/skills/update-architecture-diagram/scripts/render-diagrams.py --check
+mise install d2
+mise exec -- d2 fmt docs/assets/diagrams/sources/*.d2
+mise exec -- python3 .agents/skills/update-architecture-diagram/scripts/render-diagrams.py
+mise exec -- python3 .agents/skills/update-architecture-diagram/scripts/render-diagrams.py --check
 ```
 
-The check catches an export that no longer matches its editable source; it does not prove architectural accuracy. Review the relevant source-to-manifest relationships separately.
+If a pinned binary is already available outside mise, set `D2_BIN` to its path when running the Python helper. The helper checks its version. No browser, Node installation, PNG exporter, or extra layout plugin is needed for SVG output.
 
-Inspect the rendered images at normal README width and in the documentation, checking text wrapping, connector placement, overlap, contrast, and the legend. Labels must remain readable without animation or a live cluster connection. Update links or nearby captions only when the structural change requires it; do not rewrite unrelated prose.
+The freshness check re-renders D2 and compares bytes; it does not prove architectural accuracy. Review the affected relationships against manifests separately. Inspect the SVGs at normal article/README width and full size, checking labels, service logos, grouping, overlap, and connector routing. Keep source labels readable without motion and preserve accessible Markdown image descriptions.
 
-Report which relationships and assets changed, the verification performed, and any ambiguity or unavailable visual check. Do not apply Kubernetes changes, activate retained bundles, install a new renderer, capture private data, or commit/publish unless the user's request separately authorizes it.
+Update links and captions only when the structural change requires them. Report the changed relationships, generated assets, verification, and any unavailable visual check. Do not deploy, activate inactive bundles, handle credentials, rewrite unrelated prose, or commit/publish unless separately requested.

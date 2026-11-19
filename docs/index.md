@@ -20,7 +20,7 @@ One Ubuntu VM. A K3s cluster. Applications and infrastructure kept in Git, with 
 
 [Open the architecture diagram at full size](assets/diagrams/architecture.svg).
 
-This is the **declared architecture**, not a live status board. Homepage and Linkding are included independently of Vault. Monitoring is included but waits for Vault bootstrap and credentials. Postiz, CloudNativePG, and Cloudflared are retained without activation.
+This is the **declared architecture**, not a live status board. Homepage and Linkding are included independently of Vault. Monitoring is included but waits for Vault bootstrap and credentials. Postiz and CloudNativePG are included through dedicated groups; Postiz waits for its operator and Vault-backed credentials. Cloudflared remains disabled.
 
 ## Engineering choices
 
@@ -44,13 +44,49 @@ This is the **declared architecture**, not a live status board. Homepage and Lin
 
 </div>
 
-## A view into the cluster
+## Applications
 
-![Homepage service cards with point-in-time endpoint checks](assets/images/homepage.jpg)
+Applications are the tools used directly for everyday work. They have their own configuration, access, and data requirements.
 
-*Real Homepage capture: application and Flux checks respond, while Vault and monitoring checks reflect unfinished bootstrap. The dashboard shows the distinction instead of treating a configured link as a healthy service.*
+<div class="grid cards" markdown>
 
-[Explore Homepage](apps/homepage.md) or [open the Flux interface example](infrastructure/flux.md#web-ui). Screenshots are selected examples, not live telemetry.
+- :lucide-layout-dashboard: **[Homepage](apps/homepage.md)**
+
+    The personal starting page for application links, administrative interfaces, and current resource readings.
+
+- :lucide-bookmark: **[Linkding](apps/linkding.md)**
+
+    The private bookmark collection. A new installation needs an owner account before sign-in.
+
+</div>
+
+[Postiz](apps/postiz/index.md) is included as a social publishing application with its own database and secret prerequisites. Inclusion does not imply a completed bootstrap. See the [application inventory](apps/index.md) for activation and setup details.
+
+## Infrastructure
+
+Infrastructure runs and administers the cluster. Some components have web interfaces, but those interfaces serve administration rather than changing the component's role.
+
+<div class="grid cards" markdown>
+
+- :lucide-git-branch: **[Flux](infrastructure/flux.md)**
+
+    Reconciles the configuration in Git and exposes the operator's status interface.
+
+- :lucide-key-round: **[Vault](infrastructure/vault.md) and [External Secrets](infrastructure/external-secrets.md)**
+
+    Store private values and deliver Kubernetes Secrets. Vault initialization, unsealing, authentication, and credential population are separate setup steps.
+
+- :lucide-chart-no-axes-combined: **[Monitoring](infrastructure/kube-prometheus-stack.md)**
+
+    Prometheus stores metrics, Grafana presents dashboards, and Alertmanager manages alerts. Installation waits for the required Vault-backed credentials.
+
+- :lucide-server: **[K3s foundation](architecture/platform.md)**
+
+    Supplies CoreDNS, Traefik, ServiceLB, local volume provisioning, and Metrics Server. These support components do not all need a dashboard shortcut.
+
+</div>
+
+The [infrastructure inventory](infrastructure/index.md) covers ownership, setup, CloudNativePG, and the optional disabled Cloudflared tunnel. Homepage's visible cards are shortcuts, not a complete list of cluster workloads.
 
 ## Find your route
 

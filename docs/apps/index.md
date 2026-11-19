@@ -10,7 +10,7 @@ Applications are the tools used by people. They live under `gitops/apps`, while 
 | --- | --- | --- | --- |
 | [Homepage](homepage.md) | Dashboard, shortcuts, and current Kubernetes resource readings | Included | Review service cards and workstation hostname access |
 | [Linkding](linkding.md) | Personal bookmark collection | Included | Create an owner account on a new installation |
-| [Postiz](postiz/index.md) | Social post scheduling | Inactive | Requires CNPG, credentials, provider setup, and a separate activation plan |
+| [Postiz](postiz/index.md) | Social post scheduling | Included in its own group | Requires CNPG, Vault credentials, owner account, and provider setup |
 
 `gitops/apps/kustomization.yaml` includes only Homepage and Linkding. Their Flux group has no dependency on Vault or monitoring. Future applications needing operators or secrets should get their own readiness boundary rather than blocking these independent applications.
 
