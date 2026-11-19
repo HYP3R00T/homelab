@@ -18,11 +18,11 @@ Vault holds monitoring and application credential values outside Git. External S
 
 ## Initial configuration
 
-Follow [Vault bootstrap](../runbooks/vault-bootstrap.md) in order: configure the workstation address, check initialization status, initialize only a new Vault, unseal, authenticate, configure the private Terraform inputs, and apply the workspace to populate Postiz and monitoring credentials.
+Follow [Vault bootstrap](../runbooks/vault-bootstrap.md) in order: configure the workstation address, check initialization status, initialize only a new Vault, unseal, authenticate, configure the private Terraform inputs, and apply the workspace to populate Shoutrrr and monitoring credentials.
 
 The Helm chart does not perform those steps. Its health probes accept sealed and uninitialized responses, so a Ready pod or successful Helm release is not proof that Vault can serve secrets. The ClusterSecretStore is a stronger check of the authentication path.
 
-`iac/vault` manages the Kubernetes authentication mount, reviewer configuration, KV v2 mount, ESO policy, service-account role, and the three Postiz/monitoring credential records. The injector is disabled because these workloads use External Secrets rather than Vault Agent injection. There is no configured auto-unseal provider.
+`iac/vault` manages the Kubernetes authentication mount, reviewer configuration, KV v2 mount, ESO policy, service-account role, and the three Shoutrrr/monitoring credential records. The injector is disabled because these workloads use External Secrets rather than Vault Agent injection. There is no configured auto-unseal provider.
 
 ## Restart and recovery
 

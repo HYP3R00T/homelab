@@ -11,7 +11,6 @@ gitops/
   apps/
     homepage/
     linkding/
-    postiz/                 # retained trial; excluded from entrypoint
     shoutrrr/               # SQLite trial, waits for retained storage and Vault
   infrastructure/
     core/                   # retained storage class and Flux ingress
@@ -34,7 +33,6 @@ gitops/
     monitoring.yaml
     monitoring-monitors.yaml
     cnpg.yaml
-    postiz.yaml             # retained, commented in entrypoint
     shoutrrr.yaml
     kustomization.yaml
 ```

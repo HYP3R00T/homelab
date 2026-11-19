@@ -6,7 +6,7 @@ icon: lucide/cloud
 
 Cloudflared connects an origin service to an optional Cloudflare public tunnel. Its retained bundle in `gitops/infrastructure/cloudflared` is **not activated**. The baseline homelab uses private LAN ingress and does not need a tunnel or Cloudflare DNS configuration.
 
-The bundle contains a Deployment, namespace, ExternalSecret, and ConfigMap input with earlier Linkding/Postiz route choices. Retained tunnel IDs and public hostnames describe that unused configuration, not a live public endpoint. Keeping Vault and ESO does not require running Cloudflared.
+The bundle contains a Deployment, namespace, ExternalSecret, and ConfigMap input with the retained Linkding route. Retained tunnel IDs and public hostnames describe that unused configuration, not a live public endpoint. Keeping Vault and ESO does not require running Cloudflared.
 
 ## Before activation
 

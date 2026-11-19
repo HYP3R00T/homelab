@@ -10,5 +10,4 @@ resources:
 - monitoring.yaml
 - monitoring-monitors.yaml
 - cnpg.yaml
-# - postiz.yaml # Retired trial; retained manifests and data.
 - shoutrrr.yaml

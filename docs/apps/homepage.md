@@ -31,7 +31,7 @@ Ingress discovery is disabled to avoid duplicate cards. Traefik's card shows pod
 
 ## Dashboard groups
 
-The dashboard shows visible **Applications** and **Infrastructure** headings. Applications contains Homepage, Linkding, and Postiz. Infrastructure contains the Flux UI, Vault, Grafana, Prometheus, and the Traefik resource card. Monitoring belongs to Infrastructure even though its tools open in a browser. External AI links remain in their own **AI Assistants** group; they are not hosted workloads.
+The dashboard shows visible **Applications** and **Infrastructure** headings. Applications contains Homepage, Linkding, and Shoutrrr. Infrastructure contains the Flux UI, Vault, Grafana, Prometheus, and the Traefik resource card. Monitoring belongs to Infrastructure even though its tools open in a browser. External AI links remain in their own **AI Assistants** group; they are not hosted workloads.
 
 These cards are a selected set of entry points and resource views, not a pod inventory. External Secrets, CoreDNS, ServiceLB, Local Path Provisioner, and monitoring collectors do not need individual shortcuts merely because they run in the cluster. Use the [infrastructure inventory](../infrastructure/index.md) and Flux for the broader picture.
 

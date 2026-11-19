@@ -4,22 +4,16 @@ icon: lucide/database
 
 # CloudNativePG
 
-CloudNativePG manages PostgreSQL instances and their lifecycle. The `cnpg` Flux group installs chart `0.29.0` in namespace `cnpg`, independently of Vault bootstrap. The retained `postiz` group is excluded from the entrypoint and suspended; its database is hibernated. If deliberately restored, it waits for the operator and secret store. Shoutrrr uses SQLite and does not depend on this operator.
+CloudNativePG manages PostgreSQL instances and their lifecycle. The `cnpg` Flux group installs chart `0.29.0` in namespace `cnpg`, independently of Vault bootstrap. The operator remains available for future database workloads; no application PostgreSQL cluster is currently declared. Shoutrrr uses SQLite and does not depend on this operator.
 
-The operator is infrastructure; Postiz's Cluster and Database resources belong to the application. The retained Postiz configuration declares one PostgreSQL instance with three logical databases, not one server for each database. The operator requests 100m CPU and 128 MiB memory, with limits of 500m CPU and 256 MiB memory.
-
-## Configuration and monitoring
-
-Operator resources are under `gitops/infrastructure/cnpg`; its activation is `gitops/clusters/lab/cnpg.yaml`. The application resources are under `gitops/apps/postiz`. The operator PodMonitor is assembled by the monitoring-monitors group, which waits for both CNPG and the monitoring chart.
-
-The Postiz database uses the retained local StorageClass. Review [storage recovery](../runbooks/storage-recovery.md) before changing database storage. No automatic database backup is configured by this installation.
+The operator requests 100m CPU and 128 MiB memory, with limits of 500m CPU and 256 MiB memory. Operator resources are under `gitops/infrastructure/cnpg`; activation is `gitops/clusters/lab/cnpg.yaml`. Its PodMonitor is assembled by the monitoring-monitors group, which waits for both CNPG and the monitoring chart.
 
 ## Verify
 
 ```shell
-flux get kustomizations cnpg postiz
+flux get kustomizations cnpg
 kubectl -n cnpg get helmrelease,pods
-kubectl -n postiz get cluster,database,pods,pvc
+kubectl get clusters.postgresql.cnpg.io -A
 ```
 
-A ready operator does not prove that its application database is running; hibernation intentionally stops the retained Postiz database. Database creation also requires the Vault-backed credentials. Follow [Postiz bootstrap](../apps/postiz/index.md#bootstrap-prerequisites) and [CloudNativePG documentation](https://cloudnative-pg.io/docs/) for database operations and backup planning.
+A Ready operator is available to manage application databases; it does not create a database server by itself. When adding a PostgreSQL workload, declare its Cluster, credentials, storage, and backup policy in the application's bundle. Review [storage recovery](../runbooks/storage-recovery.md) and the [CloudNativePG documentation](https://cloudnative-pg.io/docs/) before creating persistent database resources.

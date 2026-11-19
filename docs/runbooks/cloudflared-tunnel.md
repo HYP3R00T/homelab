@@ -61,7 +61,6 @@ Create the application DNS routes:
 
 ```shell
 cloudflared tunnel route dns "$CLOUDFLARE_TUNNEL_ID" linkding.hyperoot.dev
-cloudflared tunnel route dns "$CLOUDFLARE_TUNNEL_ID" postiz.hyperoot.dev
 ```
 
 Continue with [Store Cloudflared credentials in Vault](cloudflared-vault-credentials.md).

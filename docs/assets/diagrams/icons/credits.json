@@ -73,11 +73,6 @@
       "collection": "dashboard-icons"
     },
     {
-      "file": "postiz.svg",
-      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d4b500dc40a8e1043b1581cabb7208892cf35472/svg/postiz.svg",
-      "collection": "dashboard-icons"
-    },
-    {
       "file": "cloudflared.svg",
       "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d4b500dc40a8e1043b1581cabb7208892cf35472/svg/cloudflared.svg",
       "collection": "dashboard-icons"

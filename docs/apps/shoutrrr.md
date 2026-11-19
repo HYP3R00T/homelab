@@ -4,7 +4,7 @@ icon: lucide/calendar-clock
 
 # Shoutrrr
 
-[Shoutrrr](https://github.com/coollabsio/shoutrrr/tree/v1.5.8) is the social scheduling trial replacing Postiz in the cluster entrypoint. It runs the published `ghcr.io/coollabsio/shoutrrr:1.5.8` image in one container, with SQLite for data, queues, cache, and sessions. No Redis, Temporal, or separate PostgreSQL server is added. TryPost was an unapplied trial and has been removed. Postflare is excluded because the operator does not want metered Cloudflare dependencies.
+[Shoutrrr](https://github.com/coollabsio/shoutrrr/tree/v1.5.8) is the social scheduling application in the cluster entrypoint. It runs the published `ghcr.io/coollabsio/shoutrrr:1.5.8` image in one container, with SQLite for data, queues, cache, and sessions. No Redis, Temporal, or separate PostgreSQL server is added. TryPost was an unapplied trial and has been removed. Postflare is excluded because the operator does not want metered Cloudflare dependencies.
 
 LinkedIn, X, and Instagram are supported by this release; Instagram requires media and supports Reels. YouTube and Substack are not supported. Schedule Shorts separately in YouTube Studio. Provider credentials, permissions, API pricing, callbacks, and media reachability must be checked before relying on publishing; running the application does not grant platform access.
 
@@ -24,7 +24,7 @@ Back up both volumes and the stable APP_KEY. For a consistent file backup, stop 
 
 The ignored `iac/vault/terraform.tfvars` contains `shoutrrr_credentials`. The tracked example includes `openssl rand -base64 32` for generating APP_KEY and the LinkedIn developer portal for obtaining client credentials. Preserve the key across reinstalls; changing it can make stored tokens unreadable. Optional LinkedIn values can be empty initially.
 
-Terraform writes `external-secrets/shoutrrr`; ESO maps that record to `shoutrrr-app`. Existing Postiz and monitoring records remain managed separately. Keep inputs, state, and plans private:
+Terraform writes `external-secrets/shoutrrr`; ESO maps that record to `shoutrrr-app`. Monitoring records remain managed separately. Keep inputs, state, and plans private:
 
 ```shell
 umask 077
@@ -33,20 +33,7 @@ terraform -chdir=iac/vault plan -out=tfplan
 terraform -chdir=iac/vault apply tfplan
 ```
 
-For a workspace with the original eight resources already managed, adding Shoutrrr should create only its credential record, with no changes or deletions. Review the actual plan before applying it. Flux's Shoutrrr group waits for `infrastructure` and `secret-store`; CNPG is not a dependency of this SQLite application.
-
-## Preserve and stop Postiz
-
-A commented reference alone does not stop existing workloads. Preserve and suspend the old group, stop its application processes, and hibernate its CNPG database:
-
-```shell
-kubectl -n flux-system patch kustomization postiz --type=merge -p '{"metadata":{"annotations":{"kustomize.toolkit.fluxcd.io/reconcile":"disabled","kustomize.toolkit.fluxcd.io/prune":"disabled"}},"spec":{"suspend":true,"deletionPolicy":"Orphan"}}'
-kubectl -n postiz scale deployment/postiz deployment/postiz-redis deployment/postiz-temporal --replicas=0
-kubectl -n postiz annotate cluster/postiz-postgres --overwrite cnpg.io/hibernation=on
-kubectl -n postiz get pods,pvc
-```
-
-Postiz data, manifests, namespace, claims, and Vault record remain available. Its entrypoint reference stays commented out, and its Flux object is protected from pruning. This does not migrate posts or accounts. Restoring Postiz requires deliberately reversing hibernation, restoring its reference, removing reconciliation exclusions, and resuming its group.
+For a workspace with the shared five bootstrap resources and two monitoring records already managed, adding Shoutrrr should create only its credential record, with no changes or deletions. Review the actual plan before applying it. Flux's Shoutrrr group waits for `infrastructure` and `secret-store`; CNPG is not a dependency of this SQLite application.
 
 ## Access and first owner
 
@@ -54,7 +41,7 @@ Map `shoutrrr.homelab.internal` to the current K3s node address using the [local
 
 Register your account immediately on the trusted LAN. The first registration claims the instance Owner role. `INSTANCE_REGISTRATIONS_ENABLED=false` permits that first owner but blocks subsequent public registrations; invited users are still possible, so do not issue invitations for this single-user setup. No default owner password or mail service is configured. Upstream skips email verification with the log mailer, so registration does not require an email link. Account recovery and invitations would require a deliberate mail setup; the log mailer is not email delivery.
 
-The LinkedIn callback is `http://shoutrrr.homelab.internal/accounts/callback/linkedin`. Register that exact URI in the developer application if LinkedIn accepts it; check HTTPS and provider rules before connecting. Reusing client credentials does not update the provider's callback allowlist. Some media publishing integrations need publicly reachable media URLs, which private LAN HTTP cannot supply. No tunnel or public exposure is enabled by this trial. See the [upstream production environment example](https://github.com/coollabsio/shoutrrr/blob/v1.5.8/.env.example.prod) for other provider settings.
+The LinkedIn callback is `http://shoutrrr.homelab.internal/accounts/callback/linkedin`. Register that exact URI in the developer application. On 2026-11-19, the operator successfully connected LinkedIn using this LAN HTTP callback after saving the matching redirect URI. The browser follows the callback through its local hosts mapping; LinkedIn does not need inbound network access to the homelab for this authorization flow. This confirms account connection, not scheduled publishing or media delivery. Provider requirements may change; recheck them when changing the access model. Reusing client credentials does not update the provider's callback allowlist. Some media publishing integrations need publicly reachable media URLs, which private LAN HTTP cannot supply. No tunnel or public exposure is enabled by this trial. See the [upstream production environment example](https://github.com/coollabsio/shoutrrr/blob/v1.5.8/.env.example.prod) for other provider settings.
 
 ## Verify rollout
 
