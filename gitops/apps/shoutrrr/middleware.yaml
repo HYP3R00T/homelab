@@ -1,0 +1,9 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: shoutrrr-public-redirect
+spec:
+  redirectRegex:
+    regex: '^https?://shoutrrr\.homelab\.internal(?::[0-9]+)?/(.*)'
+    replacement: 'https://shoutrrr.hyperoot.dev/${1}'
+    permanent: true

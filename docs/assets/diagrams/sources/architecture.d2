@@ -40,7 +40,7 @@ vm: "Ubuntu VM" {
     infrastructure: Infrastructure {
       class: group
       grid-rows: 2
-      grid-columns: 3
+      grid-columns: 4
       grid-gap: 30
       style.stroke: "#aa9aeb"
       flux: "Flux + status UI" {class: service; icon: ../icons/flux.svg}
@@ -49,6 +49,7 @@ vm: "Ubuntu VM" {
       prometheus: Prometheus {class: service; icon: ../icons/prometheus.svg}
       grafana: Grafana {class: service; icon: ../icons/grafana.svg}
       cnpg: CloudNativePG {class: service; icon: ../icons/cloudnativepg.svg}
+      cloudflared: Cloudflared {class: service; icon: ../icons/cloudflare.svg}
     }
   }
 
@@ -60,3 +61,6 @@ vm: "Ubuntu VM" {
 
 git -> vm: "Flux → K3s" {style: {stroke: "#83b7ff"; font-size: 18; stroke-width: 2}}
 workstation -> vm: "LAN → Traefik" {style: {stroke: "#78d7c6"; font-size: 18; stroke-width: 2}}
+
+public: "Public HTTPS\nShoutrrr only" {style: {fill: "#342c24"; stroke: "#e4bc78"; font-size: 22; border-radius: 12}}
+public -> vm: "Cloudflare Tunnel → Shoutrrr" {style: {stroke: "#e4bc78"; font-size: 18; stroke-width: 2}}

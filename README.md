@@ -20,7 +20,7 @@
 
 # Homelab
 
-A private, single-node Ubuntu K3s homelab, managed through Flux, Kustomize, and Helm. Built around a small VM—4 vCPUs and approximately 5.28 GiB RAM—with explicit ownership, dependency-aware reconciliation, and persistent data that has a recovery plan.
+A single-node Ubuntu K3s homelab with private LAN services and a Shoutrrr-only HTTPS tunnel, managed through Flux, Kustomize, and Helm. Built around a small VM—4 vCPUs and approximately 5.28 GiB RAM—with explicit ownership, dependency-aware reconciliation, and persistent data that has a recovery plan.
 
 ## The architecture
 
@@ -28,7 +28,7 @@ A private, single-node Ubuntu K3s homelab, managed through Flux, Kustomize, and 
 
 [Open the architecture diagram at full size](docs/assets/diagrams/architecture.svg).
 
-The diagram describes the **declared configuration**, not live availability. Homepage and Linkding reconcile independently. Monitoring waits for Vault authentication and credential delivery. Shoutrrr and CloudNativePG are included through dependency-ordered groups; Shoutrrr uses SQLite and requires Vault credentials and first-owner registration. Cloudflared remains intentionally disabled for private LAN access.
+The diagram describes the **declared configuration**, not live availability. Homepage and Linkding reconcile independently. Monitoring waits for Vault authentication and credential delivery. Shoutrrr and CloudNativePG are included through dependency-ordered groups; Shoutrrr uses SQLite and requires Vault credentials and first-owner registration. Cloudflared publishes only Shoutrrr over HTTPS; the other application and administrative interfaces remain on the private LAN.
 
 ## What this project demonstrates
 

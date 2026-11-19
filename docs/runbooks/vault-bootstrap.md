@@ -229,7 +229,7 @@ terraform -chdir=iac/vault plan -out=tfplan
 terraform -chdir=iac/vault apply tfplan
 ```
 
-Review the plan before running `apply`: a completely new setup creates eight resources, with no updates or deletions. These are the Kubernetes auth mount, its reviewer configuration, the KV mount, the ESO policy, the ESO role, and three credential records. If the original five bootstrap resources are already tracked in state, credential management creates three records. If these already exist from manual setup but the local state is missing, recover the state or import the existing resources first; do not delete them to make the plan succeed. A clean follow-up plan should report no changes:
+Review the plan before running `apply`: a completely new baseline creates eight resources, with no updates or deletions. Providing `cloudflared_credentials` additionally creates its separate tunnel credential record, for nine resources in this deployment. These are the Kubernetes auth mount, its reviewer configuration, the KV mount, the ESO policy, the ESO role, and three credential records. If the original five bootstrap resources are already tracked in state, credential management creates three records. If these already exist from manual setup but the local state is missing, recover the state or import the existing resources first; do not delete them to make the plan succeed. A clean follow-up plan should report no changes:
 
 ```shell
 terraform -chdir=iac/vault plan
@@ -268,9 +268,9 @@ kubectl -n monitoring get helmrelease,pods,pvc
 
 Expect the store and both ExternalSecrets to report ready, followed by the `monitoring` and `monitoring-monitors` Kustomizations. If a secret reports an error, inspect its events with `kubectl -n monitoring describe externalsecret grafana-admin` or `kubectl -n monitoring describe externalsecret prometheus-basic-auth`.
 
-Add `grafana.homelab.internal` and `prometheus.homelab.internal` to the workstation's hosts entry for the node's current LAN IP address to open their interfaces. CNPG and Shoutrrr have separate included Flux groups. The Shoutrrr record is managed by this workspace. Shoutrrr allows first-owner registration and disables subsequent public registration by default; social-provider setup remains a separate step. See [Shoutrrr](../apps/shoutrrr.md) before activating the new trial. This procedure does not enable the disabled Cloudflared tunnel.
+Add `grafana.homelab.internal` and `prometheus.homelab.internal` to the workstation's hosts entry for the node's current LAN IP address to open their interfaces. CNPG and Shoutrrr have separate included Flux groups. The Shoutrrr record is managed by this workspace. Shoutrrr allows first-owner registration and disables subsequent public registration by default; social-provider setup remains a separate step. See [Shoutrrr](../apps/shoutrrr.md) before activating the new trial. The separate Cloudflared group additionally needs its tunnel credential and DNS route; see [tunnel setup](cloudflared-tunnel.md).
 
 ## Next steps
 
 - Use [Recover Vault](vault-recovery.md) if state or Vault data is lost.
-- If deliberately enabling the inactive tunnel later, use [Store Cloudflared credentials in Vault](cloudflared-vault-credentials.md).
+- For the Shoutrrr-only public tunnel, use [Manage Cloudflared credentials in Vault](cloudflared-vault-credentials.md).

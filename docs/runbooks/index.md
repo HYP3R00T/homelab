@@ -18,9 +18,9 @@ Runbooks own longer bootstrap, rollout, and recovery procedures. For the first-i
 - [Recover Vault](vault-recovery.md): restore Terraform tracking or rebuild a
   lost Vault installation
 
-## Optional public tunnel
+## Shoutrrr public tunnel
 
-Cloudflared is inactive. These procedures are not prerequisites for private LAN access.
+Cloudflared publishes Shoutrrr only. These procedures are not prerequisites for the other private LAN interfaces.
 
 - [Create a Cloudflared tunnel](cloudflared-tunnel.md): authenticate the CLI,
   create a locally managed tunnel, and record its ID
@@ -38,6 +38,6 @@ The repository keeps repeatable Kubernetes state in Git, while these steps remai
 - apply the Vault Terraform workspace
 - choose and preserve application credentials in private Terraform inputs
 
-Only a separately chosen public tunnel requires Cloudflared authentication, tunnel creation, credential population, and a Cloudflare DNS route. Those actions do not belong to the private LAN setup.
+Shoutrrr's public tunnel requires Cloudflared authorization, a tunnel credential in private Terraform inputs, and a Cloudflare DNS route. The remaining services use the private LAN setup.
 
 After bootstrap, persistent Kubernetes configuration changes are committed and reconciled by Flux. Do not rely on manual cluster edits for persistent configuration.

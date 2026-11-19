@@ -19,7 +19,7 @@ gitops/
     external-secrets/
     secret-store/           # waits for ESO and manual Vault bootstrap
     cnpg/                   # included operator
-    cloudflared/            # inactive
+    cloudflared/            # public HTTPS for Shoutrrr only
     kube-prometheus-stack/  # Helm source/release, values, ingress
       secrets/              # namespace and ExternalSecrets
       monitors/             # CRs requiring Prometheus Operator
@@ -34,6 +34,7 @@ gitops/
     monitoring-monitors.yaml
     cnpg.yaml
     shoutrrr.yaml
+    cloudflared.yaml
     kustomization.yaml
 ```
 

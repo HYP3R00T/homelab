@@ -26,10 +26,10 @@ The `vault` ClusterSecretStore authenticates at `auth/kubernetes` using role `es
 
 A running Vault pod can still be sealed or uninitialized. Until authentication and the required values work, the secret store and monitoring credentials remain unready. Flux waits at those boundaries before installing the monitoring chart. Homepage and Linkding are independent of this chain.
 
-Follow [Vault bootstrap](../runbooks/vault-bootstrap.md), then verify the [monitoring credentials](../infrastructure/kube-prometheus-stack.md#credentials). Terraform creates the Vault configuration and writes the three credential records from sensitive private inputs. It does not manage application-generated OAuth tokens.
+Follow [Vault bootstrap](../runbooks/vault-bootstrap.md), then verify the [monitoring credentials](../infrastructure/kube-prometheus-stack.md#credentials). Terraform creates the Vault configuration and writes the application and monitoring records plus the enabled tunnel record from sensitive private inputs. It does not manage application-generated OAuth tokens.
 
 ## Secret ownership
 
 The operator owns credential values and recovery material. A manifest reference or an available token does not grant automation permission to read or mutate secrets. Keep `.env`, Terraform inputs/state/plans, unseal keys, and Raft snapshots outside the public repository. Use the [recovery runbook](../runbooks/vault-recovery.md) when the cluster or Terraform state changes.
 
-Shoutrrr has its own ExternalSecrets and waits for the same secret store independently of monitoring. Shoutrrr stores its runtime provider tokens in SQLite, encrypted using its stable APP_KEY; Terraform cannot recreate that application data. The disabled Cloudflared bundle retains its separate credential reference.
+Shoutrrr has its own ExternalSecrets and waits for the same secret store independently of monitoring. Shoutrrr stores its runtime provider tokens in SQLite, encrypted using its stable APP_KEY; Terraform cannot recreate that application data. Cloudflared consumes its separate Terraform-managed tunnel credential from Vault.

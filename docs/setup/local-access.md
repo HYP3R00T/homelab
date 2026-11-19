@@ -24,7 +24,7 @@ For the included browser interfaces, use your actual IP with these aliases. The 
 
 ```text
 # Example: replace 192.168.0.61 with your K3s node's current LAN IP
-192.168.0.61 homepage.homelab.internal linkding.homelab.internal shoutrrr.homelab.internal flux.homelab.internal
+192.168.0.61 homepage.homelab.internal linkding.homelab.internal flux.homelab.internal
 192.168.0.61 vault.homelab.internal grafana.homelab.internal prometheus.homelab.internal
 ```
 
@@ -36,13 +36,13 @@ Preserve other hosts-file entries. If an alias already exists, update its mappin
 | --- | --- | --- |
 | `homepage.homelab.internal` | Personal dashboard | Homepage deployment Ready |
 | `linkding.homelab.internal` | Bookmarks | Deployment Ready and [owner account created](../apps/linkding.md#initial-setup) |
-| `shoutrrr.homelab.internal` | Social publishing trial | [Shoutrrr bootstrap](../apps/shoutrrr.md), credentials and application Ready |
+| `shoutrrr.hyperoot.dev` | Social publishing over HTTPS | [Shoutrrr setup](../apps/shoutrrr.md), Cloudflared and public DNS ready |
 | `flux.homelab.internal` | GitOps status | Flux Operator and core ingress ready |
 | `vault.homelab.internal` | Secret administration | Vault deployment, initialization, and unseal |
 | `grafana.homelab.internal` | Metrics dashboards | [Vault and monitoring setup](../runbooks/vault-bootstrap.md) complete |
 | `prometheus.homelab.internal` | Metric queries | Monitoring Ready; Basic Auth credentials available |
 
-Open these interfaces with `http://`. This configuration does not provide certificates for these names. An included hostname is not evidence that its workload has completed bootstrap.
+Open the internal interfaces with `http://`. Shoutrrr uses `https://shoutrrr.hyperoot.dev` through public DNS and requires no hosts-file entry; its former internal route redirects to that canonical address. This configuration does not provide certificates for these names. An included hostname is not evidence that its workload has completed bootstrap.
 
 ## Verify resolution and routing
 

@@ -30,4 +30,4 @@ Current readings are useful for finding expensive applications, but they do not 
 
 New Vault, monitoring, and Shoutrrr volumes use `local-path-retain`. Existing Linkding storage keeps its original claim. Local storage remains tied to this node, and Retain is not a backup or protection from K3s uninstall. See [storage recovery](../runbooks/storage-recovery.md).
 
-CloudNativePG and Shoutrrr are included through dedicated Flux groups, with Shoutrrr waiting for retained storage and Vault readiness; SQLite runs inside its application container. Cloudflared remains disabled. Removed Talos, NVIDIA, and MetalLB configuration is available through Git history rather than maintained as a second deployment design.
+CloudNativePG and Shoutrrr are included through dedicated Flux groups, with Shoutrrr waiting for retained storage and Vault readiness; SQLite runs inside its application container. Cloudflared publishes only Shoutrrr at `https://shoutrrr.hyperoot.dev`. Removed Talos, NVIDIA, and MetalLB configuration is available through Git history rather than maintained as a second deployment design.

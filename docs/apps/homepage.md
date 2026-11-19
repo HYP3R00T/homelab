@@ -25,7 +25,7 @@ The Kustomization generates a ConfigMap from the individual settings, service, w
 
 The Kubernetes information widget reads cluster and node CPU/memory through [Metrics Server](../infrastructure/metrics-server.md). Cards use explicit namespaces and pod selectors for application readings. Linkding selects `app=linkding`; Homepage selects `app.kubernetes.io/name=homepage`. HTTP site checks indicate endpoint availability separately from pod resource readings.
 
-The resource view is live, not historical. [Grafana and Prometheus](../infrastructure/kube-prometheus-stack.md) supply history once monitoring is ready. Their configured Homepage links may show unavailable while Vault or monitoring bootstrap is unfinished. Shoutrrr has an entry point but requires its Vault credentials and first-owner registration; Cloudflared has no active tunnel.
+The resource view is live, not historical. [Grafana and Prometheus](../infrastructure/kube-prometheus-stack.md) supply history once monitoring is ready. Their configured Homepage links may show unavailable while Vault or monitoring bootstrap is unfinished. Shoutrrr has an entry point but requires its Vault credentials and first-owner registration; Cloudflared provides the public HTTPS route for Shoutrrr.
 
 Ingress discovery is disabled to avoid duplicate cards. Traefik's card shows pod readings rather than calling a separately exposed dashboard API.
 

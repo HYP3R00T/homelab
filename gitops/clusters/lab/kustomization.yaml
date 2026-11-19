@@ -11,3 +11,4 @@ resources:
 - monitoring-monitors.yaml
 - cnpg.yaml
 - shoutrrr.yaml
+- cloudflared.yaml

@@ -31,7 +31,7 @@ One Ubuntu VM. A K3s cluster. Applications and infrastructure kept in Git, with 
 
 [Open the architecture diagram at full size](assets/diagrams/architecture.svg).
 
-This is the **declared architecture**, not a live status board. Homepage and Linkding are included independently of Vault. Monitoring is included but waits for Vault bootstrap and credentials. Shoutrrr and CloudNativePG are included through dedicated groups; Shoutrrr waits for retained storage and Vault-backed credentials. Cloudflared remains disabled.
+This is the **declared architecture**, not a live status board. Homepage and Linkding are included independently of Vault. Monitoring is included but waits for Vault bootstrap and credentials. Shoutrrr and CloudNativePG are included through dedicated groups; Shoutrrr waits for retained storage and Vault-backed credentials. Cloudflared publishes only Shoutrrr at `https://shoutrrr.hyperoot.dev`.
 
 ## Engineering choices
 
@@ -97,7 +97,7 @@ Infrastructure runs and administers the cluster. Some components have web interf
 
 </div>
 
-The [infrastructure inventory](infrastructure/index.md) covers ownership, setup, CloudNativePG, and the optional disabled Cloudflared tunnel. Homepage's visible cards are shortcuts, not a complete list of cluster workloads.
+The [infrastructure inventory](infrastructure/index.md) covers ownership, setup, CloudNativePG, and the Shoutrrr-only Cloudflared tunnel. Homepage's visible cards are shortcuts, not a complete list of cluster workloads.
 
 ## Find your route
 

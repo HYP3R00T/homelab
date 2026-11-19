@@ -22,7 +22,7 @@ Follow [Vault bootstrap](../runbooks/vault-bootstrap.md) in order: configure the
 
 The Helm chart does not perform those steps. Its health probes accept sealed and uninitialized responses, so a Ready pod or successful Helm release is not proof that Vault can serve secrets. The ClusterSecretStore is a stronger check of the authentication path.
 
-`iac/vault` manages the Kubernetes authentication mount, reviewer configuration, KV v2 mount, ESO policy, service-account role, and the three Shoutrrr/monitoring credential records. The injector is disabled because these workloads use External Secrets rather than Vault Agent injection. There is no configured auto-unseal provider.
+`iac/vault` manages the Kubernetes authentication mount, reviewer configuration, KV v2 mount, ESO policy, service-account role, the three Shoutrrr/monitoring credential records, and the optional tunnel credential record. The injector is disabled because these workloads use External Secrets rather than Vault Agent injection. There is no configured auto-unseal provider.
 
 ## Restart and recovery
 

@@ -82,15 +82,36 @@ variable "prometheus_users" {
 }
 
 variable "shoutrrr_credentials" {
-  description = "Stable Shoutrrr encryption key and optional LinkedIn developer credentials."
+  description = "Stable Shoutrrr encryption key and optional LinkedIn and Meta developer credentials."
   type = object({
     app_key                = string
     linkedin_client_id     = optional(string, "")
     linkedin_client_secret = optional(string, "")
+    facebook_client_id     = optional(string, "")
+    facebook_client_secret = optional(string, "")
   })
   sensitive = true
   validation {
     condition     = can(regex("^base64:[A-Za-z0-9+/]{43}=$", var.shoutrrr_credentials.app_key))
     error_message = "Supply base64: followed by a base64-encoded 32-byte encryption key."
+  }
+}
+
+variable "cloudflared_credentials" {
+  description = "Optional locally managed tunnel credentials, kept in private tfvars; null omits the tunnel Vault record."
+  type = object({
+    account_tag   = string
+    tunnel_id     = string
+    tunnel_secret = string
+  })
+  sensitive = true
+  default   = null
+  validation {
+    condition = var.cloudflared_credentials == null ? true : alltrue([
+      length(trimspace(var.cloudflared_credentials.account_tag)) > 0,
+      can(regex("^[0-9a-fA-F-]{36}$", var.cloudflared_credentials.tunnel_id)),
+      length(trimspace(var.cloudflared_credentials.tunnel_secret)) > 0,
+    ])
+    error_message = "Provide the AccountTag, TunnelID, and TunnelSecret from cloudflared's credential JSON, or null."
   }
 }

@@ -6,6 +6,7 @@ resources:
 - deployment.yaml
 - external-secret.yaml
 - ingress.yaml
+- middleware.yaml
 - namespace.yaml
 - service.yaml
 - sqlite-persistent-volume-claim.yaml

@@ -26,4 +26,4 @@ The stages are not a single chain of application dependencies. Homepage and Link
 
 Vault requires unsealing after its pod restarts unless an auto-unseal system is introduced separately. Retained local volumes require backups outside the VM. Check [Runbooks](../runbooks/index.md) for recovery and maintenance.
 
-CloudNativePG is included independently. Complete [Shoutrrr bootstrap](../apps/shoutrrr.md) to supply its stable encryption key and register the first owner; this trial uses SQLite and does not require CNPG. Cloudflared remains disabled; no public tunnel is needed for LAN access. This guide does not install a LAN DNS server or expose the cluster publicly.
+CloudNativePG is included independently. Complete [Shoutrrr bootstrap](../apps/shoutrrr.md) to supply its stable encryption key and register the first owner; this trial uses SQLite and does not require CNPG. Cloudflared provides public HTTPS only for Shoutrrr; the remaining interfaces use LAN access. This guide does not install a LAN DNS server or expose the cluster publicly.

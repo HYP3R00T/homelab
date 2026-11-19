@@ -2,6 +2,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: shoutrrr
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: shoutrrr-shoutrrr-public-redirect@kubernetescrd
 spec:
   ingressClassName: traefik
   rules:

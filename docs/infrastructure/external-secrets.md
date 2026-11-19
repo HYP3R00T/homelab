@@ -21,7 +21,7 @@ External Secrets Operator (ESO) turns references to Vault values into Kubernetes
 
 The separate secret-store group waits for the operator, but it also needs an initialized, unsealed, and configured Vault. Follow [Vault bootstrap](../runbooks/vault-bootstrap.md). The service-account identity and audience must match the Terraform role; the controller requests a token for that identity.
 
-Monitoring then synchronizes `grafana-admin` and `prometheus-basic-auth` before Flux installs the chart. Shoutrrr has a separate included group that waits for this store and reads its own Vault record. The disabled Cloudflared bundle retains its own credential reference; installing ESO does not activate that tunnel.
+Monitoring then synchronizes `grafana-admin` and `prometheus-basic-auth` before Flux installs the chart. Shoutrrr has a separate included group that waits for this store and reads its own Vault record. Cloudflared has a dedicated group and reads its tunnel credential from `cloudflared/tunnel`.
 
 ## Verify and diagnose
 
