@@ -6,7 +6,18 @@ icon: lucide/house
 
 <div class="hero" markdown>
 
-![Homelab: private infrastructure, versioned in Git](assets/branding/banner.svg){ .hero-art }
+![Homelab: self-hosted Kubernetes and GitOps automation](assets/branding/banner.svg){ .hero-art }
+
+<div class="tech-badges" markdown>
+
+[![Kubernetes / K3s](https://img.shields.io/badge/Kubernetes_K3s-326CE5?style=flat-square&logo=kubernetes&logoColor=white)](architecture/platform.md)
+[![GitOps / Flux CD](https://img.shields.io/badge/GitOps_Flux_CD-5468FF?style=flat-square&logo=flux&logoColor=white)](gitops/reconciliation.md)
+[![Helm](https://img.shields.io/badge/Helm-0F1689?style=flat-square&logo=helm&logoColor=white)](gitops/repository-structure.md)
+[![Terraform](https://img.shields.io/badge/Terraform-844FBA?style=flat-square&logo=terraform&logoColor=white)](architecture/secrets-flow.md)
+[![Vault](https://img.shields.io/badge/Vault-B59A1F?style=flat-square&logo=vault&logoColor=white)](infrastructure/vault.md)
+[![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=flat-square&logo=prometheus&logoColor=white)](infrastructure/kube-prometheus-stack.md)
+
+</div>
 
 One Ubuntu VM. A K3s cluster. Applications and infrastructure kept in Git, with clear ownership and room to measure what each workload costs.
 

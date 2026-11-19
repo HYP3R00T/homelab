@@ -1,5 +1,14 @@
 <p align="center">
-  <img src="docs/assets/branding/banner.svg" alt="Homelab — private by design, versioned in Git" width="100%">
+  <img src="docs/assets/branding/banner.svg" alt="Homelab — self-hosted Kubernetes and GitOps automation" width="100%">
+</p>
+
+<p align="center">
+  <a href="docs/architecture/platform.md"><img src="https://img.shields.io/badge/Kubernetes_K3s-326CE5?style=flat-square&amp;logo=kubernetes&amp;logoColor=white" alt="Kubernetes / K3s"></a>
+  <a href="docs/gitops/reconciliation.md"><img src="https://img.shields.io/badge/GitOps_Flux_CD-5468FF?style=flat-square&amp;logo=flux&amp;logoColor=white" alt="GitOps / Flux CD"></a>
+  <a href="docs/gitops/repository-structure.md"><img src="https://img.shields.io/badge/Helm-0F1689?style=flat-square&amp;logo=helm&amp;logoColor=white" alt="Helm"></a>
+  <a href="iac/vault/README.md"><img src="https://img.shields.io/badge/Terraform-844FBA?style=flat-square&amp;logo=terraform&amp;logoColor=white" alt="Terraform"></a>
+  <a href="docs/infrastructure/vault.md"><img src="https://img.shields.io/badge/Vault-B59A1F?style=flat-square&amp;logo=vault&amp;logoColor=white" alt="Vault"></a>
+  <a href="docs/infrastructure/kube-prometheus-stack.md"><img src="https://img.shields.io/badge/Prometheus-E6522C?style=flat-square&amp;logo=prometheus&amp;logoColor=white" alt="Prometheus"></a>
 </p>
 
 <p align="center">
