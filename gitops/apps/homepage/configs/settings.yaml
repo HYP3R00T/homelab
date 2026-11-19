@@ -24,10 +24,11 @@ layout:
     columns: 6
     header: true
   Infrastructure:
+    useEqualHeights: false
     style: row
-    columns: 6
+    columns: 4
     header: true
-  AI Assistants:
+  Web:
     style: row
     columns: 6
     header: true

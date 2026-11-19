@@ -1,0 +1,34 @@
+/* Pair simple infrastructure links beside the taller widget cards on wide screens. */
+@media (min-width: 1280px) {
+  .services-list:has(> #infrastructure-proxmox) {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(44px, auto));
+    align-items: stretch;
+  }
+
+  #infrastructure-proxmox,
+  #infrastructure-tailscale,
+  #infrastructure-cloudflared {
+    grid-row: 1 / 3;
+  }
+
+  #infrastructure-flux {
+    grid-column: 4;
+    grid-row: 1;
+  }
+
+  #infrastructure-vault {
+    grid-column: 4;
+    grid-row: 2;
+  }
+
+  #infrastructure-grafana {
+    grid-column: 5;
+    grid-row: 1;
+  }
+
+  #infrastructure-prometheus {
+    grid-column: 5;
+    grid-row: 2;
+  }
+}
