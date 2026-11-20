@@ -48,16 +48,6 @@
       "collection": "dashboard-icons"
     },
     {
-      "file": "prometheus.svg",
-      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d4b500dc40a8e1043b1581cabb7208892cf35472/svg/prometheus.svg",
-      "collection": "dashboard-icons"
-    },
-    {
-      "file": "grafana.svg",
-      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d4b500dc40a8e1043b1581cabb7208892cf35472/svg/grafana.svg",
-      "collection": "dashboard-icons"
-    },
-    {
       "file": "traefik.svg",
       "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d4b500dc40a8e1043b1581cabb7208892cf35472/svg/traefik.svg",
       "collection": "dashboard-icons"

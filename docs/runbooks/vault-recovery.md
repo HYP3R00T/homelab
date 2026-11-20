@@ -23,12 +23,12 @@ Verify the complete authentication and synchronization path:
 
 ```shell
 kubectl get clustersecretstore vault
-kubectl -n monitoring annotate externalsecret grafana-admin \
+kubectl -n shoutrrr annotate externalsecret shoutrrr \
   force-sync="$(date +%s)" --overwrite
-kubectl -n monitoring get externalsecret,secret,pod
+kubectl -n shoutrrr get externalsecret,secret,pod
 ```
 
-The store should report `Valid`, the ExternalSecret should report `SecretSynced`, and the monitoring credential gate should become ready. A Vault secret existing at the correct path does not bypass this authentication requirement.
+The store should report `Valid`, the ExternalSecret should report `SecretSynced`, and the application credential gate should become ready. A Vault secret existing at the correct path does not bypass this authentication requirement.
 
 ## Recover lost Terraform state
 
@@ -42,8 +42,6 @@ terraform -chdir=iac/vault import vault_mount.external_secrets external-secrets
 terraform -chdir=iac/vault import module.eso.vault_policy.this eso
 terraform -chdir=iac/vault import module.eso.vault_kubernetes_auth_backend_role.this auth/kubernetes/role/eso
 # Import each credential record only if it exists:
-terraform -chdir=iac/vault import vault_kv_secret_v2.grafana external-secrets/data/monitoring/grafana
-terraform -chdir=iac/vault import vault_kv_secret_v2.prometheus external-secrets/data/monitoring/prometheus
 terraform -chdir=iac/vault import vault_kv_secret_v2.shoutrrr external-secrets/data/shoutrrr
 # Only when cloudflared_credentials is populated and the record exists:
 terraform -chdir=iac/vault import 'vault_kv_secret_v2.cloudflared[0]' external-secrets/data/cloudflared/tunnel
@@ -68,8 +66,8 @@ For a completely empty Vault:
 
 1. Reconcile the Vault and External Secrets manifests with Flux.
 2. Follow [Bootstrap Vault](vault-bootstrap.md) without running imports.
-3. Restore the original private credential inputs from secure backup before applying Terraform, preserving Shoutrrr APP_KEY and monitoring credentials. Restore other application secrets from their secure backup or source system.
-4. Verify the Terraform-managed Shoutrrr and monitoring records. Cloudflared credentials are a separate Terraform-managed record when `cloudflared_credentials` is provided.
+3. Restore the original private credential inputs from secure backup before applying Terraform, preserving Shoutrrr APP_KEY. Restore other application secrets from their secure backup or source system.
+4. Verify the Terraform-managed Shoutrrr record. Cloudflared credentials are a separate Terraform-managed record when `cloudflared_credentials` is provided.
 5. Verify the `ClusterSecretStore`, `ExternalSecret`, and generated Secret.
 
 Do not run `vault operator init` against an existing initialized Vault.

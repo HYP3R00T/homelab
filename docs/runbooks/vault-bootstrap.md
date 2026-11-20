@@ -4,7 +4,7 @@ icon: lucide/key-round
 
 # Bootstrap Vault
 
-This runbook initializes Vault, configures its Kubernetes integration for External Secrets, and supplies the credentials needed to unblock monitoring. Run commands from the workstation at the repository root.
+This runbook initializes Vault, configures its Kubernetes integration for External Secrets, and supplies application and tunnel credentials. Run commands from the workstation at the repository root.
 
 ## What this setup creates
 
@@ -15,7 +15,7 @@ Flux deploys Vault, its persistent volume, the External Secrets Operator, and th
 - a KV v2 secrets engine mounted at `external-secrets`
 - an `eso` policy with read access to that mount
 - an `eso` role for the `external-secrets` service account with audience `vault`, matching the store TokenRequest
-- the Shoutrrr, Grafana, and Prometheus credential records, populated from sensitive private inputs
+- the Shoutrrr and optional Homepage/tunnel credential records, populated from sensitive private inputs
 
 The `ClusterSecretStore` in `gitops/infrastructure/secret-store/cluster-secret-store.yaml` uses those names exactly.
 
@@ -30,7 +30,7 @@ kubectl -n vault get pods
 kubectl -n external-secrets get pods
 ```
 
-Flux must have reconciled `infrastructure` and `secrets`. The secret store and monitoring can remain unready until this bootstrap finishes. A running Vault pod does not mean Vault has been initialized or unsealed.
+Flux must have reconciled `infrastructure` and `secrets`. The secret store can remain unready until this bootstrap finishes. A running Vault pod does not mean Vault has been initialized or unsealed.
 
 ## 2. Resolve the hostname from the workstation
 
@@ -150,7 +150,7 @@ Once unsealed, the UI presents **Sign in to Vault**. Choose **Token**, enter the
 
 *The root token signs in; it does not replace an unseal share.*
 
-The dashboard confirms that the browser session can access Vault. This capture shows the initial state, including `cubbyhole/`, before the repository's Terraform configuration has created the `external-secrets` mount and Kubernetes authentication. Dashboard access alone does not establish that External Secrets or monitoring is ready.
+The dashboard confirms that the browser session can access Vault. This capture shows the initial state, including `cubbyhole/`, before the repository's Terraform configuration has created the `external-secrets` mount and Kubernetes authentication. Dashboard access alone does not establish that External Secrets is ready.
 
 [![Vault dashboard after initialization, unsealing, and root-token sign-in](../assets/images/vault-bootstrap/06-dashboard.png)](../assets/images/vault-bootstrap/06-dashboard.png)
 
@@ -195,8 +195,6 @@ Populate it with:
 - `kubernetes_ca_cert`: the cluster CA certificate
 - `token_reviewer_jwt`: the token for `vault-token-reviewer`
 - `shoutrrr_credentials`: a persistent APP_KEY and optional LinkedIn inputs (see the example generation commands)
-- `grafana_credentials`: administrator username and password
-- `prometheus_users`: a complete htpasswd bcrypt entry
 
 The example file contains commands for retrieving the Kubernetes values. Its default `kubernetes_host`, `https://kubernetes.default.svc:443`, uses the in-cluster API because Vault runs in this cluster. A reachable node API URL is also valid; do not use a workstation-only localhost proxy address. Keep the reviewer token on a single quoted line. The configured reviewer Secret supplies a long-lived service-account token; a short-lived token from `kubectl create token` would require renewal and an update to Vault's configuration.
 
@@ -212,9 +210,9 @@ EOT
 
 The snippet illustrates the format; the placeholder is not a usable certificate. Keep the populated file private and outside Git. Regenerate the CA and reviewer JWT after every Kubernetes reinstall; reusing the old file can cause `403 permission denied` errors from `auth/kubernetes/login`.
 
-Generate the Shoutrrr key once using `openssl rand -base64 32`, prefix it with `base64:`, and paste it into `shoutrrr_credentials.app_key`. Generate the Grafana password once using `openssl rand -hex 32`. For Prometheus, run `htpasswd -nB prometheus` at its hidden password prompt and paste the complete output into `prometheus_users`. The example includes installation instructions if the utility is missing. Save browser credentials in your password manager. Do not regenerate these values during routine applies. The LinkedIn fields can remain empty until provider setup.
+Generate the Shoutrrr key once using `openssl rand -base64 32`, prefix it with `base64:`, and paste it into `shoutrrr_credentials.app_key`. Save browser credentials in your password manager. Do not regenerate these values during routine applies. The LinkedIn fields can remain empty until provider setup.
 
-If these credential records already exist in Vault outside Terraform, preserve their values and import them first; see the [Shoutrrr](../apps/shoutrrr.md#private-configuration) and [monitoring](../infrastructure/kube-prometheus-stack.md#credentials) guides. Terraform owns the entire contents of each managed record.
+If these credential records already exist in Vault outside Terraform, preserve their values and import them first; see the [Shoutrrr](../apps/shoutrrr.md#private-configuration) guide. Terraform owns the entire contents of each managed record.
 
 ## 7. Configure Vault
 
@@ -229,7 +227,7 @@ terraform -chdir=iac/vault plan -out=tfplan
 terraform -chdir=iac/vault apply tfplan
 ```
 
-Review the plan before running `apply`: a completely new baseline creates eight resources, with no updates or deletions. Providing `cloudflared_credentials` additionally creates its separate tunnel credential record, for nine resources in this deployment. These are the Kubernetes auth mount, its reviewer configuration, the KV mount, the ESO policy, the ESO role, and three credential records. If the original five bootstrap resources are already tracked in state, credential management creates three records. If these already exist from manual setup but the local state is missing, recover the state or import the existing resources first; do not delete them to make the plan succeed. A clean follow-up plan should report no changes:
+Review the plan before running `apply`: a completely new baseline creates six resources, with no updates or deletions. Providing `cloudflared_credentials` additionally creates its separate tunnel credential record, for seven resources before optional Homepage records. These are the Kubernetes auth mount, its reviewer configuration, the KV mount, the ESO policy, the ESO role, and the Shoutrrr credential record. If the original five bootstrap resources are already tracked in state, Shoutrrr credential management creates one record. If these already exist from manual setup but the local state is missing, recover the state or import the existing resources first; do not delete them to make the plan succeed. A clean follow-up plan should report no changes:
 
 ```shell
 terraform -chdir=iac/vault plan
@@ -255,20 +253,16 @@ kubectl -n external-secrets logs deployment/external-secrets --tail=100
 
 ## 9. Verify the application credentials and rollout
 
-The Terraform apply writes `shoutrrr`, `monitoring/grafana`, and `monitoring/prometheus` in the `external-secrets` mount. External Secrets then synchronizes those records into the Kubernetes Secrets consumed by the applications. You do not need to enter the same values manually in Vault. See [Monitoring credentials](../infrastructure/kube-prometheus-stack.md#credentials) and [Shoutrrr setup](../apps/shoutrrr.md#private-configuration) for ownership and import guidance.
-
-Flux waits in order for the secret store, monitoring secrets, the monitoring Helm release, and finally the additional monitors. Once the dependencies become ready, reconciliation proceeds automatically; do not manually install the chart.
+Terraform writes the Shoutrrr record and any enabled Homepage and tunnel records in the `external-secrets` mount. External Secrets synchronizes those values into Kubernetes Secrets. See [Shoutrrr setup](../apps/shoutrrr.md#private-configuration) for ownership and import guidance.
 
 ```shell
 kubectl get clustersecretstore vault
-kubectl -n monitoring get externalsecrets
+kubectl get externalsecrets -A
 kubectl -n flux-system get kustomizations
-kubectl -n monitoring get helmrelease,pods,pvc
+kubectl -n shoutrrr get pods,pvc
 ```
 
-Expect the store and both ExternalSecrets to report ready, followed by the `monitoring` and `monitoring-monitors` Kustomizations. If a secret reports an error, inspect its events with `kubectl -n monitoring describe externalsecret grafana-admin` or `kubectl -n monitoring describe externalsecret prometheus-basic-auth`.
-
-Add `grafana.homelab.internal` and `prometheus.homelab.internal` to the workstation's hosts entry for the node's current LAN IP address to open their interfaces. CNPG and Shoutrrr have separate included Flux groups. The Shoutrrr record is managed by this workspace. Shoutrrr allows first-owner registration and disables subsequent public registration by default; social-provider setup remains a separate step. See [Shoutrrr](../apps/shoutrrr.md) before activating the new trial. The separate Cloudflared group additionally needs its tunnel credential and DNS route; see [tunnel setup](cloudflared-tunnel.md).
+Expect the store and application ExternalSecrets to report ready. If a secret reports an error, inspect its events. Shoutrrr allows first-owner registration and disables subsequent public registration by default; social-provider setup remains a separate step. The Cloudflared group additionally needs its tunnel credential and DNS route; see [tunnel setup](cloudflared-tunnel.md).
 
 ## Next steps
 

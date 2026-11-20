@@ -24,7 +24,7 @@ Back up both volumes and the stable APP_KEY. For a consistent file backup, stop 
 
 The ignored `iac/vault/terraform.tfvars` contains `shoutrrr_credentials`. The tracked example includes `openssl rand -base64 32` for generating APP_KEY and the LinkedIn developer portal for obtaining client credentials. Preserve the key across reinstalls; changing it can make stored tokens unreadable. Optional LinkedIn values can be empty initially.
 
-Terraform writes `external-secrets/shoutrrr`; ESO maps that record to `shoutrrr-app`. Monitoring records remain managed separately. Keep inputs, state, and plans private:
+Terraform writes `external-secrets/shoutrrr`; ESO maps that record to `shoutrrr-app`. Keep inputs, state, and plans private:
 
 ```shell
 umask 077
@@ -33,7 +33,7 @@ terraform -chdir=iac/vault plan -out=tfplan
 terraform -chdir=iac/vault apply tfplan
 ```
 
-For a workspace with the shared five bootstrap resources and two monitoring records already managed, adding Shoutrrr should create only its credential record, with no changes or deletions. Review the actual plan before applying it. Flux's Shoutrrr group waits for `infrastructure` and `secret-store`; CNPG is not a dependency of this SQLite application.
+For a workspace with the shared five bootstrap resources already managed, adding Shoutrrr should create only its credential record, with no changes or deletions. Review the actual plan before applying it. Flux's Shoutrrr group waits for `infrastructure` and `secret-store`; CNPG is not a dependency of this SQLite application.
 
 ## Access and first owner
 
@@ -133,4 +133,4 @@ kubectl -n shoutrrr top pods
 kubectl top nodes
 ```
 
-Check `/up`, registration/login, a small media upload, and an approved scheduled post. Watch memory, CPU, restarts, queue delay, and node swapping during real use; an idle measurement cannot establish peak capacity. Homepage exposes the application card and current pod readings, while Prometheus/Grafana provide history.
+Check `/up`, registration/login, a small media upload, and an approved scheduled post. Watch memory, CPU, restarts, queue delay, and node swapping during real use; an idle measurement cannot establish peak capacity. Homepage exposes the application card and current pod readings, without retaining metric history.

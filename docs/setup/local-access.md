@@ -25,7 +25,7 @@ For the included browser interfaces, use your actual IP with these aliases. The 
 ```text
 # Example: replace 192.168.0.61 with your K3s node's current LAN IP
 192.168.0.61 homepage.homelab.internal linkding.homelab.internal flux.homelab.internal
-192.168.0.61 vault.homelab.internal grafana.homelab.internal prometheus.homelab.internal
+192.168.0.61 vault.homelab.internal
 ```
 
 Preserve other hosts-file entries. If an alias already exists, update its mapping rather than leaving conflicting entries. Each device needs its own resolution mechanism and LAN connectivity. If the node's address changes, update these mappings. This does not route all workstation DNS through the cluster.
@@ -39,8 +39,6 @@ Preserve other hosts-file entries. If an alias already exists, update its mappin
 | `shoutrrr.hyperoot.dev` | Social publishing over HTTPS | [Shoutrrr setup](../apps/shoutrrr.md), Cloudflared and public DNS ready |
 | `flux.homelab.internal` | GitOps status | Flux Operator and core ingress ready |
 | `vault.homelab.internal` | Secret administration | Vault deployment, initialization, and unseal |
-| `grafana.homelab.internal` | Metrics dashboards | [Vault and monitoring setup](../runbooks/vault-bootstrap.md) complete |
-| `prometheus.homelab.internal` | Metric queries | Monitoring Ready; Basic Auth credentials available |
 
 Open the internal interfaces with `http://`. Shoutrrr uses `https://shoutrrr.hyperoot.dev` through public DNS and requires no hosts-file entry; its former internal route redirects to that canonical address. This configuration does not provide certificates for these names. An included hostname is not evidence that its workload has completed bootstrap.
 
@@ -60,7 +58,6 @@ The first command should return your node address. The Ingress list should show 
 | Connection refused or times out | LAN reachability, current node address, firewall, Traefik/ServiceLB |
 | Traefik 404 | Hostname and path match an Ingress; use the hostname rather than just the IP |
 | 502 or 503 | Backend pods, Services, endpoints, and bootstrap dependencies |
-| Prometheus 401 | Expected Basic Auth gate; use the configured credential |
 | Browser opens but login fails | Component account/bootstrap configuration, not name resolution |
 
 Inside Kubernetes, services use cluster DNS such as `vault.vault.svc.cluster.local`. Those names do not rely on workstation hosts mappings. A future LAN DNS choice would replace the workstation mapping procedure; it is not required by this design.

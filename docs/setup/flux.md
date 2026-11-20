@@ -23,7 +23,7 @@ flux get sources git -A
 flux get kustomizations -A
 ```
 
-The operator creates the controllers and the repository synchronization resources. Confirm the Git source revision matches the intended branch. `apps`, `infrastructure`, and then `secrets` should reconcile. The store and monitoring can remain unready until Vault bootstrap and credential population are complete.
+The operator creates the controllers and the repository synchronization resources. Confirm the Git source revision matches the intended branch. `apps`, `infrastructure`, and then `secrets` should reconcile. The store can remain unready until Vault bootstrap and credential population are complete.
 
 Do not manually apply the entire cluster directory to bypass a dependency failure. Inspect [reconciliation](../gitops/reconciliation.md) and the [rollout runbook](../runbooks/gitops-rollout.md) to find the waiting boundary.
 

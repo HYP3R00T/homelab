@@ -6,7 +6,7 @@ icon: lucide/database
 
 CloudNativePG manages PostgreSQL instances and their lifecycle. The `cnpg` Flux group installs chart `0.29.0` in namespace `cnpg`, independently of Vault bootstrap. The operator remains available for future database workloads; no application PostgreSQL cluster is currently declared. Shoutrrr uses SQLite and does not depend on this operator.
 
-The operator requests 100m CPU and 128 MiB memory, with limits of 500m CPU and 256 MiB memory. Operator resources are under `gitops/infrastructure/cnpg`; activation is `gitops/clusters/lab/cnpg.yaml`. Its PodMonitor is assembled by the monitoring-monitors group, which waits for both CNPG and the monitoring chart.
+The operator requests 100m CPU and 128 MiB memory, with limits of 500m CPU and 256 MiB memory. Operator resources are under `gitops/infrastructure/cnpg`; activation is `gitops/clusters/lab/cnpg.yaml`.
 
 ## Verify
 

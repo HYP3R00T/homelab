@@ -44,7 +44,6 @@ nav = [
     { "External Secrets" = "infrastructure/external-secrets.md" },
     { "Local Path Provisioner" = "infrastructure/local-path-provisioner.md" },
     { "Metrics Server" = "infrastructure/metrics-server.md" },
-    { Monitoring = "infrastructure/kube-prometheus-stack.md" },
     { CloudNativePG = "infrastructure/cloudnative-pg.md" },
     { Cloudflared = "infrastructure/cloudflared.md" },
   ] },

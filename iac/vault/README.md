@@ -2,7 +2,7 @@
 
 This directory is the infrastructure-as-code workspace for Vault configuration in the homelab.
 
-It manages the shared Vault bootstrap needed by External Secrets and the credential records consumed by Shoutrrr, Homepage, monitoring, and Cloudflared.
+It manages the shared Vault bootstrap needed by External Secrets and the credential records consumed by Shoutrrr, Homepage, and Cloudflared.
 
 Managed resources:
 
@@ -10,7 +10,7 @@ Managed resources:
 - Kubernetes authentication at `kubernetes`
 - Kubernetes auth configuration
 - the `eso` policy and Kubernetes auth role with audience `vault`
-- Shoutrrr, Grafana, and Prometheus KV v2 records from sensitive tfvars inputs
+- the Shoutrrr KV v2 record from sensitive tfvars inputs
 - the tunnel credential record when `cloudflared_credentials` is supplied
 - the Homepage Proxmox record when `homepage_proxmox` is supplied
 - the Homepage Tailscale and Cloudflare Tunnel API records when their optional inputs are supplied
@@ -72,8 +72,6 @@ terraform -chdir=iac/vault import vault_mount.external_secrets external-secrets
 terraform -chdir=iac/vault import module.eso.vault_policy.this eso
 terraform -chdir=iac/vault import module.eso.vault_kubernetes_auth_backend_role.this auth/kubernetes/role/eso
 # Import these only if the credential records already exist:
-terraform -chdir=iac/vault import vault_kv_secret_v2.grafana external-secrets/data/monitoring/grafana
-terraform -chdir=iac/vault import vault_kv_secret_v2.prometheus external-secrets/data/monitoring/prometheus
 terraform -chdir=iac/vault import vault_kv_secret_v2.shoutrrr external-secrets/data/shoutrrr
 # Only when cloudflared_credentials is populated and this record already exists:
 terraform -chdir=iac/vault import 'vault_kv_secret_v2.cloudflared[0]' external-secrets/data/cloudflared/tunnel

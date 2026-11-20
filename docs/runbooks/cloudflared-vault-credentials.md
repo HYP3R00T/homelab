@@ -8,7 +8,7 @@ Terraform owns the locally managed tunnel credential at `external-secrets/cloudf
 
 ## Private inputs
 
-Complete [Vault bootstrap](vault-bootstrap.md) and [tunnel authorization](cloudflared-tunnel.md). Copy the three fields from the connector JSON into the ignored `iac/vault/terraform.tfvars`, using the mapping below. Preserve the existing application and monitoring inputs.
+Complete [Vault bootstrap](vault-bootstrap.md) and [tunnel authorization](cloudflared-tunnel.md). Copy the three fields from the connector JSON into the ignored `iac/vault/terraform.tfvars`, using the mapping below. Preserve the existing application inputs.
 
 | Connector JSON field | Terraform field |
 | --- | --- |

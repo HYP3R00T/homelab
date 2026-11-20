@@ -12,14 +12,11 @@ Flux watches main at `gitops/clusters/lab`. Its individual group files contain t
 | infrastructure | infrastructure/core | Nothing |
 | secrets | infrastructure/secrets | infrastructure; then both Helm releases must be Ready |
 | secret-store | infrastructure/secret-store | secrets; store must be Ready |
-| monitoring-secrets | infrastructure/kube-prometheus-stack/secrets | secret-store; ExternalSecrets must be Ready |
-| monitoring | infrastructure/kube-prometheus-stack | infrastructure and monitoring-secrets; Helm release must be Ready |
-| monitoring-monitors | infrastructure/kube-prometheus-stack/monitors | monitoring and cnpg |
 | cnpg | infrastructure/cnpg | infrastructure; operator Helm release must be Ready |
 | shoutrrr | apps/shoutrrr | infrastructure and secret-store; application resources must become Ready |
 | cloudflared | infrastructure/cloudflared | secret-store and shoutrrr; tunnel credential and connection must become Ready |
 
-The store cannot be Ready until Vault is initialized, unsealed, and configured for Kubernetes authentication. The monitoring secrets cannot be Ready until their approved values exist in Vault. This is an expected bootstrap gate, not a reason to remove dependsOn or embed credentials in Git.
+The store cannot be Ready until Vault is initialized, unsealed, and configured for Kubernetes authentication. This is an expected bootstrap gate, not a reason to remove dependsOn or embed credentials in Git.
 
 Inspect status with:
 
@@ -27,7 +24,7 @@ Inspect status with:
 flux get kustomizations -A
 flux get helmreleases -A
 kubectl get clustersecretstore vault
-kubectl get externalsecrets -n monitoring
+kubectl get externalsecrets -A
 ```
 
 The apps group keeps Homepage and Linkding independent of secret failures. Shoutrrr is included through its own group, depending on retained storage and the secret store rather than the independent apps root. Its ExternalSecrets need the Shoutrrr Vault record. Cloudflared publishes only Shoutrrr over HTTPS; the other application and administrative interfaces remain on the private LAN.

@@ -40,14 +40,12 @@ vm: "Ubuntu VM" {
     infrastructure: Infrastructure {
       class: group
       grid-rows: 2
-      grid-columns: 4
+      grid-columns: 3
       grid-gap: 30
       style.stroke: "#aa9aeb"
       flux: "Flux + status UI" {class: service; icon: ../icons/flux.svg}
       vault: Vault {class: service; icon: ../icons/vault.svg}
       eso: "External Secrets" {class: service; icon: ../icons/external-secrets.svg}
-      prometheus: Prometheus {class: service; icon: ../icons/prometheus.svg}
-      grafana: Grafana {class: service; icon: ../icons/grafana.svg}
       cnpg: CloudNativePG {class: service; icon: ../icons/cloudnativepg.svg}
       cloudflared: Cloudflared {class: service; icon: ../icons/cloudflare.svg}
     }

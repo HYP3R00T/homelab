@@ -15,7 +15,7 @@ Flux continuously compares the declared configuration in Git with the cluster an
 
 ## Initial setup
 
-Follow [Flux bootstrap](../setup/flux.md) for a fresh cluster. For an existing cluster, check the source URL, revision, and group readiness before considering another installation. [Reconciliation](../gitops/reconciliation.md) explains the independent apps group and the secret/monitoring chain.
+Follow [Flux bootstrap](../setup/flux.md) for a fresh cluster. For an existing cluster, check the source URL, revision, and group readiness before considering another installation. [Reconciliation](../gitops/reconciliation.md) explains the independent apps group and the secret delivery chain.
 
 ## Web UI
 

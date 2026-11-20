@@ -19,10 +19,8 @@ The connection reaches the node on the requested port. K3s ServiceLB makes the T
 | `linkding.homelab.internal` | Linkding | Owner account required |
 | `flux.homelab.internal` | Flux Operator's embedded web UI | Included core ingress |
 | `vault.homelab.internal` | Vault | Initialization and unseal required |
-| `grafana.homelab.internal` | Grafana | Monitoring credentials and chart ready |
-| `prometheus.homelab.internal` | Prometheus | Monitoring ready; Traefik Basic Auth |
 
-Alertmanager is cluster-internal. The Flux UI uses the existing operator service rather than another UI deployment. Hostname resolution does not prove that the destination is ready or provide an authentication boundary.
+The Flux UI uses the existing operator service rather than another UI deployment. Hostname resolution does not prove that the destination is ready or provide an authentication boundary.
 
 Follow [Local access](../setup/local-access.md) for internal hosts-file mappings. Shoutrrr uses public DNS, and Cloudflared forwards directly to its cluster-internal Service rather than through Traefik. The old Shoutrrr LAN Ingress redirects to its public HTTPS hostname. The tunnel routes no other service; unmatched hostnames return 404. Tailscale remains unused, and the private interfaces still depend on the router/firewall not forwarding LAN ports publicly.
 

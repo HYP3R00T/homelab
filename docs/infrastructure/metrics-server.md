@@ -6,7 +6,7 @@ icon: lucide/gauge
 
 Metrics Server supplies Kubernetes' current pod and node CPU/memory readings. K3s installs it in `kube-system`, so this GitOps tree does not install a duplicate server or the removed Talos-specific certificate patches.
 
-[Homepage](../apps/homepage.md) reads this metrics API for its current node and service indicators. Metrics Server does not retain historical measurements; [Prometheus and Grafana](kube-prometheus-stack.md) provide that separate capability.
+[Homepage](../apps/homepage.md) reads this metrics API for its current node and service indicators. Metrics Server does not retain historical measurements. Prometheus, Grafana, and Alertmanager are not installed; use `kubectl top` for current readings.
 
 ## Setup and verification
 

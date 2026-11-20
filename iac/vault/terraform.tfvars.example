@@ -18,19 +18,6 @@ EOT
 # Keep the decoded token on one line. Do not use a short-lived `kubectl create token` here.
 token_reviewer_jwt = ""
 
-grafana_credentials = {
-  username = "admin"
-  # Generate once with: openssl rand -hex 32
-  password = ""
-}
-
-# Install the workstation utility if missing: sudo apt install apache2-utils
-# Run: htpasswd -nB prometheus
-# Enter your chosen password at the hidden prompt; keep it in your password manager.
-# Paste the complete resulting prometheus:<bcrypt-hash> line between the quotes.
-# Dollar signs in the bcrypt output are literal in HCL; no escaping is needed.
-prometheus_users = ""
-
 # Generate once: openssl rand -base64 32
 # Prefix that output with base64: and paste it below. Preserve it across upgrades.
 # Losing/changing APP_KEY prevents decryption of stored provider tokens.

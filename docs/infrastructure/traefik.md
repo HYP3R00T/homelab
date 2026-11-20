@@ -12,8 +12,6 @@ K3s ServiceLB makes its LoadBalancer service available on the node's LAN address
 
 Follow [local access](../setup/local-access.md) to map hostnames to the actual node address. An Ingress then routes the hostname to the appropriate Kubernetes Service. The Traefik dashboard is not exposed by this repository. Homepage shows its pod readings rather than querying a separate dashboard endpoint.
 
-The monitoring PodMonitor selects `app.kubernetes.io/name=traefik` and `app.kubernetes.io/instance=traefik-kube-system`, using metrics port 9100. Recheck the packaged labels and metrics configuration after K3s upgrades.
-
 ## Verify
 
 ```shell

@@ -20,7 +20,7 @@ kubectl top nodes
 kubectl top pods -A
 ```
 
-Record the current Git revision for rollback. The cleanup can be reviewed in stages: NVIDIA removal, duplicate platform removal and layout changes, Flux ingress and retained class, secret bootstrap, monitoring, and Homepage. The checked-in dependency graph enforces runtime ordering; Git commits do not substitute for those readiness checks.
+Record the current Git revision for rollback. The cleanup can be reviewed in stages: NVIDIA removal, duplicate platform removal and layout changes, Flux ingress and retained class, secret bootstrap and Homepage. The checked-in dependency graph enforces runtime ordering; Git commits do not substitute for those readiness checks.
 
 ## Core infrastructure and applications
 
@@ -47,19 +47,6 @@ kubectl get clustersecretstore vault
 
 The secret-store group waits for the store to become Ready. This can take longer than its reconciliation timeout while operator-driven bootstrap is incomplete; Flux retries. Do not make apps depend on the store to hide this expected state.
 
-## Monitoring credentials and chart
-
-The operator supplies or approves the Grafana and Prometheus credentials using the existing [monitoring credential procedure](../infrastructure/kube-prometheus-stack.md#credentials). Neither Terraform nor GitOps creates those values automatically.
-
-```shell
-kubectl get externalsecrets -n monitoring
-flux get kustomizations monitoring-secrets monitoring monitoring-monitors
-flux get helmreleases -n monitoring
-kubectl get pods,pvc -n monitoring
-```
-
-Both ExternalSecrets must be Ready before the chart starts. Verify all three monitoring PVs have Retain and all StatefulSet claim-retention policies keep claims on deletion and scale-down. Read [storage recovery](storage-recovery.md) before testing recovery. Do not test by deleting a production claim.
-
 ## CloudNativePG and Shoutrrr
 
 The `cnpg` group installs the operator after core infrastructure. Shoutrrr does not use CNPG; it waits for retained storage and the secret store, then runs SQLite inside its application container.
@@ -72,18 +59,16 @@ kubectl -n cnpg get helmrelease,pods
 kubectl -n shoutrrr get externalsecrets,pods,pvc
 ```
 
-Shoutrrr requests 256 MiB RAM and has a 768 MiB limit, with one web worker and one queue worker. Measure startup, uploads, publishing, and node pressure alongside monitoring. Resource requests do not prove that simultaneous runtime peaks fit on this VM.
+Shoutrrr requests 256 MiB RAM and has a 768 MiB limit, with one web worker and one queue worker. Measure startup, uploads, publishing, and node pressure with `kubectl top`. Resource requests do not prove that simultaneous runtime peaks fit on this VM.
 
 ## Acceptance
 
-Open Grafana and verify node and individual pod CPU/memory history. Check Prometheus /targets for kubelet/cAdvisor, node exporter, kube-state-metrics, Flux, Vault, ESO, and K3s Traefik. Intentionally absent scheduler, controller-manager, etcd, and kube-proxy targets should not generate false failures. A Ready Helm release is not sufficient evidence that the targets work.
+Compare node and per-workload CPU/memory readings at idle and under ordinary application use using `kubectl top nodes` and `kubectl top pods -A`. Homepage uses the same Metrics Server API. Historical metrics and alerting are not installed.
 
-Compare the VM and per-workload CPU/memory at idle and under ordinary application use. Keep existing allocations and retention initially: Prometheus 10 days and 8GB, Alertmanager 120h. Notifications are intentionally not delivered; do not expect a receiver until one is chosen later. No fixed 2 GiB agent capacity is promised.
-
-During a controlled persistence test, record a historical query result, replace only the Prometheus pod, wait for it to become Ready, and verify that earlier data remains. Check Grafana state the same way. Record results before changing resource allocations. Investigate OOM kills, restarts, pending pods, disk pressure, or unavailable applications before proceeding.
+Check application availability, restarts, OOM kills, pending pods, and node pressure before adding workloads. Resource requests do not prove that simultaneous runtime peaks fit on this VM. Verify persistence using the application-specific backup and recovery procedures.
 
 ## Rollback
 
-Restore reviewed manifests through Git. For a running Helm release that must be paused, suspend its reconciliation before changing runtime state; suspending Flux alone does not stop pods. Do not delete a namespace or claim as a rollback shortcut. Reverting a commit that removes a HelmRelease can uninstall its workloads; inspect pruning and Helm ownership first. Retained volumes still require deliberate rebinding on recovery. Keep the core retained class and data even if monitoring is temporarily disabled.
+Restore reviewed manifests through Git. For a running Helm release that must be paused, suspend its reconciliation before changing runtime state; suspending Flux alone does not stop pods. Do not delete a namespace or claim as a rollback shortcut. Reverting a commit that removes a HelmRelease can uninstall its workloads; inspect pruning and Helm ownership first. Retained volumes still require deliberate rebinding on recovery. Keep the core retained class and application data during rollback.
 
 Cloudflared is included for Shoutrrr only. Tailscale and agent workloads are not activated by this rollout. CNPG and Shoutrrr are included but require their documented readiness and bootstrap checks.

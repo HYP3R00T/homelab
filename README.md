@@ -8,7 +8,6 @@
   <a href="docs/gitops/repository-structure.md"><img src="https://img.shields.io/badge/Helm-0F1689?style=flat-square&amp;logo=helm&amp;logoColor=white" alt="Helm"></a>
   <a href="iac/vault/README.md"><img src="https://img.shields.io/badge/Terraform-844FBA?style=flat-square&amp;logo=terraform&amp;logoColor=white" alt="Terraform"></a>
   <a href="docs/infrastructure/vault.md"><img src="https://img.shields.io/badge/Vault-B59A1F?style=flat-square&amp;logo=vault&amp;logoColor=white" alt="Vault"></a>
-  <a href="docs/infrastructure/kube-prometheus-stack.md"><img src="https://img.shields.io/badge/Prometheus-E6522C?style=flat-square&amp;logo=prometheus&amp;logoColor=white" alt="Prometheus"></a>
 </p>
 
 <p align="center">
@@ -24,11 +23,11 @@ A single-node Ubuntu K3s homelab with private LAN services and a Shoutrrr-only H
 
 ## The architecture
 
-[![Full-system architecture: GitOps, private LAN access, applications, secrets, monitoring, and local storage](docs/assets/diagrams/architecture.svg)](docs/assets/diagrams/architecture.svg)
+[![Full-system architecture: GitOps, private LAN access, applications, secrets, and local storage](docs/assets/diagrams/architecture.svg)](docs/assets/diagrams/architecture.svg)
 
 [Open the architecture diagram at full size](docs/assets/diagrams/architecture.svg).
 
-The diagram describes the **declared configuration**, not live availability. Homepage and Linkding reconcile independently. Monitoring waits for Vault authentication and credential delivery. Shoutrrr and CloudNativePG are included through dependency-ordered groups; Shoutrrr uses SQLite and requires Vault credentials and first-owner registration. Cloudflared publishes only Shoutrrr over HTTPS; the other application and administrative interfaces remain on the private LAN.
+The diagram describes the **declared configuration**, not live availability. Homepage and Linkding reconcile independently. Shoutrrr and CloudNativePG are included through dependency-ordered groups; Shoutrrr uses SQLite and requires Vault credentials and first-owner registration. Cloudflared publishes only Shoutrrr over HTTPS; the other application and administrative interfaces remain on the private LAN.
 
 ## What this project demonstrates
 
@@ -37,8 +36,7 @@ The diagram describes the **declared configuration**, not live availability. Hom
 | GitOps | One environment, individual resource files, and explicit readiness boundaries instead of duplicated overlays | [Reconciliation](docs/gitops/reconciliation.md) |
 | Platform | K3s owns its packaged ingress, load balancing, DNS, storage, and live metrics; Flux does not install duplicates | [Platform](docs/architecture/platform.md) |
 | Secrets | Public references in Git, private values in Vault, Terraform-managed authentication, and ESO delivery | [Secret flow](docs/architecture/secrets-flow.md) |
-| Observability | Homepage for current readings; Prometheus and Grafana for history and per-workload assessment | [Monitoring](docs/infrastructure/kube-prometheus-stack.md) |
-| Persistence | Retained volumes for new Vault/monitoring data, with explicit limits and recovery responsibilities | [Storage recovery](docs/runbooks/storage-recovery.md) |
+| Persistence | Retained volumes for Vault and Shoutrrr data, with explicit limits and recovery responsibilities | [Storage recovery](docs/runbooks/storage-recovery.md) |
 | Access | Private LAN ingress and workstation hostname mappings, without a public tunnel or LAN DNS server | [Local access](docs/setup/local-access.md) |
 
 ## Applications
@@ -53,7 +51,7 @@ Tools used directly for everyday work:
 
 ## Infrastructure
 
-Administrative and shared capabilities support those applications. Flux reconciles Git, Vault and External Secrets deliver credentials, and Prometheus, Grafana, and Alertmanager provide monitoring. K3s supplies ingress, DNS, service load balancing, local storage provisioning, and current resource metrics.
+Administrative and shared capabilities support those applications. Flux reconciles Git, and Vault and External Secrets deliver credentials. K3s supplies ingress, DNS, service load balancing, local storage provisioning, and current resource metrics.
 
 A browser interface does not make an administrative tool an end-user application. The [infrastructure inventory](docs/infrastructure/index.md) explains ownership and setup, including CloudNativePG database management and the optional, disabled Cloudflared tunnel. Homepage exposes selected shortcuts; it is not a list of every controller or collector.
 
@@ -63,12 +61,12 @@ A browser interface does not make an administrative tool an end-user application
 
 ## Reproduce and operate it
 
-Start with the [ordered setup guide](docs/setup/index.md). It covers the workstation and K3s baseline, Flux bootstrap, hosts-file access, application initialization, and the Vault/monitoring chain. Installing a pod is only one stage: Linkding needs an owner account on a fresh installation, and Vault needs initialization, unsealing, authentication configuration, and secret values.
+Start with the [ordered setup guide](docs/setup/index.md). It covers the workstation and K3s baseline, Flux bootstrap, hosts-file access, application initialization, and the Vault credential chain. Installing a pod is only one stage: Linkding needs an owner account on a fresh installation, and Vault needs initialization, unsealing, authentication configuration, and secret values.
 
 | Location | Responsibility |
 | --- | --- |
 | `gitops/apps/<component>/` | End-user application manifests and configuration |
-| `gitops/infrastructure/<component>/` | Administrative and shared capabilities, including monitoring |
+| `gitops/infrastructure/<component>/` | Administrative and shared capabilities |
 | `gitops/clusters/lab/` | Flux entrypoint and readiness dependencies |
 | `iac/vault/` | Vault authentication, KV mount, policies, and role |
 | `docs/` | Architecture, setup, component reference, and operations |

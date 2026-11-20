@@ -14,7 +14,6 @@ Infrastructure supports and administers the applications. This category includes
 | [Metrics Server](metrics-server.md) | Supplies current pod/node resource readings | K3s packaged component | Verify metrics API |
 | [Vault](vault.md) | Stores credential values outside Git | Flux secrets group | Initialize, unseal, configure authentication, populate values |
 | [External Secrets](external-secrets.md) | Synchronizes Vault values to Kubernetes Secrets | Flux secrets/store groups | Working Vault authentication and secret values |
-| [Monitoring](kube-prometheus-stack.md) | Stores metrics, renders dashboards, evaluates alerts | Flux monitoring groups | Vault-backed credentials; no notification destination configured |
 | [CloudNativePG](cloudnative-pg.md) | Manages PostgreSQL clusters | Flux cnpg group | Application credentials and database bootstrap |
 | [Cloudflared](cloudflared.md) | Public HTTPS for Shoutrrr | Dedicated Flux group | Vault-backed tunnel credential and Cloudflare DNS route |
 

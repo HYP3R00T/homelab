@@ -4,7 +4,7 @@ icon: lucide/archive-restore
 
 # Recover retained storage
 
-New Vault and monitoring volumes use the non-default local-path-retain StorageClass. K3s's existing local provisioner creates the PV directories. Retain preserves data after claim deletion; manual recovery and cleanup are deliberate operator steps.
+Vault and Shoutrrr volumes use the non-default local-path-retain StorageClass. K3s's existing local provisioner creates the PV directories. Retain preserves data after claim deletion; manual recovery and cleanup are deliberate operator steps.
 
 ## Record where data lives
 
@@ -18,13 +18,13 @@ Save the PV and PVC YAML securely alongside backups, including claim names, exac
 
 ## Pod replacement
 
-A replacement pod mounts the existing claim. The StatefulSets for Prometheus, Grafana, and Alertmanager explicitly retain claims on deletion and scale-down, and their dynamically created PVs inherit Retain. Existing data is not discarded just because a pod exits. Confirm the bound PV's policy rather than assuming the class changed an already-created volume.
+A replacement pod mounts the existing claim. Vault and Shoutrrr claims use `local-path-retain`, and their dynamically created PVs inherit Retain. Existing data is not discarded just because a pod exits. Confirm the bound PV's policy rather than assuming the class changed an already-created volume.
 
 Linkding's pre-existing default-class volume is outside this new storage policy. Its claim is preserved unchanged and must not be deleted. Changing a StorageClass does not change existing PV reclaim policies.
 
 ## Released volume
 
-If a monitoring claim is explicitly deleted, its PV becomes Released and its directory remains. Stop reconciliation of the affected consumer while planning recovery. Record the old PV and its claim reference. An administrator must clear the obsolete claim binding when safe, create a matching claim explicitly bound to the retained PV, and use that claim with the workload's expected name. Recreating the old PVC name alone can allocate a fresh empty directory instead of recovering the retained data.
+If a retained claim is explicitly deleted, its PV becomes Released and its directory remains. Stop reconciliation of the affected consumer while planning recovery. Record the old PV and its claim reference. An administrator must clear the obsolete claim binding when safe, create a matching claim explicitly bound to the retained PV, and use that claim with the workload's expected name. Recreating the old PVC name alone can allocate a fresh empty directory instead of recovering the retained data.
 
 Do not remove files or reformat a volume to make it bind. Check node affinity, namespace, claim name, capacity, access mode, and StorageClass before making it available to the workload. Use an isolated recovery test before applying a rebinding procedure to important data.
 
@@ -38,7 +38,7 @@ Backup tooling and schedules are not automated by this repository. Perform and v
 
 ## Retention versus backup
 
-Prometheus still expires data at 10 days or its 8GB retention-size boundary. Retain does not disable that database cleanup. Alertmanager keeps silence/notification state, not metric history. Grafana keeps its database and local state; dashboards provisioned from Git/Helm can be recreated from configuration.
+Retain controls volume reclamation; it does not replace application-consistent backups.
 
 Only manually remove a retained directory after identifying its former owner and confirming its backup and data are no longer needed. No cleanup script in this repository removes retained data automatically.
 

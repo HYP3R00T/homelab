@@ -15,7 +15,6 @@ icon: lucide/house
 [![Helm](https://img.shields.io/badge/Helm-0F1689?style=flat-square&logo=helm&logoColor=white)](gitops/repository-structure.md)
 [![Terraform](https://img.shields.io/badge/Terraform-844FBA?style=flat-square&logo=terraform&logoColor=white)](architecture/secrets-flow.md)
 [![Vault](https://img.shields.io/badge/Vault-B59A1F?style=flat-square&logo=vault&logoColor=white)](infrastructure/vault.md)
-[![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=flat-square&logo=prometheus&logoColor=white)](infrastructure/kube-prometheus-stack.md)
 
 </div>
 
@@ -27,11 +26,11 @@ One Ubuntu VM. A K3s cluster. Applications and infrastructure kept in Git, with 
 
 ## The whole system
 
-[![Homelab architecture: GitOps, private LAN access, applications, secrets, monitoring, and local storage](assets/diagrams/architecture.svg)](assets/diagrams/architecture.svg)
+[![Homelab architecture: GitOps, private LAN access, applications, secrets, and local storage](assets/diagrams/architecture.svg)](assets/diagrams/architecture.svg)
 
 [Open the architecture diagram at full size](assets/diagrams/architecture.svg).
 
-This is the **declared architecture**, not a live status board. Homepage and Linkding are included independently of Vault. Monitoring is included but waits for Vault bootstrap and credentials. Shoutrrr and CloudNativePG are included through dedicated groups; Shoutrrr waits for retained storage and Vault-backed credentials. Cloudflared publishes only Shoutrrr at `https://shoutrrr.hyperoot.dev`.
+This is the **declared architecture**, not a live status board. Homepage and Linkding are included independently of Vault. Shoutrrr and CloudNativePG are included through dedicated groups; Shoutrrr waits for retained storage and Vault-backed credentials. Cloudflared publishes only Shoutrrr at `https://shoutrrr.hyperoot.dev`.
 
 ## Engineering choices
 
@@ -51,7 +50,7 @@ This is the **declared architecture**, not a live status board. Homepage and Lin
 
 - :lucide-chart-no-axes-combined: **Resources treated as a budget**
 
-    The reference VM has 4 vCPUs and about 5.28 GiB RAM. Homepage shows current readings; Prometheus and Grafana provide history. [Explore monitoring](infrastructure/kube-prometheus-stack.md).
+    The reference VM has 4 vCPUs and about 5.28 GiB RAM. Homepage and Metrics Server show current readings. Historical metrics and alerting are not installed. [Inspect current metrics](infrastructure/metrics-server.md).
 
 </div>
 
@@ -86,10 +85,6 @@ Infrastructure runs and administers the cluster. Some components have web interf
 - :lucide-key-round: **[Vault](infrastructure/vault.md) and [External Secrets](infrastructure/external-secrets.md)**
 
     Store private values and deliver Kubernetes Secrets. Vault initialization, unsealing, authentication, and credential population are separate setup steps.
-
-- :lucide-chart-no-axes-combined: **[Monitoring](infrastructure/kube-prometheus-stack.md)**
-
-    Prometheus stores metrics, Grafana presents dashboards, and Alertmanager manages alerts. Installation waits for the required Vault-backed credentials.
 
 - :lucide-server: **[K3s foundation](architecture/platform.md)**
 

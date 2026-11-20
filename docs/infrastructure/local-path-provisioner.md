@@ -9,7 +9,7 @@ K3s runs Rancher's Local Path Provisioner in `kube-system`. This repository does
 | Class | Provisioner | Reclaim policy | Use |
 | --- | --- | --- | --- |
 | local-path | rancher.io/local-path | Existing K3s default, inspected as Delete | Existing Linkding claim remains unchanged |
-| local-path-retain | rancher.io/local-path | Retain | New monitoring and Vault claims |
+| local-path-retain | rancher.io/local-path | Retain | Vault and Shoutrrr claims |
 
 The additional class is non-default and defined in `gitops/infrastructure/core/storage-class.yaml`. Both use WaitForFirstConsumer; each new claim gets a dynamically created PV. There is no duplicate controller and no need for one static PV YAML file per application.
 

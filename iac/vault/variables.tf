@@ -56,31 +56,6 @@ variable "eso_bound_service_account_namespaces" {
   default     = ["external-secrets"]
 }
 
-variable "grafana_credentials" {
-  description = "Grafana administrator username and password, supplied through private tfvars."
-  type = object({
-    username = string
-    password = string
-  })
-  sensitive = true
-
-  validation {
-    condition     = length(trimspace(var.grafana_credentials.username)) > 0 && length(trimspace(var.grafana_credentials.password)) > 0
-    error_message = "Supply a nonempty Grafana username and password."
-  }
-}
-
-variable "prometheus_users" {
-  description = "One htpasswd bcrypt entry for Prometheus Basic Auth, including username and hash."
-  type        = string
-  sensitive   = true
-
-  validation {
-    condition     = can(regex("^[^:\\r\\n]+:\\$2[aby]\\$[0-9]{2}\\$[./A-Za-z0-9]{53}$", var.prometheus_users))
-    error_message = "Supply the complete username:bcrypt-hash line produced by htpasswd -nB prometheus."
-  }
-}
-
 variable "shoutrrr_credentials" {
   description = "Stable Shoutrrr encryption key and optional LinkedIn and Meta developer credentials."
   type = object({

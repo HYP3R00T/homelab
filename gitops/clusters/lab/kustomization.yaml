@@ -6,9 +6,6 @@ resources:
 - infrastructure.yaml
 - secrets.yaml
 - secret-store.yaml
-- monitoring-secrets.yaml
-- monitoring.yaml
-- monitoring-monitors.yaml
 - cnpg.yaml
 - shoutrrr.yaml
 - cloudflared.yaml

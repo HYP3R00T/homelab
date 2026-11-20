@@ -4,7 +4,7 @@ icon: lucide/cloud
 
 # Cloudflared
 
-Cloudflared publishes only `https://shoutrrr.hyperoot.dev`. The connector establishes outbound connections to Cloudflare and forwards that hostname directly to `http://shoutrrr.shoutrrr.svc.cluster.local:8080`. All other tunnel hostnames return 404; Homepage, Linkding, Vault, Flux UI, and monitoring remain LAN-only.
+Cloudflared publishes only `https://shoutrrr.hyperoot.dev`. The connector establishes outbound connections to Cloudflare and forwards that hostname directly to `http://shoutrrr.shoutrrr.svc.cluster.local:8080`. All other tunnel hostnames return 404; Homepage, Linkding, Vault, and Flux UI remain LAN-only.
 
 The `cloudflared` Flux group depends on `secret-store` and `shoutrrr`. Terraform writes the connector credential to `external-secrets/cloudflared/tunnel`; ESO creates `cloudflared-secret`. The account-level Cloudflare management certificate stays on the workstation and is never mounted in the pod.
 
